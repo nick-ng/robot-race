@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-const Container = styled.div`
+const StyledPingDisplay = styled.div`
   position: fixed;
   top: 0.2em;
   right: 0.5em;
@@ -25,11 +25,11 @@ export default function PingDisplay({
   roundTripTime: number;
 }) {
   return (
-    <Container>
+    <StyledPingDisplay>
       <div>Ping: {roundTripTime} ms</div>
       <div>
         <Link to="/">Home</Link>
       </div>
-    </Container>
+    </StyledPingDisplay>
   );
 }

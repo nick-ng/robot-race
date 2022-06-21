@@ -11,7 +11,7 @@ interface LobbyProps {
   playerDetails: PlayerDetails;
 }
 
-const Container = styled.div``;
+const StyledLobby = styled.div``;
 
 const Details = styled.details`
   margin: 1em 0;
@@ -44,7 +44,7 @@ export default function Lobby({ gameData, playerDetails }: LobbyProps) {
   const isHost = host === playerDetails.playerId;
 
   return (
-    <Container>
+    <StyledLobby>
       <h3>Game ID: {shortId}</h3>
       <Details>
         <summary>QR Code</summary>
@@ -112,6 +112,6 @@ export default function Lobby({ gameData, playerDetails }: LobbyProps) {
           Start Game
         </Button>
       )}
-    </Container>
+    </StyledLobby>
   );
 }

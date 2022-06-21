@@ -10,7 +10,7 @@ const PLAYER_NAME_STORE = "PIG_DICE_GAME_PLAYER_NAME_STORE";
 const PLAYER_ID_STORE = "PIG_DICE_GAME_PLAYER_ID_STORE";
 const PLAYER_PASSWORD_STORE = "PIG_DICE_GAME_PLAYER_PASSWORD_STORE";
 
-const Container = styled.div`
+const StyledApp = styled.div`
   padding: 0 1em;
 `;
 
@@ -38,7 +38,7 @@ export default function App() {
     playerDetails.playerPassword;
 
   return (
-    <Container>
+    <StyledApp>
       <h1>Robot Race</h1>
       {playerDetails.playerName ? (
         <p>Hello {playerDetails.playerName}</p>
@@ -104,6 +104,6 @@ export default function App() {
           />
         </Routes>
       )}
-    </Container>
+    </StyledApp>
   );
 }
