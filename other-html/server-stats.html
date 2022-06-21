@@ -1,98 +1,87 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Pig Dice Game</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
 
-<head>
-  <title>Pig Dice Game</title>
-  <script src="https://unpkg.com/vue@3"></script>
-  <style>
-    body {
-      font-family: sans-serif;
-    }
+      .left {
+        text-align: left;
+      }
 
-    .left {
-      text-align: left;
-    }
+      .right {
+        text-align: right;
+      }
 
-    .right {
-      text-align: right;
-    }
+      .stats-table {
+        border-collapse: collapse;
+      }
 
-    .stats-table {
-      border-collapse: collapse;
-    }
+      th,
+      td {
+        padding: 0.5em;
+        border: 1px solid grey;
+      }
+    </style>
+  </head>
 
-    th,
-    td {
-      padding: 0.5em;
-      border: 1px solid grey;
-    }
-  </style>
-</head>
+  <body>
+    <div id="app">
+      <h1>Server Stats</h1>
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th class="left">Server ID</th>
+            <th class="right">Games</th>
+            <th class="right">APM</th>
+            <th class="right">Free Heap</th>
+            <th class="right">% Used Heap</th>
+            <th class="right">Seen _ ms Ago</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="server in servers">
+            <td class="left">{{ server.id }}</td>
+            <td class="right">{{ server.games }}</td>
+            <td class="right">{{ server.actionsPerMinute.toFixed(1) }}</td>
+            <td class="right">{{ server.heapFree.toLocaleString() }}</td>
+            <td class="right">
+              {{ (server.memoryUsage.heapUsed / server.memoryUsage.heapTotal *
+              100).toFixed(1) }}%
+            </td>
+            <td class="right">{{ Date.now() - server.timestamp }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
 
-<body>
-  <div id="app">
-    <h1>Server Stats</h1>
-    <table class="stats-table">
-      <thead>
-        <tr>
-          <th class="left">
-            Server ID
-          </th>
-          <th class="right">
-            Games
-          </th>
-          <th class="right">
-            APM
-          </th>
-          <th class="right">
-            Free Heap
-          </th>
-          <th class="right">
-            % Used Heap
-          </th>
-          <th class="right">
-            Seen _ ms Ago
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="server in servers">
-          <td class="left">{{ server.id }}</td>
-          <td class="right">{{ server.games }}</td>
-          <td class="right">{{ server.actionsPerMinute.toFixed(1) }}</td>
-          <td class="right">{{ server.heapFree.toLocaleString() }}</td>
-          <td class="right">{{ (server.memoryUsage.heapUsed / server.memoryUsage.heapTotal * 100).toFixed(1) }}%</td>
-          <td class="right">{{ Date.now() - server.timestamp }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</body>
+  <script>
+    (() => {
+      const { createApp } = Vue;
 
-<script>
-  (() => {
-    const { createApp } = Vue;
-
-    createApp({
-      data() {
-        return {
-          servers: []
-        }
-      },
-      methods: {
-        async getStats() {
-          const res = await fetch("/api/server-stats");
-          this.servers = await res.json();
-
-          setTimeout(this.getStats, 1500);
+      createApp({
+        data() {
+          return {
+            servers: [],
+          };
         },
-      },
-      mounted() {
-        this.getStats();
-      },
-      unmounted() { }
-    }).mount('#app')
-  })()
-</script>
+        methods: {
+          async getStats() {
+            const res = await fetch("/api/server-stats");
+            this.servers = await res.json();
 
+            setTimeout(this.getStats, 1500);
+          },
+        },
+        mounted() {
+          this.getStats();
+        },
+        unmounted() {},
+      }).mount("#app");
+    })();
+  </script>
 </html>

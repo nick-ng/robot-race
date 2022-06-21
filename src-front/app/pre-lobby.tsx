@@ -10,7 +10,7 @@ interface PreLobbyProps {
   playerDetails: PlayerDetails;
 }
 
-const Container = styled.div``;
+const StyledPreLobby = styled.div``;
 
 const HostGameButton = styled.button`
   margin-bottom: 1em;
@@ -31,7 +31,7 @@ export default function PreLobby({ playerDetails }: PreLobbyProps) {
   const navigate = useNavigate();
 
   return (
-    <Container>
+    <StyledPreLobby>
       <HostGameButton
         onClick={async () => {
           const res = await fetch(`${API_ORIGIN}/api/game`, {
@@ -104,6 +104,6 @@ export default function PreLobby({ playerDetails }: PreLobbyProps) {
         <button disabled={loading}>Join Lobby</button>
       </Form>
       <p>{errorMessage}</p>
-    </Container>
+    </StyledPreLobby>
   );
 }

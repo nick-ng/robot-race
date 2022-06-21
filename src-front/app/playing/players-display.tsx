@@ -6,7 +6,7 @@ interface PlayersDisplayProps {
   fingerOnNose: string[];
 }
 
-const Container = styled.div`
+const StyledPlayersDisplay = styled.div`
   text-align: center;
 `;
 
@@ -20,12 +20,12 @@ export default function PlayersDisplay({
   fingerOnNose,
 }: PlayersDisplayProps) {
   return (
-    <Container>
+    <StyledPlayersDisplay>
       {seatOrder.map((playerId) => (
         <Player key={playerId}>
           {fingerOnNose.includes(playerId) ? "🤫" : "🙂"}
         </Player>
       ))}
-    </Container>
+    </StyledPlayersDisplay>
   );
 }

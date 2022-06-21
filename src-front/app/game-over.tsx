@@ -8,14 +8,14 @@ interface GameOverProps {
   playerDetails: PlayerDetails;
 }
 
-const Container = styled.div``;
+const StyledGameOver = styled.div``;
 
 export default function GameOver({ gameData, playerDetails }: GameOverProps) {
-  const { gameState, players, gameSettings } = gameData;
+  const { gameState, players } = gameData;
   const { playerId } = playerDetails;
 
   if (gameState.state !== "over") {
-    return <Container>Something went wrong</Container>;
+    return <div>Something went wrong</div>;
   }
 
   const { fingerOnNose } = gameState;
@@ -23,7 +23,7 @@ export default function GameOver({ gameData, playerDetails }: GameOverProps) {
   const losers = players.filter((player) => !fingerOnNose.includes(player.id));
 
   if (losers.length !== 1) {
-    return <Container>Something went wrong</Container>;
+    return <div>Something went wrong</div>;
   }
 
   const loser = losers[0];
@@ -31,8 +31,8 @@ export default function GameOver({ gameData, playerDetails }: GameOverProps) {
   const loserIsYou = loser.id === playerId;
 
   return (
-    <Container>
+    <StyledGameOver>
       <h2>{loserIsYou ? "You have lost." : `${loser.name} has lost.`}</h2>
-    </Container>
+    </StyledGameOver>
   );
 }

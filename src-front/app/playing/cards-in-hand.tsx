@@ -9,7 +9,7 @@ interface CardsInHandProps {
   cardWidth?: number;
 }
 
-const Container = styled.div``;
+const StyledCardsInHand = styled.div``;
 
 const Cards = styled.div``;
 
@@ -50,7 +50,7 @@ export default function CardsInHand({
   const { cardMap } = gameState;
 
   return (
-    <Container>
+    <StyledCardsInHand>
       <Cards>
         {cardsInHand.map((cardId) => (
           <Card
@@ -70,6 +70,6 @@ export default function CardsInHand({
           </Card>
         ))}
       </Cards>
-    </Container>
+    </StyledCardsInHand>
   );
 }

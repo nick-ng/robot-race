@@ -13,7 +13,7 @@ interface PlayingProps {
   sendViaWebSocket: (messageObject: WebsocketIncomingMessageObject) => void;
 }
 
-const Container = styled.div`
+const StyledPlaying = styled.div`
   display: inline-block;
 `;
 
@@ -37,13 +37,13 @@ export default function Playing({
   const { id, shortId, gameState } = gameData;
 
   if (gameState.state !== "main") {
-    return <Container>Something went wrong</Container>;
+    return <div>Something went wrong</div>;
   }
 
   const { seatOrder, fingerOnNose } = gameState;
 
   return (
-    <Container>
+    <StyledPlaying>
       <p>Game ID: {shortId}</p>
       <PlayersDisplay seatOrder={seatOrder} fingerOnNose={fingerOnNose} />
       <hr />
@@ -81,6 +81,6 @@ export default function Playing({
       >
         Put Finger on Nose 🤫
       </FingerOnNoseButton>
-    </Container>
+    </StyledPlaying>
   );
 }
