@@ -1,11 +1,11 @@
-version: '3.4'
+version: "3.4"
 
 services:
   redis-robot-race:
     image: redis:6.2
     restart: always
     ports:
-      - '5052:6379'
+      - "5052:6379"
     volumes:
       - redis-data-robot-race:/data
 
