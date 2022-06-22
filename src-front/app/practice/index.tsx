@@ -1,23 +1,42 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import { PlayerGameData } from "../../../dist-common/game-types";
+import { PlayerGameData, GameData } from "../../../dist-common/game-types";
+
+import CardsInHand from "../playing/cards-in-hand";
+import { getPlayerData } from "./utils";
 
 const StyledPractice = styled.div``;
 
-const defaultGameData: PlayerGameData = {
+const PLAYERS_UUID = "player-1's-uuid";
+
+const defaultGameData: GameData = {
   id: "1",
   shortId: "1",
-  host: "player-1's-uuid",
-  maxPlayers: 26,
-  players: [{ id: "player-1's-uuid", name: "You" }],
+  host: PLAYERS_UUID,
+  maxPlayers: 8,
+  players: [{ id: PLAYERS_UUID, name: "You" }],
   gameSettings: {
     cardsPerPlayer: 4,
+    map: "a",
   },
-  yourSecrets: {
-    password: "asdf",
-    programRegisters: [],
-    cardsInHand: [
+  playerSecrets: {
+    [PLAYERS_UUID]: {
+      password: PLAYERS_UUID,
+      programRegisters: [],
+      cardsInHand: [
+        "card-uuid-01",
+        "card-uuid-02",
+        "card-uuid-03",
+        "card-uuid-04",
+        "card-uuid-05",
+        "card-uuid-06",
+        "card-uuid-07",
+      ],
+    },
+  },
+  gameSecrets: {
+    fullDeck: [
       "card-uuid-01",
       "card-uuid-02",
       "card-uuid-03",
@@ -29,13 +48,13 @@ const defaultGameData: PlayerGameData = {
   },
   gameState: {
     state: "main",
-    seatOrder: ["player-1's-uuid"],
+    seatOrder: [PLAYERS_UUID],
     finishedProgrammingPlayers: [],
     poweringDownNextTurn: [],
     robotsDamage: {
-      "player-1's-uuid": { damagePoints: 0, lockedRegisters: [] },
+      [PLAYERS_UUID]: { damagePoints: 0, lockedRegisters: [] },
     },
-    robotLives: { "player-1's-uuid": 3 },
+    robotLives: { PLAYERS_UUID: 3 },
     cardMap: {
       "card-uuid-01": {
         id: "card-uuid-01",
@@ -77,7 +96,17 @@ const defaultGameData: PlayerGameData = {
 };
 
 export default function Practice() {
-  const [gameData, setGameData] = useState<PlayerGameData>(defaultGameData);
+  const [fullGameData, setFullGameData] = useState<GameData>(defaultGameData);
 
-  return <StyledPractice>Test</StyledPractice>;
+  const gameData = getPlayerData(fullGameData, PLAYERS_UUID);
+
+  return (
+    <StyledPractice>
+      Test
+      <CardsInHand
+        gameData={gameData}
+        handleCardChoice={(a) => console.log("handleCardChoice", a)}
+      />
+    </StyledPractice>
+  );
 }

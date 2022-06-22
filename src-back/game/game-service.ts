@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-
+import { GameData } from "../../dist-common/game-types";
 import { GameAction } from "../../dist-common/game-action-types";
 
 import Game from "./game-class";
@@ -102,4 +102,12 @@ export const getGame = async (
     code: 200,
     gameData: game.getGameDataForPlayer(playerId, playerPassword),
   };
+};
+
+export const stepGame = (gameData: GameData, action: GameAction): GameData => {
+  const game = new Game(gameData);
+
+  game.gameAction(action.playerId, action.playerId, action);
+
+  return game.getGameData();
 };

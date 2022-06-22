@@ -32,6 +32,7 @@ export interface MainGameState {
   cardMap: { [cardId: string]: ProgramCard };
   robotsDamage: { [playerId: string]: RobotDamage };
   robotLives: { [playerId: string]: number };
+  discardedCards: string[];
 }
 
 export type OverGameState = Omit<MainGameState, "state"> & {
@@ -51,11 +52,12 @@ export interface PlayerSecrets {
 }
 
 export interface GameSecrets {
-  fullDeck: string[];
+  remainingDeck: string[];
 }
 
 export interface GameSettings {
   cardsPerPlayer: number;
+  map: string;
 }
 
 interface Player {

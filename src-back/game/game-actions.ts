@@ -4,7 +4,11 @@ import {
   ChooseCardAction,
   FingerOnNoseAction,
 } from "../../dist-common/game-action-types";
-import { PlayerSecrets } from "../../dist-common/game-types";
+import {
+  PlayerSecrets,
+  ProgramCard,
+  MainGameState,
+} from "../../dist-common/game-types";
 import Game from "./game-class";
 import { shuffle } from "./utils";
 
@@ -32,17 +36,8 @@ const startGame = (
   const playerIds = players.map((a) => a.id);
   const seatOrder = shuffle(playerIds);
 
-  const cardMap: { [cardId: string]: string } = {};
+  const cardMap: { [cardId: string]: ProgramCard } = {};
   let deck: string[] = [];
-
-  for (let n = 0; n < players.length; n++) {
-    const letter = LETTERS[n];
-    for (let m = 0; m < gameSettings.cardsPerPlayer; m++) {
-      const cardId = randomUUID();
-      cardMap[cardId] = letter;
-      deck.push(cardId);
-    }
-  }
 
   const shuffledDeck = shuffle(deck);
 
@@ -52,7 +47,6 @@ const startGame = (
       cardsInHand.push(shuffledDeck.pop() as string);
     }
 
-    playerSecrets[playerId].chosenCard = "";
     playerSecrets[playerId].cardsInHand = cardsInHand;
   });
 
@@ -60,12 +54,10 @@ const startGame = (
     ...game.gameState,
     state: "main",
     seatOrder,
-    chosenCardPlayers: [],
-    fingerOnNose: [],
     cardMap,
-  };
+  } as MainGameState;
 
-  game.gameSecrets.fullDeck = [...deck];
+  game.gameSecrets.remainingDeck = [...deck];
 
   return {
     game,
@@ -85,53 +77,6 @@ const chooseCard = (
     };
   }
 
-  const { playerId, cardId } = action;
-  const { cardsInHand } = playerSecrets[playerId];
-  const { chosenCardPlayers, seatOrder } = gameState;
-
-  if (!cardsInHand?.includes(cardId)) {
-    return {
-      game,
-      message: "You don't have that card.",
-    };
-  }
-
-  if (playerSecrets[playerId].chosenCard === cardId) {
-    return {
-      game,
-      message: "That's already your chosen card.",
-    };
-  }
-
-  playerSecrets[playerId].chosenCard = cardId;
-
-  const uniqueChosenCardPlayers = new Set(chosenCardPlayers);
-  uniqueChosenCardPlayers.add(playerId);
-  gameState.chosenCardPlayers = [...uniqueChosenCardPlayers];
-
-  if (uniqueChosenCardPlayers.size < players.length) {
-    return {
-      game,
-      message: "OK",
-    };
-  }
-
-  gameState.chosenCardPlayers = [];
-
-  for (let n = 0; n < seatOrder.length; n++) {
-    const giverId = seatOrder[n];
-    const receiverIndex = (n + 1) % seatOrder.length;
-    const receiverId = seatOrder[receiverIndex] as keyof PlayerSecrets;
-
-    const passedCard = playerSecrets[giverId].chosenCard;
-    playerSecrets[giverId].chosenCard = "";
-    playerSecrets[giverId].cardsInHand = playerSecrets[
-      giverId
-    ].cardsInHand?.filter((cardId) => cardId !== passedCard);
-
-    playerSecrets[receiverId].cardsInHand?.push(passedCard!);
-  }
-
   return {
     game,
     message: "OK",
@@ -147,56 +92,6 @@ const fingerOnNose = (
     return {
       game,
       message: "You can't do that right now.",
-    };
-  }
-
-  const { playerId } = action;
-  const { cardMap, fingerOnNose } = gameState;
-  const { cardsInHand } = playerSecrets[playerId];
-
-  if (fingerOnNose.length === players.length - 1) {
-    game.gameState = {
-      ...gameState,
-      state: "over",
-    };
-
-    return {
-      game,
-      message: "OK",
-    };
-  }
-
-  if (!Array.isArray(cardsInHand)) {
-    return {
-      game,
-      message: "You don't have cards somehow.",
-    };
-  }
-
-  const [firstCard, ...otherCards] = cardsInHand.map(
-    (cardId) => cardMap[cardId]
-  );
-
-  if (
-    fingerOnNose.length === 0 &&
-    !otherCards.every((cardValue) => cardValue === firstCard)
-  ) {
-    return {
-      game,
-      message: "You can't do that right now.",
-    };
-  }
-
-  fingerOnNose.push(playerId);
-  playerSecrets[playerId].chosenCard = "";
-  gameState.chosenCardPlayers = gameState.chosenCardPlayers.filter(
-    (a) => a !== playerId
-  );
-
-  if (fingerOnNose.length === players.length - 1) {
-    game.gameState = {
-      ...gameState,
-      state: "over",
     };
   }
 

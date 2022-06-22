@@ -9,6 +9,7 @@
       "common": ["src-common"],
       "back": ["src-back"],
       "front": ["src-front"]
-    }
+    },
+    "strict": false
   }
 }

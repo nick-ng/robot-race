@@ -44,9 +44,10 @@ export default class Game {
       players: [],
       gameSettings: {
         cardsPerPlayer: 4,
+        map: "",
       },
       gameSecrets: {
-        fullDeck: [],
+        remainingDeck: [],
       },
       playerSecrets: {},
       gameState: defaultGameState,
@@ -154,7 +155,11 @@ export default class Game {
       name: playerName,
     });
 
-    this.playerSecrets[playerId] = { password: playerPassword };
+    this.playerSecrets[playerId] = {
+      password: playerPassword,
+      programRegisters: [],
+      cardsInHand: [],
+    };
 
     return {
       type: "success",
