@@ -143,3 +143,14 @@ Sent to Alice
 ### WebSocket API
 
 If you get disconnected, you need to reconnect and re-listen to the game. You'll still be in the game so you don't need to rejoin it.
+
+## Arrows
+
+↱
+↰
+⤷
+↷
+⤶
+⇶
+⇉
+→
