@@ -36,7 +36,7 @@ const defaultGameData: GameData = {
     },
   },
   gameSecrets: {
-    fullDeck: [
+    remainingDeck: [
       "card-uuid-01",
       "card-uuid-02",
       "card-uuid-03",
@@ -55,6 +55,7 @@ const defaultGameData: GameData = {
       [PLAYERS_UUID]: { damagePoints: 0, lockedRegisters: [] },
     },
     robotLives: { PLAYERS_UUID: 3 },
+    discardedCards: [],
     cardMap: {
       "card-uuid-01": {
         id: "card-uuid-01",
@@ -89,7 +90,7 @@ const defaultGameData: GameData = {
       "card-uuid-07": {
         id: "card-uuid-07",
         action: "U-Turn",
-        priority: 1,
+        priority: 0,
       },
     },
   },

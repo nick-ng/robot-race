@@ -5,6 +5,7 @@ import styled from "styled-components";
 import randomUUID from "src-front/utils/random-uuid";
 import PreLobby from "./pre-lobby";
 import Game from "./game";
+import Practice from "./practice";
 
 const PLAYER_NAME_STORE = "PIG_DICE_GAME_PLAYER_NAME_STORE";
 const PLAYER_ID_STORE = "PIG_DICE_GAME_PLAYER_ID_STORE";
@@ -98,6 +99,7 @@ export default function App() {
             path="/"
             element={<PreLobby playerDetails={playerDetails} />}
           />
+          <Route path="/practice" element={<Practice />} />
           <Route
             path=":gameId"
             element={<Game playerDetails={playerDetails} />}
