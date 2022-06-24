@@ -13,8 +13,11 @@ export interface SetRegisterAction extends BasicAction {
   registerIndex: number;
 }
 
-export interface FingerOnNoseAction extends BasicAction {
-  type: "finger-on-nose";
+export interface FinishSettingRegistersAction extends BasicAction {
+  type: "finish-setting-registers";
 }
 
-export type GameAction = StartAction | SetRegisterAction | FingerOnNoseAction;
+export type GameAction =
+  | StartAction
+  | SetRegisterAction
+  | FinishSettingRegistersAction;

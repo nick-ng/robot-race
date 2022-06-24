@@ -43,7 +43,7 @@ export const usePracticeGameData = (
       ];
 
       setGameData(resJson);
-    }, Math.random() * 500);
+    }, 150);
   };
 
   return {

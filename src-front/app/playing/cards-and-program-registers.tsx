@@ -1,27 +1,58 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import { PlayerGameData, MainGameState } from "../../../dist-common/game-types";
+import {
+  PlayerGameData,
+  PlayerDetails,
+  MainGameState,
+} from "../../../dist-common/game-types";
+import { ActionIncomingMessageObject } from "../../../dist-common/websocket-message-types";
 
 import CardsInHand from "./cards-in-hand";
 import ProgramRegisters from "./program-registers";
 
 interface CardsAndProgramRegistersProps {
   gameData: PlayerGameData;
-  handleSettingProgramRegister: (
-    cardId: string | null,
-    registerIndex: number
-  ) => void;
+  playerDetails: PlayerDetails;
+  sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
 }
 
 const StyledCardsAndProgramRegisters = styled.div``;
 
+const buttonRatio = 5;
+const SubmitButton = styled.button<{ isLoading?: boolean }>`
+  box-sizing: border-box;
+  border: ${buttonRatio * 0.05}vw outset black;
+  background-color: #dddddd;
+  padding: 0.5em;
+  margin: 0.5em 0;
+  width: 100%;
+
+  cursor: ${({ disabled, isLoading }) => {
+    if (disabled) {
+      return "not-allowed";
+    }
+    if (isLoading) {
+      return "wait";
+    }
+    return "pointer";
+  }};
+
+  &:active {
+    border-style: ${({ disabled }) => (disabled ? "outset" : "inset")};
+  }
+`;
+
 export default function CardsAndProgramRegisters({
   gameData,
-  handleSettingProgramRegister,
+  playerDetails,
+  sendViaWebSocket,
 }: CardsAndProgramRegistersProps) {
-  const { yourSecrets } = gameData;
+  const { playerId, playerPassword } = playerDetails;
+
+  const { id, yourSecrets, gameState } = gameData;
   const { cardsInHand, programRegisters } = yourSecrets;
+  const { finishedProgrammingPlayers } = gameState as MainGameState;
 
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [selectedRegisterIndex, setSelectedRegisterIndex] = useState<
@@ -29,10 +60,23 @@ export default function CardsAndProgramRegisters({
   >(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const youFinishedProgramming = finishedProgrammingPlayers.includes(playerId);
+
   useEffect(() => {
     if (selectedCardId !== null && selectedRegisterIndex !== null) {
       setIsLoading(true);
-      handleSettingProgramRegister(selectedCardId, selectedRegisterIndex);
+      sendViaWebSocket({
+        playerId,
+        playerPassword,
+        gameId: id,
+        type: "action",
+        action: {
+          type: "set-register",
+          playerId,
+          cardId: selectedCardId,
+          registerIndex: selectedRegisterIndex,
+        },
+      });
     }
   }, [selectedCardId, selectedRegisterIndex]);
 
@@ -40,7 +84,15 @@ export default function CardsAndProgramRegisters({
     setIsLoading(false);
     setSelectedCardId(null);
     setSelectedRegisterIndex(null);
-  }, [cardsInHand.join(","), programRegisters.join(",")]);
+  }, [
+    cardsInHand.join(","),
+    programRegisters.join(","),
+    youFinishedProgramming,
+  ]);
+
+  const fullyProgrammed = programRegisters.every(
+    (register) => register !== null
+  );
 
   return (
     <StyledCardsAndProgramRegisters>
@@ -55,13 +107,47 @@ export default function CardsAndProgramRegisters({
             selectedRegisterIndex === registerIndex &&
             programRegisters[registerIndex] !== null
           ) {
-            handleSettingProgramRegister(null, selectedRegisterIndex);
+            setIsLoading(true);
+            sendViaWebSocket({
+              playerId,
+              playerPassword,
+              gameId: id,
+              type: "action",
+              action: {
+                type: "set-register",
+                playerId,
+                cardId: null,
+                registerIndex: selectedRegisterIndex,
+              },
+            });
             return;
           }
           setSelectedRegisterIndex(registerIndex);
         }}
         chosenRegister={selectedRegisterIndex}
       />
+      <SubmitButton
+        disabled={!fullyProgrammed || youFinishedProgramming}
+        isLoading={isLoading}
+        onClick={() => {
+          if (!fullyProgrammed || youFinishedProgramming) {
+            return;
+          }
+          setIsLoading(true);
+          sendViaWebSocket({
+            playerId,
+            playerPassword,
+            gameId: id,
+            type: "action",
+            action: {
+              type: "finish-setting-registers",
+              playerId,
+            },
+          });
+        }}
+      >
+        {fullyProgrammed ? "Submit Program" : "Set All Registers"}
+      </SubmitButton>
       <CardsInHand
         isLoading={isLoading}
         gameData={gameData}

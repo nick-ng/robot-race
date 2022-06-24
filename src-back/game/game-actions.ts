@@ -1,14 +1,9 @@
-import { randomUUID } from "crypto";
 import {
   GameAction,
   SetRegisterAction,
-  FingerOnNoseAction,
+  FinishSettingRegistersAction,
 } from "../../dist-common/game-action-types";
-import {
-  PlayerSecrets,
-  ProgramCard,
-  MainGameState,
-} from "../../dist-common/game-types";
+import { ProgramCard, MainGameState } from "../../dist-common/game-types";
 import Game from "./game-class";
 import { shuffle } from "./utils";
 
@@ -67,7 +62,7 @@ const setRegister = (
   game: Game,
   action: SetRegisterAction
 ): { game: Game; message: string } => {
-  const { gameState, playerSecrets, players } = game;
+  const { gameState, playerSecrets } = game;
   if (gameState.state !== "main") {
     return {
       game,
@@ -102,17 +97,33 @@ const setRegister = (
   };
 };
 
-const fingerOnNose = (
+const finishSettingRegisters = (
   game: Game,
-  action: FingerOnNoseAction
+  action: FinishSettingRegistersAction
 ): { game: Game; message: string } => {
-  const { gameState, playerSecrets, players } = game;
+  const { gameState, playerSecrets } = game;
   if (gameState.state !== "main") {
     return {
       game,
       message: "You can't do that right now.",
     };
   }
+
+  const { playerId } = action;
+  if (
+    playerSecrets[playerId].programRegisters.some(
+      (register) => register === null
+    )
+  ) {
+    return {
+      game,
+      message: "You need to fully program your robot.",
+    };
+  }
+
+  gameState.finishedProgrammingPlayers = [
+    ...new Set([...gameState.finishedProgrammingPlayers, playerId]),
+  ];
 
   return {
     game,
@@ -132,8 +143,8 @@ export const performAction = (
       return startGame(game, action);
     case "set-register":
       return setRegister(game, action);
-    case "finger-on-nose":
-      return fingerOnNose(game, action);
+    case "finish-setting-registers":
+      return finishSettingRegisters(game, action);
     default:
       return { game, message: "OK" };
   }
