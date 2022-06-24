@@ -3,12 +3,14 @@ import styled from "styled-components";
 
 import { ProgramCard } from "../../../dist-common/game-types";
 
-interface ProgramCardProps {
-  card: ProgramCard;
-  showLoadingStyle: boolean;
-  chosen: boolean;
-  clickHandler: (cardId: string) => void;
+interface BaseProgramCardProps {
+  isLoading?: boolean;
+  chosen?: boolean;
+  clickHandler: () => void;
 }
+
+type ProgramCardProps = BaseProgramCardProps &
+  ({ card: ProgramCard; text?: never } | { text: string[]; card?: never });
 
 const IMAGE_MAP = {
   "Move 1": "move-1.png",
@@ -23,7 +25,7 @@ const IMAGE_MAP = {
 const StyledProgramCard = styled.button<{
   chosen?: boolean;
   cardWidth: number;
-  showLoadingStyle?: boolean;
+  isLoading?: boolean;
 }>`
   padding: ${({ cardWidth }) => cardWidth * 0.05}vw;
   display: flex;
@@ -38,7 +40,11 @@ const StyledProgramCard = styled.button<{
   font-size: ${({ cardWidth }) => cardWidth * 0.12}vw;
   background-color: ${({ chosen }) => (chosen ? "#777777" : "#dddddd")};
 
-  cursor: ${({ showLoadingStyle }) => (showLoadingStyle ? "wait" : "pointer")};
+  cursor: ${({ isLoading }) => (isLoading ? "wait" : "pointer")};
+
+  &:active {
+    border-style: inset;
+  }
 
   img {
     width: 100%;
@@ -47,24 +53,49 @@ const StyledProgramCard = styled.button<{
   }
 `;
 
+const Text = styled.div`
+  & + & {
+    margin-top: 0.5em;
+  }
+`;
+
 export default function ProgramCard({
   card,
-  showLoadingStyle,
+  text,
+  isLoading,
   chosen,
   clickHandler,
 }: ProgramCardProps) {
-  return (
-    <StyledProgramCard
-      showLoadingStyle={showLoadingStyle}
-      chosen={chosen}
-      cardWidth={9}
-      onClick={() => {
-        clickHandler(card.id);
-      }}
-    >
-      <span>Priority {card.priority}</span>
-      <img src={`/${IMAGE_MAP[card.action]}`} />
-      {card.action}
-    </StyledProgramCard>
-  );
+  if (card) {
+    const cardImagePath = IMAGE_MAP[card.action];
+    return (
+      <StyledProgramCard
+        isLoading={isLoading || false}
+        chosen={chosen || false}
+        cardWidth={9}
+        onClick={clickHandler}
+      >
+        <div>Priority {card.priority}</div>
+        <img src={`/${cardImagePath}`} />
+        <div>{card.action}</div>
+      </StyledProgramCard>
+    );
+  }
+
+  if (text) {
+    return (
+      <StyledProgramCard
+        isLoading={isLoading}
+        chosen={chosen}
+        cardWidth={9}
+        onClick={clickHandler}
+      >
+        {text.map((s) => (
+          <Text key={s}>{s}</Text>
+        ))}
+      </StyledProgramCard>
+    );
+  }
+
+  return null;
 }

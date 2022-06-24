@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import {
   GameAction,
-  ChooseCardAction,
+  SetRegisterAction,
   FingerOnNoseAction,
 } from "../../dist-common/game-action-types";
 import {
@@ -11,8 +11,6 @@ import {
 } from "../../dist-common/game-types";
 import Game from "./game-class";
 import { shuffle } from "./utils";
-
-const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 const startGame = (
   game: Game,
@@ -65,9 +63,9 @@ const startGame = (
   };
 };
 
-const chooseCard = (
+const setRegister = (
   game: Game,
-  action: ChooseCardAction
+  action: SetRegisterAction
 ): { game: Game; message: string } => {
   const { gameState, playerSecrets, players } = game;
   if (gameState.state !== "main") {
@@ -76,6 +74,27 @@ const chooseCard = (
       message: "You can't do that right now.",
     };
   }
+
+  const { playerId, cardId, registerIndex } = action;
+
+  if (cardId && !playerSecrets[playerId].cardsInHand.includes(cardId)) {
+    return {
+      game,
+      message: "Card must be in your hand before you can set it in a register.",
+    };
+  }
+
+  playerSecrets[playerId].cardsInHand = playerSecrets[
+    playerId
+  ].cardsInHand.filter((a) => a !== cardId);
+
+  const existingCardInRegister =
+    playerSecrets[playerId].programRegisters[registerIndex];
+  if (existingCardInRegister !== null) {
+    playerSecrets[playerId].cardsInHand.push(existingCardInRegister);
+  }
+
+  playerSecrets[playerId].programRegisters[registerIndex] = cardId;
 
   return {
     game,
@@ -111,8 +130,8 @@ export const performAction = (
   switch (action.type) {
     case "start":
       return startGame(game, action);
-    case "choose-card":
-      return chooseCard(game, action);
+    case "set-register":
+      return setRegister(game, action);
     case "finger-on-nose":
       return fingerOnNose(game, action);
     default:

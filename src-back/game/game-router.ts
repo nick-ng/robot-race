@@ -11,6 +11,12 @@ import {
 
 const router = Router();
 
+router.post("/advance-game-state", async (req, res) => {
+  const { action, gameData } = req.body;
+
+  res.json(stepGame(gameData, action));
+});
+
 // Get game state
 router.get("/:gameId", async (req, res) => {
   const { gameId } = req.params;
@@ -148,10 +154,6 @@ router.post("/:gameId", async (req, res, _next) => {
     default:
       res.sendStatus(400);
   }
-});
-
-router.post("/advance-game-state", async (req, res) => {
-  const { action, gameData } = req.body;
 });
 
 export default router;

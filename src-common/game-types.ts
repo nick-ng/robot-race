@@ -43,7 +43,13 @@ export type GameState = LobbyGameState | MainGameState | OverGameState;
 
 export interface OnePlayerSecrets {
   password: string;
-  programRegisters: string[];
+  programRegisters: [
+    string | null,
+    string | null,
+    string | null,
+    string | null,
+    string | null
+  ];
   cardsInHand: string[];
 }
 

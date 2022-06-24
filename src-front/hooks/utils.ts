@@ -1,4 +1,4 @@
-import { PlayerGameData, GameData } from "../../../dist-common/game-types";
+import { PlayerGameData, GameData } from "../../dist-common/game-types";
 
 export const getPlayerData = (
   gameData: GameData,

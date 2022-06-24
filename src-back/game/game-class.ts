@@ -157,7 +157,7 @@ export default class Game {
 
     this.playerSecrets[playerId] = {
       password: playerPassword,
-      programRegisters: [],
+      programRegisters: [null, null, null, null, null],
       cardsInHand: [],
     };
 
