@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 
 import { GameData, PlayerDetails } from "../../dist-common/game-types";
@@ -102,6 +102,10 @@ export default function PreLobby({ playerDetails }: PreLobbyProps) {
         <button disabled={loading}>Join Lobby</button>
       </Form>
       <p>{errorMessage}</p>
+      <p>
+        All your friends asleep, too busy for you, or you don't have any? Try{" "}
+        <Link to="/practice">Practice Mode</Link>
+      </p>
     </StyledPreLobby>
   );
 }

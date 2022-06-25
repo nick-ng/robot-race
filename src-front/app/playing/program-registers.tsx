@@ -11,6 +11,7 @@ interface ProgramRegistersProps {
   isLoading?: boolean;
   chosenRegister?: number | null;
   cardWidth?: number;
+  className?: string;
 }
 
 const StyledProgramRegisters = styled.div``;
@@ -26,13 +27,14 @@ export default function ProgramRegisters({
   isLoading,
   chosenRegister,
   cardWidth,
+  className,
 }: ProgramRegistersProps) {
   const { yourSecrets, gameState } = gameData;
   const { programRegisters } = yourSecrets;
   const { cardMap } = gameState as MainGameState;
 
   return (
-    <StyledProgramRegisters>
+    <StyledProgramRegisters className={className}>
       <Cards>
         {programRegisters.map((register, i) => {
           if (register) {

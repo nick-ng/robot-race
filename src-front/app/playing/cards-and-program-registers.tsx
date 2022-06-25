@@ -21,13 +21,20 @@ const StyledCardsAndProgramRegisters = styled.div`
   display: inline-block;
 `;
 
+const StyledProgramRegisters = styled(ProgramRegisters)`
+  // margin-top: 0.5em;
+`;
+
+const StyledCardsInHand = styled(CardsInHand)`
+  // margin-top: 0.5em;
+`;
+
 const buttonRatio = 5;
 const SubmitButton = styled.button<{ isLoading?: boolean }>`
   box-sizing: border-box;
   border: ${buttonRatio * 0.05}vw outset black;
   background-color: gainsboro;
   padding: 0.5em;
-  margin: 0.5em 0;
   width: 100%;
 
   cursor: ${({ disabled, isLoading }) => {
@@ -98,7 +105,32 @@ export default function CardsAndProgramRegisters({
 
   return (
     <StyledCardsAndProgramRegisters>
-      <ProgramRegisters
+      <SubmitButton
+        disabled={!fullyProgrammed || youFinishedProgramming}
+        isLoading={isLoading}
+        onClick={() => {
+          if (!fullyProgrammed || youFinishedProgramming) {
+            return;
+          }
+          setIsLoading(true);
+          sendViaWebSocket({
+            playerId,
+            password: playerPassword,
+            gameId: id,
+            type: "action",
+            action: {
+              type: "finish-setting-registers",
+              playerId,
+            },
+          });
+        }}
+      >
+        {fullyProgrammed
+          ? "Submit Program"
+          : "Submit Program (Set All Registers First)"}
+      </SubmitButton>
+      <hr />
+      <StyledProgramRegisters
         cardWidth={6}
         isLoading={isLoading}
         gameData={gameData}
@@ -129,29 +161,8 @@ export default function CardsAndProgramRegisters({
         }}
         chosenRegister={selectedRegisterIndex}
       />
-      <SubmitButton
-        disabled={!fullyProgrammed || youFinishedProgramming}
-        isLoading={isLoading}
-        onClick={() => {
-          if (!fullyProgrammed || youFinishedProgramming) {
-            return;
-          }
-          setIsLoading(true);
-          sendViaWebSocket({
-            playerId,
-            password: playerPassword,
-            gameId: id,
-            type: "action",
-            action: {
-              type: "finish-setting-registers",
-              playerId,
-            },
-          });
-        }}
-      >
-        {fullyProgrammed ? "Submit Program" : "Set All Registers"}
-      </SubmitButton>
-      <CardsInHand
+      <hr />
+      <StyledCardsInHand
         cardWidth={5}
         isLoading={isLoading}
         gameData={gameData}

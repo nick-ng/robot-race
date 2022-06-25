@@ -11,6 +11,7 @@ interface CardsInHandProps {
   cardWidth?: number;
   isLoading?: boolean;
   chosenCard?: string | null;
+  className?: string;
 }
 
 const StyledCardsInHand = styled.div``;
@@ -29,13 +30,14 @@ export default function CardsInHand({
   isLoading,
   chosenCard,
   cardWidth,
+  className,
 }: CardsInHandProps) {
   const { gameState, yourSecrets } = gameData;
   const { cardsInHand } = yourSecrets;
   const { cardMap } = gameState as MainGameState;
 
   return (
-    <StyledCardsInHand>
+    <StyledCardsInHand className={className}>
       <Cards width={(cardWidth || 9) * 6}>
         {cardsInHand.map((cardId) => (
           <ProgramCard

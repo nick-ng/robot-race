@@ -26,7 +26,9 @@ export default function Practice() {
         gameData={gameData}
         sendViaWebSocket={sendViaWebSocket}
       />
-      <pre>{JSON.stringify(fullGameData, null, "  ")}</pre>
+      {process.env.NODE_ENV === "development" && (
+        <pre>{JSON.stringify(fullGameData, null, "  ")}</pre>
+      )}
     </StyledPractice>
   );
 }
