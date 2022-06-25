@@ -17,7 +17,7 @@ export interface FinishSettingRegistersAction extends BasicAction {
   type: "finish-setting-registers";
 }
 
-export interface ProcessRegistersAction extends BasicAction {
+export interface ProcessRegisterAction extends BasicAction {
   type: "process-registers";
 }
 
@@ -25,4 +25,34 @@ export type GameAction =
   | StartAction
   | SetRegisterAction
   | FinishSettingRegistersAction
-  | ProcessRegistersAction;
+  | ProcessRegisterAction;
+
+interface BasicIncomingMessageObject {
+  playerId: string;
+  password: string;
+  gameId: string;
+}
+
+interface ListenIncomingMessageObject extends BasicIncomingMessageObject {
+  type: "listen";
+}
+
+interface JoinIncomingMessageObject extends BasicIncomingMessageObject {
+  type: "join";
+}
+
+export interface ActionIncomingMessageObject
+  extends BasicIncomingMessageObject {
+  type: "action";
+  action: GameAction;
+}
+
+export type WebsocketIncomingMessageObject =
+  | ListenIncomingMessageObject
+  | JoinIncomingMessageObject
+  | ActionIncomingMessageObject;
+
+export interface AutomaticAction {
+  action: GameAction;
+  delay: number;
+}

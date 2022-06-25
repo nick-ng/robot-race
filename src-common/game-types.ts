@@ -2,10 +2,6 @@ export interface Scores {
   [index: string]: number;
 }
 
-export interface LobbyGameState {
-  state: "lobby";
-}
-
 export interface ProgramCard {
   id: string;
   action:
@@ -42,6 +38,15 @@ export interface Robot {
     | "outset";
 }
 
+export type InstructionItem = {
+  playerId: string;
+  payload: ProgramCard;
+};
+
+export interface LobbyGameState {
+  state: "lobby";
+}
+
 export interface MainGameState {
   state: "main";
   seatOrder: string[];
@@ -50,6 +55,7 @@ export interface MainGameState {
   cardMap: { [cardId: string]: ProgramCard };
   robots: Robot[];
   discardedCards: string[];
+  instructionQueue: InstructionItem[];
 }
 
 export type OverGameState = Omit<MainGameState, "state"> & {
@@ -105,11 +111,11 @@ export interface PlayerSecrets {
 }
 
 export interface GameSecrets {
+  password: string;
   remainingDeck: string[];
 }
 
 export interface GameSettings {
-  cardsPerPlayer: number;
   mapName: string;
   map: MapItem[][][];
 }

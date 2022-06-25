@@ -2,7 +2,7 @@ import {
   Listener,
   DefaultStreamMessageType,
 } from "../../dist-common/redis-types";
-import { ActionIncomingMessageObject } from "../../dist-common/websocket-message-types";
+import { ActionIncomingMessageObject } from "../../dist-common/game-action-types";
 
 import { RedisClient2 } from "../redis";
 

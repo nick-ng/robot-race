@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-import { WebsocketIncomingMessageObject } from "../../dist-common/websocket-message-types";
+import { WebsocketIncomingMessageObject } from "../../dist-common/game-action-types";
 import { PlayerGameData, PlayerDetails } from "../../dist-common/game-types";
 
 declare const API_ORIGIN: string;

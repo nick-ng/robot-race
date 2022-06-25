@@ -6,10 +6,14 @@ import { PLAYER_UUID } from "../../hooks/default-game-data";
 
 import Playing from "../playing";
 
-const StyledPractice = styled.div``;
+const StyledPractice = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 export default function Practice() {
-  const { gameData, sendViaWebSocket } = usePracticeGameData(PLAYER_UUID);
+  const { gameData, fullGameData, sendViaWebSocket } =
+    usePracticeGameData(PLAYER_UUID);
 
   return (
     <StyledPractice>
@@ -22,6 +26,7 @@ export default function Practice() {
         gameData={gameData}
         sendViaWebSocket={sendViaWebSocket}
       />
+      <pre>{JSON.stringify(fullGameData, null, "  ")}</pre>
     </StyledPractice>
   );
 }

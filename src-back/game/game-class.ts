@@ -1,3 +1,5 @@
+import { randomUUID } from "crypto";
+
 import {
   Players,
   InitObject,
@@ -38,14 +40,14 @@ export default class Game {
     };
 
     const temp = {
-      maxPlayers: 26,
+      maxPlayers: 8,
       players: [],
       gameSettings: {
-        cardsPerPlayer: 4,
         mapName: "",
         map: [[[]]],
       },
       gameSecrets: {
+        password: randomUUID(),
         remainingDeck: [],
       },
       playerSecrets: {},
@@ -128,6 +130,13 @@ export default class Game {
       };
     }
 
+    if (playerId === "server") {
+      return {
+        type: "error",
+        message: 'Your player ID can\'t be "server"',
+      };
+    }
+
     if (!playerPassword) {
       return {
         type: "error",
@@ -165,19 +174,23 @@ export default class Game {
     };
   };
 
-  gameAction = (
-    playerId: string,
-    playerPassword: string,
-    action: GameAction
-  ) => {
-    if (this.players.filter((a) => a.id === playerId).length === 0) {
+  gameAction = (playerId: string, password: string, action: GameAction) => {
+    if (
+      playerId !== "server" &&
+      this.players.filter((a) => a.id === playerId).length === 0
+    ) {
       return {
         type: "error",
         message: "You aren't in this game",
       };
     }
 
-    if (this.playerSecrets[playerId].password !== playerPassword) {
+    if (
+      !(
+        (playerId === "server" && password === this.gameSecrets.password) ||
+        this.playerSecrets[playerId]?.password === password
+      )
+    ) {
       return {
         type: "error",
         message: "Wrong password",
@@ -191,7 +204,7 @@ export default class Game {
       };
     }
 
-    const { message } = performAction(this, action);
+    const { message, automaticAction } = performAction(this, action);
 
     if (message !== "OK") {
       return {
@@ -203,6 +216,7 @@ export default class Game {
     return {
       type: "success",
       message,
+      automaticAction,
     };
   };
 }

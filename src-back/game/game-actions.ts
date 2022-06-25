@@ -1,11 +1,14 @@
 import {
   GameAction,
   SetRegisterAction,
-  FinishSettingRegistersAction,
+  AutomaticAction,
 } from "../../dist-common/game-action-types";
 import { ProgramCard, MainGameState } from "../../dist-common/game-types";
 import Game from "./game-class";
 import { shuffle } from "./utils";
+
+import finishSettingRegisters from "./actions/finish-setting-registers";
+import processRegister from "./actions/process-register";
 
 const startGame = (
   game: Game,
@@ -36,7 +39,7 @@ const startGame = (
 
   playerIds.forEach((playerId) => {
     const cardsInHand: string[] = [];
-    for (let n = 0; n < gameSettings.cardsPerPlayer; n++) {
+    for (let n = 0; n < 9; n++) {
       cardsInHand.push(shuffledDeck.pop() as string);
     }
 
@@ -97,47 +100,17 @@ const setRegister = (
   };
 };
 
-const finishSettingRegisters = (
-  game: Game,
-  action: FinishSettingRegistersAction
-): { game: Game; message: string } => {
-  const { gameState, playerSecrets } = game;
-  if (gameState.state !== "main") {
-    return {
-      game,
-      message: "You can't do that right now.",
-    };
-  }
-
-  const { playerId } = action;
-  if (
-    playerSecrets[playerId].programRegisters.some(
-      (register) => register === null
-    )
-  ) {
-    return {
-      game,
-      message: "You need to fully program your robot.",
-    };
-  }
-
-  gameState.finishedProgrammingPlayers = [
-    ...new Set([...gameState.finishedProgrammingPlayers, playerId]),
-  ];
-
-  return {
-    game,
-    message: "OK",
-  };
-};
-
 /**
  * If performAction gets called, the game has already verified the player's identity
  */
 export const performAction = (
   game: Game,
   action: GameAction
-): { game: Game; message: string } => {
+): {
+  game: Game;
+  message: string;
+  automaticAction?: AutomaticAction;
+} => {
   switch (action.type) {
     case "start":
       return startGame(game, action);
@@ -145,6 +118,8 @@ export const performAction = (
       return setRegister(game, action);
     case "finish-setting-registers":
       return finishSettingRegisters(game, action);
+    case "process-registers":
+      return processRegister(game, action);
     default:
       return { game, message: "OK" };
   }

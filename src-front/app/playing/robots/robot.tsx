@@ -21,20 +21,19 @@ const StyledRobot = styled.div`
   width: 2vw;
   height: 2vw;
 
-  transition-property: all;
-  transition-duration: 450ms;
-  transition-timing-function: linear;
+  transition: 450ms ease-in-out;
 
   span {
     font-size: 1.1vw;
+    transition: 450ms ease-in-out;
   }
 `;
 
 const facingMap = {
-  up: "0deg",
-  right: "90deg",
-  down: "180deg",
-  left: "270deg",
+  up: "0turn",
+  right: "0.25turn",
+  down: "0.5turn",
+  left: "0.75turn",
 };
 
 export default function Robot({ player, robot }: RobotProps) {
@@ -77,9 +76,7 @@ export default function Robot({ player, robot }: RobotProps) {
         left: offsets.x,
       }}
     >
-      <span style={{ transform: `rotate(${facingMap[position.facing]})` }}>
-        🤖
-      </span>
+      <span style={{ rotate: facingMap[position.facing] }}>🤖</span>
     </StyledRobot>
   );
 }

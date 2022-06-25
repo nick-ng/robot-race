@@ -1,4 +1,4 @@
-import { ActionIncomingMessageObject } from "../../dist-common/websocket-message-types";
+import { ActionIncomingMessageObject } from "../../dist-common/game-action-types";
 import { sleep } from "../../dist-common/utils";
 
 import {
@@ -11,6 +11,7 @@ import {
   addAction,
 } from "./game-redis";
 import Game from "./game-class";
+import { playGame } from "./game-service";
 
 const STATS_REPORT_DELAY_MS = 1000;
 const APM_WEIGHT = 3;
@@ -117,11 +118,11 @@ export default class GameServer {
       }
       this.actionCount += 1;
 
-      const { playerId, playerPassword, action } = messageObject;
+      const { type } = playGame(game, messageObject, (nextAction) =>
+        addAction(nextAction)
+      );
 
-      const result = game.gameAction(playerId, playerPassword, action);
-
-      if (result.type !== "success") {
+      if (type !== "success") {
         return;
       }
 

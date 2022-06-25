@@ -21,11 +21,6 @@ export const defaultGameData: GameData = {
   host: PLAYER_UUID,
   maxPlayers: 8,
   players: [{ id: PLAYER_UUID, name: "Practice Player" }],
-  gameSettings: {
-    cardsPerPlayer: 4,
-    mapName: "a",
-    map: getMap(),
-  },
   playerSecrets: {
     [PLAYER_UUID]: {
       password: PLAYER_UUID,
@@ -42,6 +37,7 @@ export const defaultGameData: GameData = {
     },
   },
   gameSecrets: {
+    password: "server",
     remainingDeck: [
       "card-uuid-01",
       "card-uuid-02",
@@ -107,7 +103,7 @@ export const defaultGameData: GameData = {
         design: "dashed",
       },
     ],
-
+    instructionQueue: [],
     discardedCards: [],
     cardMap: {
       "card-uuid-01": {
@@ -146,5 +142,9 @@ export const defaultGameData: GameData = {
         priority: 0,
       },
     },
+  },
+  gameSettings: {
+    mapName: "a",
+    map: getMap(),
   },
 };

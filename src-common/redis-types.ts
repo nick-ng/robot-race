@@ -1,4 +1,4 @@
-import { ActionIncomingMessageObject } from "./websocket-message-types";
+import { ActionIncomingMessageObject } from "./game-action-types";
 
 export interface DefaultStreamMessageType {
   id: string;

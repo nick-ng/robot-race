@@ -1,7 +1,7 @@
 import { createClient2 } from "../redis";
 import { GameData } from "../../dist-common/game-types";
+import { ActionIncomingMessageObject } from "../../dist-common/game-action-types";
 import { DefaultStreamMessageType } from "../../dist-common/redis-types";
-import { ActionIncomingMessageObject } from "../../dist-common/websocket-message-types";
 import { randomString } from "../../dist-common/utils";
 import Game from "./game-class";
 import StreamHelper from "../redis/stream-helper";

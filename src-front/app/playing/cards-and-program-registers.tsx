@@ -6,7 +6,7 @@ import {
   PlayerDetails,
   MainGameState,
 } from "../../../dist-common/game-types";
-import { ActionIncomingMessageObject } from "../../../dist-common/websocket-message-types";
+import { ActionIncomingMessageObject } from "../../../dist-common/game-action-types";
 
 import CardsInHand from "./cards-in-hand";
 import ProgramRegisters from "./program-registers";
@@ -69,7 +69,7 @@ export default function CardsAndProgramRegisters({
       setIsLoading(true);
       sendViaWebSocket({
         playerId,
-        playerPassword,
+        password: playerPassword,
         gameId: id,
         type: "action",
         action: {
@@ -113,7 +113,7 @@ export default function CardsAndProgramRegisters({
             setIsLoading(true);
             sendViaWebSocket({
               playerId,
-              playerPassword,
+              password: playerPassword,
               gameId: id,
               type: "action",
               action: {
@@ -139,7 +139,7 @@ export default function CardsAndProgramRegisters({
           setIsLoading(true);
           sendViaWebSocket({
             playerId,
-            playerPassword,
+            password: playerPassword,
             gameId: id,
             type: "action",
             action: {
