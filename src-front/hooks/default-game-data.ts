@@ -20,7 +20,7 @@ export const defaultGameData: GameData = {
   shortId: "1",
   host: PLAYER_UUID,
   maxPlayers: 8,
-  players: [{ id: PLAYER_UUID, name: "You" }],
+  players: [{ id: PLAYER_UUID, name: "Practice Player" }],
   gameSettings: {
     cardsPerPlayer: 4,
     mapName: "a",
@@ -57,10 +57,57 @@ export const defaultGameData: GameData = {
     seatOrder: [PLAYER_UUID],
     finishedProgrammingPlayers: [],
     poweringDownNextTurn: [],
-    robotsDamage: {
-      [PLAYER_UUID]: { damagePoints: 0, lockedRegisters: [] },
-    },
-    robotLives: { PLAYER_UUID: 3 },
+    robots: [
+      {
+        playerId: PLAYER_UUID,
+        damagePoints: 0,
+        lockedRegisters: [],
+        lives: 3,
+        position: {
+          x: 0,
+          y: 0,
+          facing: "down",
+        },
+        design: "dotted",
+      },
+      {
+        playerId: "Test-1",
+        damagePoints: 0,
+        lockedRegisters: [],
+        lives: 3,
+        position: {
+          x: 6,
+          y: 6,
+          facing: "up",
+        },
+        design: "ridge",
+      },
+      {
+        playerId: "Test-2",
+        damagePoints: 0,
+        lockedRegisters: [],
+        lives: 3,
+        position: {
+          x: 7,
+          y: 7,
+          facing: "left",
+        },
+        design: "double",
+      },
+      {
+        playerId: "Test-3",
+        damagePoints: 0,
+        lockedRegisters: [],
+        lives: 3,
+        position: {
+          x: 3,
+          y: 3,
+          facing: "right",
+        },
+        design: "dashed",
+      },
+    ],
+
     discardedCards: [],
     cardMap: {
       "card-uuid-01": {

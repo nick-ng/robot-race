@@ -59,10 +59,7 @@ export default function ProgramRegisters({
               clickHandler={() => {
                 handleRegisterSelect(i);
               }}
-              text={[
-                `Register ${i + 1}`,
-                "Click a card then click an empty register.",
-              ]}
+              text={[`Register ${i + 1}`, "Empty"]}
               chosen={chosenRegister === i || false}
             />
           );

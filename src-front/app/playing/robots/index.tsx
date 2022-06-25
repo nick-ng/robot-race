@@ -16,16 +16,15 @@ interface RobotsProps {
 
 export default function Robots({ gameData }: RobotsProps) {
   const { gameState, players } = gameData;
-  const { seatOrder } = gameState as MainGameState;
+  const { seatOrder, robots } = gameState as MainGameState;
 
   return (
     <>
-      {seatOrder.map((playerId) => (
+      {robots.map((robot) => (
         <Robot
-          key={playerId}
-          player={players.find((a) => a.id === playerId)!}
-          xOrd={11}
-          yOrd={12}
+          key={robot.playerId}
+          player={players.find((a) => a.id === robot.playerId)!}
+          robot={robot}
         />
       ))}
     </>

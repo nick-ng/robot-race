@@ -45,7 +45,7 @@ export default function Map({ gameData, playerDetails }: MapProps) {
           {map.map((mapRow, n) => (
             <tr key={`map-row-${n}`}>
               {mapRow.map((mapCell, m) => (
-                <MapCell key={`map-item-${m}-${n}`}>🤖</MapCell>
+                <MapCell key={`map-item-${m}-${n}`}></MapCell>
               ))}
             </tr>
           ))}

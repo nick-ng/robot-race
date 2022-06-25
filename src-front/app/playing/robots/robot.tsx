@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-import { Player } from "../../../../dist-common/game-types";
+import { Player, Robot } from "../../../../dist-common/game-types";
+import { positionToOffsets } from "../utils";
 
 interface RobotProps {
   player: Player;
-  xOrd: number;
-  yOrd: number;
+  robot: Robot;
 }
 
 const StyledRobot = styled.div`
@@ -16,32 +16,70 @@ const StyledRobot = styled.div`
   align-items: center;
 
   box-sizing: border-box;
-  border-width: 3px;
-  border-radius: 1.5vw;
+  border-width: 5px;
+  border-radius: 0vw;
   width: 2vw;
   height: 2vw;
+
+  transition-property: all;
+  transition-duration: 450ms;
+  transition-timing-function: linear;
 
   span {
     font-size: 1.1vw;
   }
 `;
 
-export default function Robot({ player, xOrd, yOrd }: RobotProps) {
-  const ratio = 2.8;
-  const constant = 0.43;
-  const xOffset = `${ratio * xOrd + constant}vw`;
-  const yOffset = `${ratio * yOrd + constant}vw`;
+const facingMap = {
+  up: "0deg",
+  right: "90deg",
+  down: "180deg",
+  left: "270deg",
+};
+
+export default function Robot({ player, robot }: RobotProps) {
+  const { position, design } = robot;
+
+  const offsets = positionToOffsets(position);
+
+  let style = {};
+
+  switch (design) {
+    case "dotted":
+    case "dashed":
+    case "double":
+    case "ridge":
+    case "outset":
+      style = {
+        borderStyle: design,
+        borderColor: "white",
+      };
+      break;
+    case "white":
+    case "black":
+      style = {
+        borderStyle: "solid",
+        borderColor: design,
+      };
+      break;
+    default:
+      style = {
+        borderStyle: "gainsboro",
+        borderColor: design,
+      };
+  }
 
   return (
     <StyledRobot
       style={{
-        borderStyle: "solid",
-        borderColor: "gainsboro",
-        top: yOffset,
-        left: xOffset,
+        ...style,
+        top: offsets.y,
+        left: offsets.x,
       }}
     >
-      <span>🤖</span>
+      <span style={{ transform: `rotate(${facingMap[position.facing]})` }}>
+        🤖
+      </span>
     </StyledRobot>
   );
 }

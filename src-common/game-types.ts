@@ -19,9 +19,27 @@ export interface ProgramCard {
   priority: number;
 }
 
-export interface RobotDamage {
+export interface Position {
+  x: number;
+  y: number;
+  facing: "up" | "down" | "left" | "right";
+}
+
+export interface Robot {
+  playerId: string;
   damagePoints: number;
   lockedRegisters: number[];
+  lives: number;
+  position: Position;
+  design:
+    | "white"
+    | "black"
+    | "grey"
+    | "dotted"
+    | "dashed"
+    | "double"
+    | "ridge"
+    | "outset";
 }
 
 export interface MainGameState {
@@ -30,8 +48,7 @@ export interface MainGameState {
   finishedProgrammingPlayers: string[];
   poweringDownNextTurn: string[];
   cardMap: { [cardId: string]: ProgramCard };
-  robotsDamage: { [playerId: string]: RobotDamage };
-  robotLives: { [playerId: string]: number };
+  robots: Robot[];
   discardedCards: string[];
 }
 
