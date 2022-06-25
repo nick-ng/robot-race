@@ -17,6 +17,10 @@ interface PlayingProps {
 
 const StyledPlaying = styled.div``;
 
+const StyledInstructions = styled(Instructions)`
+  margin-top: 0.5em;
+`;
+
 const Heading = styled.h1`
   margin-top: 0;
 `;
@@ -30,9 +34,14 @@ const DisplayArea = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  flex-shrink: 0;
 `;
 
-const ControlsArea = styled.div``;
+const ControlsArea = styled.div`
+  flex-basis: 30vw;
+  flex-grow: 0;
+  flex-shrink: 0;
+`;
 
 export default function Playing({
   gameData,
@@ -58,7 +67,10 @@ export default function Playing({
             playerDetails={playerDetails}
             sendViaWebSocket={sendViaWebSocket}
           />
-          <Instructions gameData={gameData} playerDetails={playerDetails} />
+          <StyledInstructions
+            gameData={gameData}
+            playerDetails={playerDetails}
+          />
         </ControlsArea>
       </Row>
     </StyledPlaying>

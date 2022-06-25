@@ -5,11 +5,15 @@ import {
   MainGameState,
   PlayerDetails,
   PlayerGameData,
-} from "../../../dist-common/game-types";
+} from "../../../../dist-common/game-types";
+
+import SetProgramRegistersInstruction from "./set-program-registers-instruction";
+import FinishedProgrammingInstruction from "./finished-programming-instruction";
 
 interface InstructionProps {
   gameData: PlayerGameData;
   playerDetails: PlayerDetails;
+  className?: string;
 }
 
 const StyledInstructions = styled.details`
@@ -22,9 +26,11 @@ const StyledInstructions = styled.details`
 export default function Instructions({
   gameData,
   playerDetails,
+  className,
 }: InstructionProps) {
-  const { gameState } = gameData;
-  const { state } = gameState as MainGameState;
+  const { gameState, yourSecrets } = gameData;
+  const { finishedProgrammingPlayers } = gameState as MainGameState;
+  const { programRegisters } = yourSecrets;
 
   const [isOpen, _setIsOpen] = useState(
     (): boolean =>
@@ -40,11 +46,15 @@ export default function Instructions({
           (!isOpen).toString()
         );
       }}
+      className={className}
     >
       <summary>Instructions</summary>
-      <p>Detailed instructions based on what you can do go here.</p>
-      <p>It's the {state} phase of the game.</p>
-      <p>Your player ID is {playerDetails.playerId}</p>
+      {programRegisters.filter((a) => a !== null).length < 5 && (
+        <SetProgramRegistersInstruction />
+      )}
+      {!finishedProgrammingPlayers.includes(playerDetails.playerId) && (
+        <FinishedProgrammingInstruction />
+      )}
     </StyledInstructions>
   );
 }
