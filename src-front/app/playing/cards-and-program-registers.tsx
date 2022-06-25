@@ -17,13 +17,15 @@ interface CardsAndProgramRegistersProps {
   sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
 }
 
-const StyledCardsAndProgramRegisters = styled.div``;
+const StyledCardsAndProgramRegisters = styled.div`
+  display: inline-block;
+`;
 
 const buttonRatio = 5;
 const SubmitButton = styled.button<{ isLoading?: boolean }>`
   box-sizing: border-box;
   border: ${buttonRatio * 0.05}vw outset black;
-  background-color: #dddddd;
+  background-color: gainsboro;
   padding: 0.5em;
   margin: 0.5em 0;
   width: 100%;
@@ -97,6 +99,7 @@ export default function CardsAndProgramRegisters({
   return (
     <StyledCardsAndProgramRegisters>
       <ProgramRegisters
+        cardWidth={6}
         isLoading={isLoading}
         gameData={gameData}
         handleRegisterSelect={(registerIndex) => {
@@ -149,6 +152,7 @@ export default function CardsAndProgramRegisters({
         {fullyProgrammed ? "Submit Program" : "Set All Registers"}
       </SubmitButton>
       <CardsInHand
+        cardWidth={5}
         isLoading={isLoading}
         gameData={gameData}
         handleCardChoice={(cardId) => {

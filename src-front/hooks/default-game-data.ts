@@ -1,6 +1,19 @@
-import { GameData } from "../../dist-common/game-types";
+import { GameData, MapItem } from "../../dist-common/game-types";
 
 export const PLAYER_UUID = "player-1's-uuid";
+
+const getMap = (): MapItem[][][] => {
+  const map: MapItem[][][] = [];
+
+  for (let n = 0; n < 12 + 4; n++) {
+    map.push([]);
+    for (let m = 0; m < 12; m++) {
+      map[n].push([]);
+    }
+  }
+
+  return map;
+};
 
 export const defaultGameData: GameData = {
   id: "1",
@@ -10,7 +23,8 @@ export const defaultGameData: GameData = {
   players: [{ id: PLAYER_UUID, name: "You" }],
   gameSettings: {
     cardsPerPlayer: 4,
-    map: "a",
+    mapName: "a",
+    map: getMap(),
   },
   playerSecrets: {
     [PLAYER_UUID]: {

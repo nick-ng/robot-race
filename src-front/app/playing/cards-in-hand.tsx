@@ -15,9 +15,12 @@ interface CardsInHandProps {
 
 const StyledCardsInHand = styled.div``;
 
-const Cards = styled.div`
+const Cards = styled.div<{ width: number }>`
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  width: ${({ width }) => width}vw;
+  flex-wrap: wrap;
 `;
 
 export default function CardsInHand({
@@ -25,6 +28,7 @@ export default function CardsInHand({
   handleCardChoice,
   isLoading,
   chosenCard,
+  cardWidth,
 }: CardsInHandProps) {
   const { gameState, yourSecrets } = gameData;
   const { cardsInHand } = yourSecrets;
@@ -32,9 +36,10 @@ export default function CardsInHand({
 
   return (
     <StyledCardsInHand>
-      <Cards>
+      <Cards width={(cardWidth || 9) * 6}>
         {cardsInHand.map((cardId) => (
           <ProgramCard
+            cardWidth={cardWidth}
             card={cardMap[cardId]}
             isLoading={isLoading || false}
             key={cardId}

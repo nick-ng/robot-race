@@ -40,10 +40,8 @@ export default function App() {
 
   return (
     <StyledApp>
-      <h1>Robot Race</h1>
-      {playerDetails.playerName ? (
-        <p>Hello {playerDetails.playerName}</p>
-      ) : (
+      {playerDetails.playerName && <span>{playerDetails.playerName}</span>}
+      {!playerDetails.playerName && (
         <Form
           onSubmit={(e) => {
             e.preventDefault();

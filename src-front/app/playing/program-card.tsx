@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { ProgramCard } from "../../../dist-common/game-types";
 
 interface BaseProgramCardProps {
+  cardWidth?: number;
   isLoading?: boolean;
   chosen?: boolean;
   clickHandler: () => void;
@@ -38,7 +39,7 @@ const StyledProgramCard = styled.button<{
   width: ${({ cardWidth }) => cardWidth}vw;
   height: ${({ cardWidth }) => cardWidth * 1.4}vw;
   font-size: ${({ cardWidth }) => cardWidth * 0.12}vw;
-  background-color: ${({ chosen }) => (chosen ? "#777777" : "#dddddd")};
+  background-color: ${({ chosen }) => (chosen ? "#777777" : "gainsboro")};
 
   cursor: ${({ isLoading }) => (isLoading ? "wait" : "pointer")};
 
@@ -62,6 +63,7 @@ const Text = styled.div`
 export default function ProgramCard({
   card,
   text,
+  cardWidth,
   isLoading,
   chosen,
   clickHandler,
@@ -72,7 +74,7 @@ export default function ProgramCard({
       <StyledProgramCard
         isLoading={isLoading || false}
         chosen={chosen || false}
-        cardWidth={9}
+        cardWidth={cardWidth || 9}
         onClick={clickHandler}
       >
         <div>Priority {card.priority}</div>
@@ -87,7 +89,7 @@ export default function ProgramCard({
       <StyledProgramCard
         isLoading={isLoading}
         chosen={chosen}
-        cardWidth={9}
+        cardWidth={cardWidth || 9}
         onClick={clickHandler}
       >
         {text.map((s) => (

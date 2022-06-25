@@ -16,6 +16,8 @@ export const usePracticeGameData = (
 } => {
   const [gameData, setGameData] = useState<GameData>(defaultGameData);
 
+  console.info("gameData", gameData);
+
   const sendViaWebSocket = (messageObject: ActionIncomingMessageObject) => {
     const { action } = messageObject;
     setTimeout(async () => {

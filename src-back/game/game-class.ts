@@ -42,7 +42,8 @@ export default class Game {
       players: [],
       gameSettings: {
         cardsPerPlayer: 4,
-        map: "",
+        mapName: "",
+        map: [[[]]],
       },
       gameSecrets: {
         remainingDeck: [],

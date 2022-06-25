@@ -53,6 +53,36 @@ export interface OnePlayerSecrets {
   cardsInHand: string[];
 }
 
+export interface ConveyorMapItem {
+  type: "conveyor";
+  direction: "up" | "down" | "left" | "right";
+  speed: 1 | 2;
+}
+
+export interface PitMapItem {
+  type: "pit";
+}
+
+export interface GearMapItem {
+  type: "gear";
+  direction: "clockwise" | "counter-clockwise"; // CW: Green, CCW: Red
+}
+
+export interface PusherMapItem {
+  type: "pusher";
+  direction: "up" | "down" | "left" | "right";
+  activeRegisters: number[];
+}
+
+export interface RepairMapItem {
+  type: "repair";
+}
+
+export type MapItem =
+  | ConveyorMapItem
+  | PitMapItem
+  | GearMapItem
+  | PusherMapItem;
 export interface PlayerSecrets {
   [key: string]: OnePlayerSecrets;
 }
@@ -63,10 +93,11 @@ export interface GameSecrets {
 
 export interface GameSettings {
   cardsPerPlayer: number;
-  map: string;
+  mapName: string;
+  map: MapItem[][][];
 }
 
-interface Player {
+export interface Player {
   id: string;
   name: string;
 }
