@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { GameData } from "../../dist-common/game-types";
 import { GameAction } from "../../dist-common/game-action-types";
+import { ActionIncomingMessageObject } from "../../dist-common/websocket-message-types";
 
 import Game from "./game-class";
 import { saveGame, findGame, makeShortId } from "./game-redis";
@@ -102,6 +103,18 @@ export const getGame = async (
     code: 200,
     gameData: game.getGameDataForPlayer(playerId, playerPassword),
   };
+};
+
+export const playGame = (
+  game: Game,
+  action: GameAction,
+  performAction: (
+    nextAction: ActionIncomingMessageObject
+  ) => void | Promise<void>
+): { game: Game; message: string } => {
+  // const result = game.gameAction()
+
+  return { game, message: "OK" };
 };
 
 export const stepGame = (gameData: GameData, action: GameAction): GameData => {

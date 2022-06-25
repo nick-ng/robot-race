@@ -1,3 +1,6 @@
+import { ActionIncomingMessageObject } from "../../dist-common/websocket-message-types";
+import { sleep } from "../../dist-common/utils";
+
 import {
   streamHelper,
   client as redisClient,
@@ -5,9 +8,9 @@ import {
   getRedisKeys as getGameKeys,
   saveGame,
   getRedisKeys,
+  addAction,
 } from "./game-redis";
 import Game from "./game-class";
-import { sleep } from "../../dist-common/utils";
 
 const STATS_REPORT_DELAY_MS = 1000;
 const APM_WEIGHT = 3;
@@ -106,7 +109,7 @@ export default class GameServer {
     (game: Game) =>
     (
       _message: string | null,
-      messageObject: { [key: string]: any } | null,
+      messageObject: ActionIncomingMessageObject | null,
       lastActionId: string
     ) => {
       if (messageObject === null) {

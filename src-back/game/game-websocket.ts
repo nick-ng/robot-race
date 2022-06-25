@@ -31,12 +31,8 @@ const makeUpdateHandler =
   (connection: Connection) =>
   (
     _message: string | null,
-    messageObject: { [key: string]: string } | null
+    messageObject: ActionIncomingMessageObject | null
   ) => {
-    if (typeof messageObject?.host !== "string") {
-      return;
-    }
-
     const gameData = decodeGameData(messageObject);
 
     if (!gameData) {

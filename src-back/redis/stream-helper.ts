@@ -2,6 +2,7 @@ import {
   Listener,
   DefaultStreamMessageType,
 } from "../../dist-common/redis-types";
+import { ActionIncomingMessageObject } from "../../dist-common/websocket-message-types";
 
 import { RedisClient2 } from "../redis";
 
@@ -32,7 +33,7 @@ export default class StreamHelper {
     interestedListeners: Listener[],
     lastMessageId: string
   ) => {
-    let dataObject: { [key: string]: any } | null = null;
+    let dataObject: ActionIncomingMessageObject | null = null;
 
     try {
       dataObject = JSON.parse(message.message.data);

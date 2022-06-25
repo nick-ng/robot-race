@@ -17,7 +17,12 @@ export interface FinishSettingRegistersAction extends BasicAction {
   type: "finish-setting-registers";
 }
 
+export interface ProcessRegistersAction extends BasicAction {
+  type: "process-registers";
+}
+
 export type GameAction =
   | StartAction
   | SetRegisterAction
-  | FinishSettingRegistersAction;
+  | FinishSettingRegistersAction
+  | ProcessRegistersAction;
