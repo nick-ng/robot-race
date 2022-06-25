@@ -15,7 +15,7 @@ const processRegister = (
   message: string;
   automaticAction?: AutomaticAction;
 } => {
-  const { playerSecrets, gameState } = game;
+  const { playerSecrets, gameState, gameSecrets } = game;
   if (gameState.state !== "main") {
     return {
       game,
@@ -23,7 +23,8 @@ const processRegister = (
     };
   }
 
-  const { robots, instructionQueue } = gameState;
+  const { robots } = gameState;
+  const { instructionQueue } = gameSecrets;
 
   if (instructionQueue.length === 0) {
     return {

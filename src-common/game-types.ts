@@ -55,7 +55,6 @@ export interface MainGameState {
   cardMap: { [cardId: string]: ProgramCard };
   robots: Robot[];
   discardedCards: string[];
-  instructionQueue: InstructionItem[];
 }
 
 export type OverGameState = Omit<MainGameState, "state"> & {
@@ -113,6 +112,7 @@ export interface PlayerSecrets {
 export interface GameSecrets {
   password: string;
   remainingDeck: string[];
+  instructionQueue: InstructionItem[];
 }
 
 export interface GameSettings {
@@ -137,8 +137,8 @@ export interface GameData {
   gameSecrets: GameSecrets;
   playerSecrets: PlayerSecrets;
   gameState: GameState;
-  lastActionId?: string;
-  gameServer?: string;
+  lastActionId: string;
+  gameServer: string | null;
 }
 
 export type InitObject = Partial<GameData> & {

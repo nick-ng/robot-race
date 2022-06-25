@@ -39,7 +39,7 @@ export default class Game {
       state: "lobby",
     };
 
-    const temp = {
+    const temp: GameData = {
       maxPlayers: 8,
       players: [],
       gameSettings: {
@@ -49,6 +49,7 @@ export default class Game {
       gameSecrets: {
         password: randomUUID(),
         remainingDeck: [],
+        instructionQueue: [],
       },
       playerSecrets: {},
       gameState: defaultGameState,
@@ -84,6 +85,7 @@ export default class Game {
       playerSecrets: this.playerSecrets,
       gameState: this.gameState,
       lastActionId: this.lastActionId,
+      gameServer: this.gameServer,
     };
   };
 

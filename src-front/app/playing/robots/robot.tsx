@@ -1,22 +1,50 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 import { Player, Robot } from "../../../../dist-common/game-types";
 import { positionToOffsets } from "../utils";
+
+import getBorderStyle from "./get-border-style";
 
 interface RobotProps {
   player: Player;
   robot: Robot;
 }
 
-const StyledRobot = styled.div`
+const bounceAnimation = keyframes`
+0% {
+  margin-top: 0;
+}
+
+25% {
+  margin-top: 0.2vw;
+}
+
+50% {
+  margin-top: 0;
+}
+
+75% {
+  margin-top: -0.2vw;
+}
+
+100% {
+  margin-top: 0;
+}
+`;
+
+const bounceAnimationMixin = css`
+animation ${bounceAnimation} 1s linear infinite;
+`;
+
+const StyledRobot = styled.div<{ isPlayer?: boolean }>`
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
 
   box-sizing: border-box;
-  border-width: 5px;
+  border-width: 0.25vw;
   border-radius: 0vw;
   width: 2vw;
   height: 2vw;
@@ -24,8 +52,18 @@ const StyledRobot = styled.div`
   transition: 450ms ease-in-out;
 
   span {
+    ${({ isPlayer }) => (isPlayer ? bounceAnimationMixin : "")}
     font-size: 1.1vw;
-    transition: 450ms ease-in-out;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
@@ -41,42 +79,19 @@ export default function Robot({ player, robot }: RobotProps) {
 
   const offsets = positionToOffsets(position);
 
-  let style = {};
-
-  switch (design) {
-    case "dotted":
-    case "dashed":
-    case "double":
-    case "ridge":
-    case "outset":
-      style = {
-        borderStyle: design,
-        borderColor: "white",
-      };
-      break;
-    case "white":
-    case "black":
-      style = {
-        borderStyle: "solid",
-        borderColor: design,
-      };
-      break;
-    default:
-      style = {
-        borderStyle: "gainsboro",
-        borderColor: design,
-      };
-  }
+  const style = getBorderStyle(design);
 
   return (
     <StyledRobot
+      isPlayer={player?.id === robot.playerId}
       style={{
         ...style,
         top: offsets.y,
         left: offsets.x,
+        rotate: facingMap[position.facing],
       }}
     >
-      <span style={{ rotate: facingMap[position.facing] }}>🤖</span>
+      <span>🤖</span>
     </StyledRobot>
   );
 }

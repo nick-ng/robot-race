@@ -15,7 +15,7 @@ const finishSettingRegisters = (
   message: string;
   automaticAction?: AutomaticAction;
 } => {
-  const { gameState, playerSecrets, players } = game;
+  const { gameState, playerSecrets, players, gameSecrets } = game;
   if (gameState.state !== "main") {
     return {
       game,
@@ -40,7 +40,7 @@ const finishSettingRegisters = (
   ];
 
   if (gameState.finishedProgrammingPlayers.length === players.length) {
-    gameState.instructionQueue = [];
+    gameSecrets.instructionQueue = [];
 
     const { cardMap } = gameState;
 
@@ -58,7 +58,7 @@ const finishSettingRegisters = (
         });
       });
 
-      gameState.instructionQueue.push(
+      gameSecrets.instructionQueue.push(
         ...nthRegisters.sort((a, b) => b.payload.priority - a.payload.priority)
       );
     }
