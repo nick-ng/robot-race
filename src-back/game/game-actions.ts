@@ -1,14 +1,14 @@
-import { randomUUID } from "crypto";
 import {
   GameAction,
-  ChooseCardAction,
-  FingerOnNoseAction,
+  SetRegisterAction,
+  AutomaticAction,
 } from "../../dist-common/game-action-types";
-import { PlayerSecrets } from "../../dist-common/game-types";
+import { ProgramCard, MainGameState } from "../../dist-common/game-types";
 import Game from "./game-class";
 import { shuffle } from "./utils";
 
-const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+import finishSettingRegisters from "./actions/finish-setting-registers";
+import processRegister from "./actions/process-register";
 
 const startGame = (
   game: Game,
@@ -32,27 +32,17 @@ const startGame = (
   const playerIds = players.map((a) => a.id);
   const seatOrder = shuffle(playerIds);
 
-  const cardMap: { [cardId: string]: string } = {};
+  const cardMap: { [cardId: string]: ProgramCard } = {};
   let deck: string[] = [];
-
-  for (let n = 0; n < players.length; n++) {
-    const letter = LETTERS[n];
-    for (let m = 0; m < gameSettings.cardsPerPlayer; m++) {
-      const cardId = randomUUID();
-      cardMap[cardId] = letter;
-      deck.push(cardId);
-    }
-  }
 
   const shuffledDeck = shuffle(deck);
 
   playerIds.forEach((playerId) => {
     const cardsInHand: string[] = [];
-    for (let n = 0; n < gameSettings.cardsPerPlayer; n++) {
+    for (let n = 0; n < 9; n++) {
       cardsInHand.push(shuffledDeck.pop() as string);
     }
 
-    playerSecrets[playerId].chosenCard = "";
     playerSecrets[playerId].cardsInHand = cardsInHand;
   });
 
@@ -60,77 +50,10 @@ const startGame = (
     ...game.gameState,
     state: "main",
     seatOrder,
-    chosenCardPlayers: [],
-    fingerOnNose: [],
     cardMap,
-  };
+  } as MainGameState;
 
-  game.gameSecrets.fullDeck = [...deck];
-
-  return {
-    game,
-    message: "OK",
-  };
-};
-
-const chooseCard = (
-  game: Game,
-  action: ChooseCardAction
-): { game: Game; message: string } => {
-  const { gameState, playerSecrets, players } = game;
-  if (gameState.state !== "main") {
-    return {
-      game,
-      message: "You can't do that right now.",
-    };
-  }
-
-  const { playerId, cardId } = action;
-  const { cardsInHand } = playerSecrets[playerId];
-  const { chosenCardPlayers, seatOrder } = gameState;
-
-  if (!cardsInHand?.includes(cardId)) {
-    return {
-      game,
-      message: "You don't have that card.",
-    };
-  }
-
-  if (playerSecrets[playerId].chosenCard === cardId) {
-    return {
-      game,
-      message: "That's already your chosen card.",
-    };
-  }
-
-  playerSecrets[playerId].chosenCard = cardId;
-
-  const uniqueChosenCardPlayers = new Set(chosenCardPlayers);
-  uniqueChosenCardPlayers.add(playerId);
-  gameState.chosenCardPlayers = [...uniqueChosenCardPlayers];
-
-  if (uniqueChosenCardPlayers.size < players.length) {
-    return {
-      game,
-      message: "OK",
-    };
-  }
-
-  gameState.chosenCardPlayers = [];
-
-  for (let n = 0; n < seatOrder.length; n++) {
-    const giverId = seatOrder[n];
-    const receiverIndex = (n + 1) % seatOrder.length;
-    const receiverId = seatOrder[receiverIndex] as keyof PlayerSecrets;
-
-    const passedCard = playerSecrets[giverId].chosenCard;
-    playerSecrets[giverId].chosenCard = "";
-    playerSecrets[giverId].cardsInHand = playerSecrets[
-      giverId
-    ].cardsInHand?.filter((cardId) => cardId !== passedCard);
-
-    playerSecrets[receiverId].cardsInHand?.push(passedCard!);
-  }
+  game.gameSecrets.remainingDeck = [...deck];
 
   return {
     game,
@@ -138,11 +61,11 @@ const chooseCard = (
   };
 };
 
-const fingerOnNose = (
+const setRegister = (
   game: Game,
-  action: FingerOnNoseAction
+  action: SetRegisterAction
 ): { game: Game; message: string } => {
-  const { gameState, playerSecrets, players } = game;
+  const { gameState, playerSecrets } = game;
   if (gameState.state !== "main") {
     return {
       game,
@@ -150,55 +73,26 @@ const fingerOnNose = (
     };
   }
 
-  const { playerId } = action;
-  const { cardMap, fingerOnNose } = gameState;
-  const { cardsInHand } = playerSecrets[playerId];
+  const { playerId, cardId, registerIndex } = action;
 
-  if (fingerOnNose.length === players.length - 1) {
-    game.gameState = {
-      ...gameState,
-      state: "over",
-    };
-
+  if (cardId && !playerSecrets[playerId].cardsInHand.includes(cardId)) {
     return {
       game,
-      message: "OK",
+      message: "Card must be in your hand before you can set it in a register.",
     };
   }
 
-  if (!Array.isArray(cardsInHand)) {
-    return {
-      game,
-      message: "You don't have cards somehow.",
-    };
+  playerSecrets[playerId].cardsInHand = playerSecrets[
+    playerId
+  ].cardsInHand.filter((a) => a !== cardId);
+
+  const existingCardInRegister =
+    playerSecrets[playerId].programRegisters[registerIndex];
+  if (existingCardInRegister !== null) {
+    playerSecrets[playerId].cardsInHand.push(existingCardInRegister);
   }
 
-  const [firstCard, ...otherCards] = cardsInHand.map(
-    (cardId) => cardMap[cardId]
-  );
-
-  if (
-    fingerOnNose.length === 0 &&
-    !otherCards.every((cardValue) => cardValue === firstCard)
-  ) {
-    return {
-      game,
-      message: "You can't do that right now.",
-    };
-  }
-
-  fingerOnNose.push(playerId);
-  playerSecrets[playerId].chosenCard = "";
-  gameState.chosenCardPlayers = gameState.chosenCardPlayers.filter(
-    (a) => a !== playerId
-  );
-
-  if (fingerOnNose.length === players.length - 1) {
-    game.gameState = {
-      ...gameState,
-      state: "over",
-    };
-  }
+  playerSecrets[playerId].programRegisters[registerIndex] = cardId;
 
   return {
     game,
@@ -212,14 +106,20 @@ const fingerOnNose = (
 export const performAction = (
   game: Game,
   action: GameAction
-): { game: Game; message: string } => {
+): {
+  game: Game;
+  message: string;
+  automaticAction?: AutomaticAction;
+} => {
   switch (action.type) {
     case "start":
       return startGame(game, action);
-    case "choose-card":
-      return chooseCard(game, action);
-    case "finger-on-nose":
-      return fingerOnNose(game, action);
+    case "set-register":
+      return setRegister(game, action);
+    case "finish-setting-registers":
+      return finishSettingRegisters(game, action);
+    case "process-registers":
+      return processRegister(game, action);
     default:
       return { game, message: "OK" };
   }

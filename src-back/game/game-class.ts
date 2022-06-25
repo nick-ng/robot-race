@@ -39,14 +39,17 @@ export default class Game {
       state: "lobby",
     };
 
-    const temp = {
-      maxPlayers: 26,
+    const temp: GameData = {
+      maxPlayers: 8,
       players: [],
       gameSettings: {
-        cardsPerPlayer: 4,
+        mapName: "",
+        map: [[[]]],
       },
       gameSecrets: {
-        fullDeck: [],
+        password: randomUUID(),
+        remainingDeck: [],
+        instructionQueue: [],
       },
       playerSecrets: {},
       gameState: defaultGameState,
@@ -82,6 +85,7 @@ export default class Game {
       playerSecrets: this.playerSecrets,
       gameState: this.gameState,
       lastActionId: this.lastActionId,
+      gameServer: this.gameServer,
     };
   };
 
@@ -128,6 +132,13 @@ export default class Game {
       };
     }
 
+    if (playerId === "server") {
+      return {
+        type: "error",
+        message: 'Your player ID can\'t be "server"',
+      };
+    }
+
     if (!playerPassword) {
       return {
         type: "error",
@@ -154,26 +165,34 @@ export default class Game {
       name: playerName,
     });
 
-    this.playerSecrets[playerId] = { password: playerPassword };
+    this.playerSecrets[playerId] = {
+      password: playerPassword,
+      programRegisters: [null, null, null, null, null],
+      cardsInHand: [],
+    };
 
     return {
       type: "success",
     };
   };
 
-  gameAction = (
-    playerId: string,
-    playerPassword: string,
-    action: GameAction
-  ) => {
-    if (this.players.filter((a) => a.id === playerId).length === 0) {
+  gameAction = (playerId: string, password: string, action: GameAction) => {
+    if (
+      playerId !== "server" &&
+      this.players.filter((a) => a.id === playerId).length === 0
+    ) {
       return {
         type: "error",
         message: "You aren't in this game",
       };
     }
 
-    if (this.playerSecrets[playerId].password !== playerPassword) {
+    if (
+      !(
+        (playerId === "server" && password === this.gameSecrets.password) ||
+        this.playerSecrets[playerId]?.password === password
+      )
+    ) {
       return {
         type: "error",
         message: "Wrong password",
@@ -187,7 +206,7 @@ export default class Game {
       };
     }
 
-    const { message } = performAction(this, action);
+    const { message, automaticAction } = performAction(this, action);
 
     if (message !== "OK") {
       return {
@@ -199,6 +218,7 @@ export default class Game {
     return {
       type: "success",
       message,
+      automaticAction,
     };
   };
 }

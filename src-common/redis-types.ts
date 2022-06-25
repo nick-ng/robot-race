@@ -1,3 +1,5 @@
+import { ActionIncomingMessageObject } from "./game-action-types";
+
 export interface DefaultStreamMessageType {
   id: string;
   message: { data: string };
@@ -10,7 +12,7 @@ export interface Listener {
   lastOnly: boolean;
   updateHandler(
     message: string,
-    messageObject: { [key: string]: any } | null,
+    messageObject: ActionIncomingMessageObject | null,
     lastMessageId: string
   ): void;
 }

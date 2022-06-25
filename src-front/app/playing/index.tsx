@@ -2,85 +2,65 @@ import React from "react";
 import styled from "styled-components";
 
 import { PlayerGameData, PlayerDetails } from "../../../dist-common/game-types";
-import { WebsocketIncomingMessageObject } from "../../../dist-common/websocket-message-types";
+import { ActionIncomingMessageObject } from "../../../dist-common/game-action-types";
 
-import PlayersDisplay from "./players-display";
-import CardsInHand from "./cards-in-hand";
+import Map from "./map";
+import PlayerDisplay from "./player-display";
+import CardsAndProgramRegisters from "./cards-and-program-registers";
+import Instructions from "./instructions";
 
 interface PlayingProps {
   gameData: PlayerGameData;
   playerDetails: PlayerDetails;
-  sendViaWebSocket: (messageObject: WebsocketIncomingMessageObject) => void;
+  sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
 }
 
-const StyledPlaying = styled.div`
-  display: inline-block;
+const StyledPlaying = styled.div``;
+
+const Heading = styled.h1`
+  margin-top: 0;
 `;
 
-const FingerOnNoseButton = styled.button`
-  border: 0.6vw outset black;
-  background-color: #dddddd;
-  cursor: pointer;
-  width: 100%;
-  height: 5em;
-
-  &:active {
-    border-style: inset;
-  }
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
+
+const DisplayArea = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+`;
+
+const ControlsArea = styled.div``;
 
 export default function Playing({
   gameData,
   playerDetails,
   sendViaWebSocket,
 }: PlayingProps) {
-  const { id, shortId, gameState } = gameData;
-
-  if (gameState.state !== "main") {
-    return <div>Something went wrong</div>;
-  }
-
-  const { seatOrder, fingerOnNose } = gameState;
+  const { shortId } = gameData;
 
   return (
     <StyledPlaying>
-      <p>Game ID: {shortId}</p>
-      <PlayersDisplay seatOrder={seatOrder} fingerOnNose={fingerOnNose} />
-      <hr />
-      <CardsInHand
-        cardWidth={12}
-        gameData={gameData}
-        handleCardChoice={(cardId) => {
-          sendViaWebSocket({
-            type: "action",
-            playerId: playerDetails.playerId,
-            playerPassword: playerDetails.playerPassword,
-            gameId: id,
-            action: {
-              type: "choose-card",
-              playerId: playerDetails.playerId,
-              cardId,
-            },
-          });
-        }}
-      />
-      <hr />
-      <FingerOnNoseButton
-        onClick={() => {
-          sendViaWebSocket({
-            type: "action",
-            playerId: playerDetails.playerId,
-            playerPassword: playerDetails.playerPassword,
-            gameId: id,
-            action: {
-              type: "finger-on-nose",
-              playerId: playerDetails.playerId,
-            },
-          });
-        }}
-      >
-        Put Finger on Nose 🤫
-      </FingerOnNoseButton>
+      <Row>
+        <div>Game ID: {shortId}</div>
+      </Row>
+      <Row>
+        <DisplayArea>
+          <Map gameData={gameData} playerDetails={playerDetails} />
+          <PlayerDisplay gameData={gameData} playerDetails={playerDetails} />
+        </DisplayArea>
+        <ControlsArea>
+          <Heading>Robot Race</Heading>
+          <CardsAndProgramRegisters
+            gameData={gameData}
+            playerDetails={playerDetails}
+            sendViaWebSocket={sendViaWebSocket}
+          />
+          <Instructions gameData={gameData} playerDetails={playerDetails} />
+        </ControlsArea>
+      </Row>
     </StyledPlaying>
   );
 }

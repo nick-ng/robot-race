@@ -1,9 +1,21 @@
 import { Router } from "express";
 
 import { getFullId } from "./game-redis";
-import { newGame, joinGame, getGame, startGame } from "./game-service";
+import {
+  newGame,
+  joinGame,
+  getGame,
+  startGame,
+  stepGame,
+} from "./game-service";
 
 const router = Router();
+
+router.post("/advance-game-state", async (req, res) => {
+  const { action, gameData } = req.body;
+
+  res.json(stepGame(gameData, action));
+});
 
 // Get game state
 router.get("/:gameId", async (req, res) => {

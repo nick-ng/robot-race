@@ -81,8 +81,6 @@ export default function PreLobby({ playerDetails }: PreLobbyProps) {
             }
 
             const resText = await res.text();
-
-            console.log("resText", resText);
             navigate(`/${resText}`);
             setLoading(false);
           } catch (e) {

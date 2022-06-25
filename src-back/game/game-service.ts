@@ -1,6 +1,10 @@
 import { randomUUID } from "crypto";
-
-import { GameAction } from "../../dist-common/game-action-types";
+import { GameData } from "../../dist-common/game-types";
+import {
+  GameAction,
+  ActionIncomingMessageObject,
+  AutomaticAction,
+} from "../../dist-common/game-action-types";
 
 import Game from "./game-class";
 import { saveGame, findGame, makeShortId } from "./game-redis";
@@ -102,4 +106,61 @@ export const getGame = async (
     code: 200,
     gameData: game.getGameDataForPlayer(playerId, playerPassword),
   };
+};
+
+export const playGame = (
+  game: Game,
+  actionObject: ActionIncomingMessageObject,
+  performAction: (
+    nextAction: ActionIncomingMessageObject
+  ) => void | Promise<void>
+): {
+  game: Game;
+  type: string;
+  message: string;
+  automaticAction?: AutomaticAction;
+} => {
+  const { action, playerId, password } = actionObject;
+  const { type, message, automaticAction } = game.gameAction(
+    playerId,
+    password,
+    action
+  );
+
+  if (automaticAction) {
+    const { action, delay } = automaticAction;
+
+    setTimeout(() => {
+      performAction({
+        playerId: "server",
+        password: game.gameSecrets.password,
+        gameId: game.id,
+        type: "action",
+        action,
+      });
+    }, delay);
+  }
+
+  return { game, type, message, automaticAction };
+};
+
+export const stepGame = (
+  gameData: GameData,
+  action: GameAction
+): { gameData: GameData; automaticAction?: AutomaticAction } => {
+  const game = new Game(gameData);
+
+  const { automaticAction } = playGame(
+    game,
+    {
+      playerId: action.playerId,
+      password: action.playerId,
+      gameId: game.id,
+      type: "action",
+      action,
+    },
+    (_nextAction) => {}
+  );
+
+  return { gameData: game.getGameData(), automaticAction };
 };

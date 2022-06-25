@@ -7,13 +7,52 @@ export interface StartAction extends BasicAction {
   type: "start";
 }
 
-export interface ChooseCardAction extends BasicAction {
-  type: "choose-card";
-  cardId: string;
+export interface SetRegisterAction extends BasicAction {
+  type: "set-register";
+  cardId: string | null;
+  registerIndex: number;
 }
 
-export interface FingerOnNoseAction extends BasicAction {
-  type: "finger-on-nose";
+export interface FinishSettingRegistersAction extends BasicAction {
+  type: "finish-setting-registers";
 }
 
-export type GameAction = StartAction | ChooseCardAction | FingerOnNoseAction;
+export interface ProcessRegisterAction extends BasicAction {
+  type: "process-registers";
+}
+
+export type GameAction =
+  | StartAction
+  | SetRegisterAction
+  | FinishSettingRegistersAction
+  | ProcessRegisterAction;
+
+interface BasicIncomingMessageObject {
+  playerId: string;
+  password: string;
+  gameId: string;
+}
+
+interface ListenIncomingMessageObject extends BasicIncomingMessageObject {
+  type: "listen";
+}
+
+interface JoinIncomingMessageObject extends BasicIncomingMessageObject {
+  type: "join";
+}
+
+export interface ActionIncomingMessageObject
+  extends BasicIncomingMessageObject {
+  type: "action";
+  action: GameAction;
+}
+
+export type WebsocketIncomingMessageObject =
+  | ListenIncomingMessageObject
+  | JoinIncomingMessageObject
+  | ActionIncomingMessageObject;
+
+export interface AutomaticAction {
+  action: GameAction;
+  delay: number;
+}

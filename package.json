@@ -4,11 +4,11 @@
   "description": "Based on a board game.",
   "main": "./dist-back/main.js",
   "scripts": {
-    "once-dev-build": "NODE_ENV=development rm -rf ./dist-* && tsc --build ./src-back/tsconfig.json",
+    "once": "NODE_ENV=development rm -rf ./dist-* && tsc --build ./src-back/tsconfig.json",
     "dev-back": "NODE_ENV=development tsc --build ./src-back/tsconfig.json --watch & nodemon --config nodemon.main.json ./dist-back/main.js",
     "dev-front": "NODE_ENV=development nodemon --config nodemon.front.json ./esbuild.dev.config.js",
     "worker": "NODE_ENV=development nodemon --config nodemon.worker.json ./dist-back/worker.js",
-    "start": "NODE_ENV=development rm -rf ./dist-* && tsc --build ./src-back/tsconfig.json && npm run dev-back & npm run dev-front",
+    "start": "NODE_ENV=development npm run dev-back & npm run dev-front",
     "serve": "node ./dist-back/main.js",
     "build-back": "NODE_ENV=production tsc --build ./src-back/tsconfig.json",
     "build-front": "NODE_ENV=production node esbuild.config.js",

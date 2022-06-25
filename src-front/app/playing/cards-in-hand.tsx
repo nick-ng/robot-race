@@ -1,73 +1,53 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
-import { PlayerGameData } from "../../../dist-common/game-types";
+import { PlayerGameData, MainGameState } from "../../../dist-common/game-types";
+
+import ProgramCard from "./program-card";
 
 interface CardsInHandProps {
   gameData: PlayerGameData;
   handleCardChoice: (cardId: string) => void;
   cardWidth?: number;
+  isLoading?: boolean;
+  chosenCard?: string | null;
 }
 
 const StyledCardsInHand = styled.div``;
 
-const Cards = styled.div``;
-
-const Card = styled.button<{
-  chosen?: boolean;
-  cardWidth: number;
-  showLoadingStyle?: boolean;
-}>`
-  display: inline-block;
-  margin: 1px;
-  border: ${({ cardWidth }) => cardWidth * 0.05}vw
-    ${(props) => (props.chosen ? "inset" : "outset")} black;
-  width: ${(props) => props.cardWidth}vw;
-  height: ${(props) => props.cardWidth * 1.4}vw;
-  font-size: ${(props) => props.cardWidth * 0.3}vw;
-  background-color: ${(props) => (props.chosen ? "#777777" : "#dddddd")};
-
-  cursor: ${({ showLoadingStyle }) => (showLoadingStyle ? "wait" : "pointer")};
+const Cards = styled.div<{ width: number }>`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: ${({ width }) => width}vw;
+  flex-wrap: wrap;
 `;
 
 export default function CardsInHand({
   gameData,
   handleCardChoice,
+  isLoading,
+  chosenCard,
   cardWidth,
 }: CardsInHandProps) {
   const { gameState, yourSecrets } = gameData;
-  const { cardsInHand, chosenCard } = yourSecrets;
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(false);
-  }, [chosenCard, cardsInHand?.join("-")]);
-
-  if (gameState.state !== "main" || !cardsInHand) {
-    return <div>Something Went Wrong</div>;
-  }
-
-  const { cardMap } = gameState;
+  const { cardsInHand } = yourSecrets;
+  const { cardMap } = gameState as MainGameState;
 
   return (
     <StyledCardsInHand>
-      <Cards>
+      <Cards width={(cardWidth || 9) * 6}>
         {cardsInHand.map((cardId) => (
-          <Card
-            showLoadingStyle={loading}
-            cardWidth={cardWidth || 10}
+          <ProgramCard
+            cardWidth={cardWidth}
+            card={cardMap[cardId]}
+            isLoading={isLoading || false}
             key={cardId}
-            chosen={chosenCard === cardId}
-            onClick={() => {
-              if (chosenCard === cardId) {
-                return;
-              }
-              setLoading(true);
+            chosen={chosenCard === cardId || false}
+            clickHandler={() => {
               handleCardChoice(cardId);
             }}
-          >
-            {cardMap[cardId]}
-          </Card>
+          />
         ))}
       </Cards>
     </StyledCardsInHand>

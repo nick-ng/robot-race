@@ -5,7 +5,7 @@ import { WebSocketServer, ServerOptions, WebSocket as WebSocketType } from "ws";
 import {
   ActionIncomingMessageObject,
   WebsocketIncomingMessageObject,
-} from "../../dist-common/websocket-message-types";
+} from "../../dist-common/game-action-types";
 import { decodeGameData } from "../../dist-common/decoders/game";
 import { sleep } from "../../dist-common/utils";
 
@@ -31,12 +31,8 @@ const makeUpdateHandler =
   (connection: Connection) =>
   (
     _message: string | null,
-    messageObject: { [key: string]: string } | null
+    messageObject: ActionIncomingMessageObject | null
   ) => {
-    if (typeof messageObject?.host !== "string") {
-      return;
-    }
-
     const gameData = decodeGameData(messageObject);
 
     if (!gameData) {
@@ -166,7 +162,7 @@ export default class GameWebSocketServer {
       id,
       webSocketConnection,
       playerId: data.playerId,
-      playerPassword: data.playerPassword,
+      playerPassword: data.password,
       gameId: data.gameId,
       lastPingTimeStamp: 0,
       otherThing: 0,
