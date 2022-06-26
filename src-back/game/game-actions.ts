@@ -3,64 +3,12 @@ import {
   SetRegisterAction,
   AutomaticAction,
 } from "../../dist-common/game-action-types";
-import { ProgramCard, MainGameState } from "../../dist-common/game-types";
 import Game from "./game-class";
-import { shuffle } from "./utils";
 
+import startGame from "./actions/start-game";
 import dealProgramCards from "./actions/deal-program-cards";
 import finishSettingRegisters from "./actions/finish-setting-registers";
 import processRegister from "./actions/process-register";
-
-const startGame = (
-  game: Game,
-  action: GameAction
-): { game: Game; message: string } => {
-  const { gameState, gameSettings, playerSecrets, players, host } = game;
-  if (gameState.state !== "lobby") {
-    return {
-      game,
-      message: "Game is already in progress.",
-    };
-  }
-
-  if (action.playerId !== host) {
-    return {
-      game,
-      message: "Only the host can start the game.",
-    };
-  }
-
-  const playerIds = players.map((a) => a.id);
-  const seatOrder = shuffle(playerIds);
-
-  const cardMap: { [cardId: string]: ProgramCard } = {};
-  let deck: string[] = [];
-
-  const shuffledDeck = shuffle(deck);
-
-  playerIds.forEach((playerId) => {
-    const cardsInHand: string[] = [];
-    for (let n = 0; n < 9; n++) {
-      cardsInHand.push(shuffledDeck.pop() as string);
-    }
-
-    playerSecrets[playerId].cardsInHand = cardsInHand;
-  });
-
-  game.gameState = {
-    ...game.gameState,
-    state: "main",
-    seatOrder,
-    cardMap,
-  } as MainGameState;
-
-  game.gameSecrets.remainingDeck = [...deck];
-
-  return {
-    game,
-    message: "OK",
-  };
-};
 
 const setRegister = (
   game: Game,

@@ -9,9 +9,23 @@ import {
   GameData,
   PlayerSecrets,
   LobbyGameState,
+  MapItem,
+  Robot,
 } from "../../dist-common/game-types";
-import { performAction } from "./game-actions";
 import { GameAction } from "../../dist-common/game-action-types";
+import { performAction } from "./game-actions";
+import getMap from "./actions/get-map";
+
+const ROBOT_DESIGNS: readonly Robot["design"][] = Object.freeze([
+  "double",
+  "ridge",
+  "grey",
+  "outset",
+  "dotted",
+  "dashed",
+  "white",
+  "black",
+]);
 
 export default class Game {
   id: string;
@@ -37,20 +51,29 @@ export default class Game {
 
     const defaultGameState: LobbyGameState = {
       state: "lobby",
+      finishedProgrammingPlayers: [],
+      poweringDownNextTurn: [],
+      robots: [],
     };
+
+    const defaultGameSecrets: GameSecrets = {
+      password: randomUUID(),
+      remainingDeck: [],
+      instructionQueue: [],
+    };
+
+    const mapName = "";
+    const { map, mapStartingPositions } = getMap(mapName);
 
     const temp: GameData = {
       maxPlayers: 8,
       players: [],
       gameSettings: {
-        mapName: "",
-        map: [[[]]],
+        mapName,
+        map,
+        mapStartingPositions,
       },
-      gameSecrets: {
-        password: randomUUID(),
-        remainingDeck: [],
-        instructionQueue: [],
-      },
+      gameSecrets: defaultGameSecrets,
       playerSecrets: {},
       gameState: defaultGameState,
       lastActionId: "0-0",
@@ -170,6 +193,21 @@ export default class Game {
       programRegisters: [null, null, null, null, null],
       cardsInHand: [],
     };
+
+    const existingRobots = this.gameState.robots.length;
+
+    this.gameState.robots.push({
+      playerId,
+      damagePoints: 0,
+      lockedRegisters: [],
+      lives: 3,
+      position: {
+        x: 0,
+        y: 0,
+        facing: "up",
+      },
+      design: ROBOT_DESIGNS[existingRobots],
+    });
 
     return {
       type: "success",

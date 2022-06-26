@@ -50,7 +50,7 @@ export const useGameSocket = (
 
       const onOpenWebSocketMessage = {
         playerId: playerDetails.playerId,
-        playerPassword: playerDetails.playerPassword,
+        password: playerDetails.playerPassword,
         gameId,
         type: "listen",
       };

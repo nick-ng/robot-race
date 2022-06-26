@@ -118,9 +118,9 @@ export default class GameServer {
       }
       this.actionCount += 1;
 
-      const { type } = playGame(game, messageObject, (nextAction) =>
-        addAction(nextAction)
-      );
+      const { type } = playGame(game, messageObject, (nextAction) => {
+        addAction(nextAction);
+      });
 
       if (type !== "success") {
         return;

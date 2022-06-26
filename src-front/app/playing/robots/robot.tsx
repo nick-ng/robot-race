@@ -7,8 +7,9 @@ import { positionToOffsets } from "../utils";
 import getBorderStyle from "./get-border-style";
 
 interface RobotProps {
-  player: Player;
+  name?: string;
   robot: Robot;
+  isPlayer: boolean;
 }
 
 const bounceAnimation = keyframes`
@@ -77,7 +78,7 @@ const facingMap = {
   left: "0.75turn",
 };
 
-export default function Robot({ player, robot }: RobotProps) {
+export default function Robot({ name, robot, isPlayer }: RobotProps) {
   const { position, design } = robot;
 
   const offsets = positionToOffsets(position);
@@ -86,7 +87,7 @@ export default function Robot({ player, robot }: RobotProps) {
 
   return (
     <StyledRobot
-      isPlayer={player?.id === robot.playerId}
+      isPlayer={isPlayer}
       style={{
         ...style,
         top: offsets.y,

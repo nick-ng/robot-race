@@ -3,7 +3,7 @@ import { getCardMap } from "../../dist-common/card-map";
 
 export const PLAYER_UUID = "player-1's-uuid";
 
-const getMap = (): MapItem[][][] => {
+const getMap = (_?: any): MapItem[][][] => {
   const map: MapItem[][][] = [];
 
   for (let n = 0; n < 12 + 4; n++) {
