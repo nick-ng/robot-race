@@ -27,6 +27,7 @@ const getMap = (
 ): {
   map: MapItem[][][];
   mapStartingPositions: Pick<Position, "x" | "y">[];
+  numberOfFlags: number;
 } => {
   const map: MapItem[][][] = [];
 
@@ -37,9 +38,25 @@ const getMap = (
     }
   }
 
+  map[1][7].push({
+    type: "flag",
+    number: 1,
+  });
+
+  map[7][9].push({
+    type: "flag",
+    number: 2,
+  });
+
+  map[4][1].push({
+    type: "flag",
+    number: 3,
+  });
+
   return {
     map,
-    mapStartingPositions: [...mapStartingPositionsA],
+    mapStartingPositions: [...mapStartingPositionsB],
+    numberOfFlags: 3,
   };
 };
 

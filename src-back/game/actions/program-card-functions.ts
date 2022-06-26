@@ -1,4 +1,4 @@
-import { Robot, ProgramCard } from "../../../dist-common/game-types";
+import { Robot } from "../../../dist-common/game-types";
 
 const rotateMap: Readonly<any> = {
   "Rotate Left": {

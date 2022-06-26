@@ -53,6 +53,8 @@ export default class Game {
       state: "lobby",
       finishedProgrammingPlayers: [],
       poweringDownNextTurn: [],
+      flagsTouched: {},
+      archiveMarkers: {},
       robots: [],
     };
 
@@ -208,6 +210,8 @@ export default class Game {
       },
       design: ROBOT_DESIGNS[existingRobots],
     });
+
+    this.gameState.flagsTouched[playerId] = 0;
 
     return {
       type: "success",

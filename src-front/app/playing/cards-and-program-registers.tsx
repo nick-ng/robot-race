@@ -8,6 +8,7 @@ import {
 } from "../../../dist-common/game-types";
 import { ActionIncomingMessageObject } from "../../../dist-common/game-action-types";
 
+import { getFlagEmoji } from "../utils";
 import CardsInHand from "./cards-in-hand";
 import ProgramRegisters from "./program-registers";
 
@@ -21,12 +22,13 @@ const StyledCardsAndProgramRegisters = styled.div`
   display: inline-block;
 `;
 
-const StyledProgramRegisters = styled(ProgramRegisters)`
-  // margin-top: 0.5em;
-`;
+const StyledProgramRegisters = styled(ProgramRegisters)``;
 
-const StyledCardsInHand = styled(CardsInHand)`
-  // margin-top: 0.5em;
+const StyledCardsInHand = styled(CardsInHand)``;
+
+const NextFlag = styled.div`
+  font-size: 18pt;
+  margin-bottom: 0.5em;
 `;
 
 const buttonRatio = 5;
@@ -61,7 +63,8 @@ export default function CardsAndProgramRegisters({
 
   const { id, yourSecrets, gameState } = gameData;
   const { cardsInHand, programRegisters } = yourSecrets;
-  const { finishedProgrammingPlayers } = gameState as MainGameState;
+  const { finishedProgrammingPlayers, flagsTouched } =
+    gameState as MainGameState;
 
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [selectedRegisterIndex, setSelectedRegisterIndex] = useState<
@@ -110,6 +113,10 @@ export default function CardsAndProgramRegisters({
 
   return (
     <StyledCardsAndProgramRegisters>
+      <NextFlag>
+        Next: {getFlagEmoji()}
+        {flagsTouched[playerId]}
+      </NextFlag>
       <SubmitButton
         disabled={!fullyProgrammed || youFinishedProgramming}
         isLoading={isLoading}

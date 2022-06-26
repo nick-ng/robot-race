@@ -50,6 +50,10 @@ const startGame = (
     if (robot && mapStartingPosition) {
       robot.position.x = mapStartingPosition.x;
       robot.position.y = mapStartingPosition.y;
+      game.gameState.archiveMarkers[playerId] = {
+        x: mapStartingPosition.x,
+        y: mapStartingPosition.y,
+      };
     }
   });
   game.gameState.robots;
