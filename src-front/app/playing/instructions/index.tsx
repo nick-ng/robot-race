@@ -34,18 +34,18 @@ export default function Instructions({
     gameState as MainGameState;
   const { programRegisters } = yourSecrets;
 
-  const [isOpen, _setIsOpen] = useState(
+  const [isHidden, _setisHidden] = useState(
     (): boolean =>
-      localStorage.getItem("ROBOT_RACE_INSTRUCTIONS_OPEN") === "true" || false
+      localStorage.getItem("ROBOT_RACE_INSTRUCTIONS_HIDDEN") === "true" || false
   );
 
   return (
     <StyledInstructions
-      open={isOpen}
+      open={!isHidden}
       onClick={() => {
         localStorage.setItem(
-          "ROBOT_RACE_INSTRUCTIONS_OPEN",
-          (!isOpen).toString()
+          "ROBOT_RACE_INSTRUCTIONS_HIDDEN",
+          (!isHidden).toString()
         );
       }}
       className={className}

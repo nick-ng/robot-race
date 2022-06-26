@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 import {
   PlayerGameData,
@@ -26,9 +26,32 @@ const StyledProgramRegisters = styled(ProgramRegisters)``;
 
 const StyledCardsInHand = styled(CardsInHand)``;
 
+const Heading = styled.div`
+  margin: 0.5em 0 0.3em;
+  text-align: center;
+`;
+
 const NextFlag = styled.div`
   font-size: 18pt;
   margin-bottom: 0.5em;
+`;
+
+const wiggleAnimation = keyframes`
+  0% {margin-left: -1em;}
+  10% {margin-left: 1em;}
+  20% {margin-left: -0.8em;}
+  30% {margin-left: 0.8em;}
+  40% {margin-left: -0.6em;}
+  50% {margin-left: 0.6em;}
+  60% {margin-left: -0.4em;}
+  70% {margin-left: 0.4em;}
+  80% {margin-left: -0.2em;}
+  90% {margin-left: 0.2em;}
+  100% {margin-left: 0em;}
+`;
+
+const wiggleAnimationMixin = css`
+  animation: ${wiggleAnimation} 0.8s linear;
 `;
 
 const buttonRatio = 5;
@@ -38,6 +61,8 @@ const SubmitButton = styled.button<{ isLoading?: boolean }>`
   background-color: gainsboro;
   padding: 0.5em;
   width: 100%;
+
+  ${({ disabled }) => (!disabled ? wiggleAnimationMixin : "")}
 
   cursor: ${({ disabled, isLoading }) => {
     if (disabled) {
@@ -141,7 +166,7 @@ export default function CardsAndProgramRegisters({
           ? "Submit Program"
           : "Submit Program (Set All Registers First)"}
       </SubmitButton>
-      <hr />
+      <Heading>Registers</Heading>
       <StyledProgramRegisters
         cardWidth={6}
         isLoading={isLoading}
@@ -173,7 +198,7 @@ export default function CardsAndProgramRegisters({
         }}
         chosenRegister={selectedRegisterIndex}
       />
-      <hr />
+      <Heading>Program Cards</Heading>
       <StyledCardsInHand
         cardWidth={5}
         isLoading={isLoading}
