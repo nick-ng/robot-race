@@ -12,8 +12,13 @@ interface PreLobbyProps {
 
 const StyledPreLobby = styled.div``;
 
-const HostGameButton = styled.button`
+const HostGameButton = styled.button<{ isLoading: boolean }>`
   margin-bottom: 1em;
+  cursor: ${({ isLoading }) => (isLoading ? "wait" : "pointer")};
+`;
+
+const JoinGameButton = styled.button<{ isLoading: boolean }>`
+  cursor: ${({ isLoading }) => (isLoading ? "wait" : "pointer")};
 `;
 
 const Form = styled.form`
@@ -33,7 +38,10 @@ export default function PreLobby({ playerDetails }: PreLobbyProps) {
   return (
     <StyledPreLobby>
       <HostGameButton
+        isLoading={loading}
+        disabled={loading}
         onClick={async () => {
+          setLoading(true);
           const res = await fetch(`${API_ORIGIN}/api/game`, {
             method: "POST",
             headers: {
@@ -50,6 +58,8 @@ export default function PreLobby({ playerDetails }: PreLobbyProps) {
             message: string;
             gameData: GameData;
           };
+
+          setLoading(false);
 
           if (message.toUpperCase() === "OK") {
             navigate(`/${gameData.id}`);
@@ -104,7 +114,9 @@ export default function PreLobby({ playerDetails }: PreLobbyProps) {
             setTempGameId(e.target.value);
           }}
         />
-        <button disabled={loading}>Join Lobby</button>
+        <JoinGameButton isLoading={loading} disabled={loading}>
+          Join Lobby
+        </JoinGameButton>
       </Form>
       <p>{errorMessage}</p>
       <p>
