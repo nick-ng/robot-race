@@ -7,6 +7,7 @@ import { ProgramCard, MainGameState } from "../../dist-common/game-types";
 import Game from "./game-class";
 import { shuffle } from "./utils";
 
+import dealProgramCards from "./actions/deal-program-cards";
 import finishSettingRegisters from "./actions/finish-setting-registers";
 import processRegister from "./actions/process-register";
 
@@ -114,6 +115,8 @@ export const performAction = (
   switch (action.type) {
     case "start":
       return startGame(game, action);
+    case "deal-program-cards":
+      return dealProgramCards(game, action);
     case "set-register":
       return setRegister(game, action);
     case "finish-setting-registers":

@@ -35,7 +35,7 @@ const StyledProgramCard = styled.button<{
   align-items: center;
   box-sizing: border-box;
   border: ${({ cardWidth }) => cardWidth * 0.05}vw
-    ${({ chosen }) => (chosen ? "inset" : "outset")} black;
+    ${({ chosen }) => (chosen ? "inset" : "outset")};
   width: ${({ cardWidth }) => cardWidth}vw;
   height: ${({ cardWidth }) => cardWidth * 1.4}vw;
   font-size: ${({ cardWidth }) => cardWidth * 0.12}vw;

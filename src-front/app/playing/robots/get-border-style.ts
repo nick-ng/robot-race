@@ -3,11 +3,14 @@ const getBorderStyle = (design: string) => {
     case "dotted":
     case "dashed":
     case "double":
+      return {
+        borderStyle: design,
+        borderColor: "white",
+      };
     case "ridge":
     case "outset":
       return {
         borderStyle: design,
-        borderColor: "white",
       };
     case "white":
     case "black":
@@ -17,8 +20,8 @@ const getBorderStyle = (design: string) => {
       };
     default:
       return {
-        borderStyle: "gainsboro",
-        borderColor: design,
+        borderStyle: "solid",
+        borderColor: "gainsboro",
       };
   }
 };

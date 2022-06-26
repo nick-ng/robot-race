@@ -17,7 +17,24 @@ router.post("/advance-game-state", async (req, res) => {
   res.json(stepGame(gameData, action));
 });
 
-// Get game state
+router.get(["/short-id/:shortGameId", "/short-id"], async (req, res) => {
+  const { shortGameId } = req.params;
+
+  if (!shortGameId) {
+    res.sendStatus(400);
+    return;
+  }
+
+  const fullId = await getFullId(shortGameId);
+
+  if (typeof fullId !== "string") {
+    res.sendStatus(404);
+    return;
+  }
+
+  res.send(fullId);
+});
+
 router.get("/:gameId", async (req, res) => {
   const { gameId } = req.params;
   const { "x-player-id": playerId, "x-player-password": playerPassword } =
@@ -47,19 +64,6 @@ router.get("/:gameId", async (req, res) => {
     console.error(e);
     res.sendStatus(500);
   }
-});
-
-router.get("/short-id/:shortGameId", async (req, res) => {
-  const { shortGameId } = req.params;
-
-  const fullId = await getFullId(shortGameId);
-
-  if (typeof fullId !== "string") {
-    res.sendStatus(404);
-    return;
-  }
-
-  res.send(fullId);
 });
 
 // New game
