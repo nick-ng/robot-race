@@ -92,7 +92,12 @@ export default function CardsAndProgramRegisters({
   useEffect(() => {
     setIsLoading(false);
     setSelectedCardId(null);
-    setSelectedRegisterIndex(null);
+    const firstEmptyRegister = programRegisters.findIndex(
+      (register) => register === null
+    );
+    setSelectedRegisterIndex(
+      firstEmptyRegister < 0 ? null : firstEmptyRegister
+    );
   }, [
     cardsInHand.join(","),
     programRegisters.join(","),
