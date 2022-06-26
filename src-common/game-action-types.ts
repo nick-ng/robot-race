@@ -7,6 +7,10 @@ export interface StartAction extends BasicAction {
   type: "start";
 }
 
+export interface DealProgramCardsAction extends BasicAction {
+  type: "deal-program-cards";
+}
+
 export interface SetRegisterAction extends BasicAction {
   type: "set-register";
   cardId: string | null;
@@ -23,6 +27,7 @@ export interface ProcessRegisterAction extends BasicAction {
 
 export type GameAction =
   | StartAction
+  | DealProgramCardsAction
   | SetRegisterAction
   | FinishSettingRegistersAction
   | ProcessRegisterAction;

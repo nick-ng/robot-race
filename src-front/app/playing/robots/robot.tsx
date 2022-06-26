@@ -12,24 +12,17 @@ interface RobotProps {
 }
 
 const bounceAnimation = keyframes`
-0% {
-  margin-top: 0;
-}
 
-25% {
-  margin-top: 0.2vw;
+0% {
+  bottom: 0.3vw;
 }
 
 50% {
-  margin-top: 0;
-}
-
-75% {
-  margin-top: -0.2vw;
+  bottom: -0.1vw;
 }
 
 100% {
-  margin-top: 0;
+  bottom: 0.3vw;
 }
 `;
 
@@ -50,6 +43,16 @@ const StyledRobot = styled.div<{ isPlayer?: boolean }>`
   height: 2vw;
 
   transition: 450ms ease-in-out;
+
+  & > div {
+    transition: 450ms ease-in-out;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
 
   span {
     ${({ isPlayer }) => (isPlayer ? bounceAnimationMixin : "")}
@@ -88,10 +91,11 @@ export default function Robot({ player, robot }: RobotProps) {
         ...style,
         top: offsets.y,
         left: offsets.x,
-        rotate: facingMap[position.facing],
       }}
     >
-      <span>🤖</span>
+      <div style={{ transform: `rotate(${facingMap[position.facing]})` }}>
+        <span>🤖</span>
+      </div>
     </StyledRobot>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   ActionIncomingMessageObject,
@@ -7,7 +7,7 @@ import {
 import { GameData, PlayerGameData } from "../../dist-common/game-types";
 
 import { getPlayerData } from "./utils";
-import { defaultGameData, PLAYER_UUID } from "./default-game-data";
+import { getDefaultGameData } from "./default-game-data";
 
 declare const API_ORIGIN: string;
 
@@ -18,7 +18,7 @@ export const usePracticeGameData = (
   fullGameData: GameData;
   sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
 } => {
-  const [gameData, setGameData] = useState<GameData>(defaultGameData);
+  const [gameData, setGameData] = useState<GameData>(getDefaultGameData());
 
   const sendViaWebSocket = (
     messageObject: ActionIncomingMessageObject,
@@ -42,16 +42,6 @@ export const usePracticeGameData = (
         automaticAction?: AutomaticAction;
       };
 
-      newGameData.playerSecrets[PLAYER_UUID].cardsInHand = [
-        "card-uuid-01",
-        "card-uuid-02",
-        "card-uuid-03",
-        "card-uuid-04",
-        "card-uuid-05",
-        "card-uuid-06",
-        "card-uuid-07",
-      ];
-
       setGameData(newGameData);
 
       if (automaticAction) {
@@ -68,8 +58,21 @@ export const usePracticeGameData = (
           );
         }, automaticAction.delay);
       }
-    }, 150);
+    }, 1);
   };
+
+  useEffect(() => {
+    sendViaWebSocket({
+      playerId: "server",
+      password: gameData.gameSecrets.password,
+      gameId: gameData.id,
+      type: "action",
+      action: {
+        playerId: "server",
+        type: "deal-program-cards",
+      },
+    });
+  }, []);
 
   return {
     gameData: getPlayerData(gameData, playerId),

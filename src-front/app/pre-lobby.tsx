@@ -68,13 +68,18 @@ export default function PreLobby({ playerDetails }: PreLobbyProps) {
             return;
           }
 
+          if (!trimmedId) {
+            setErrorMessage(`You need to enter a game ID before joining.`);
+            return;
+          }
+
           setLoading(true);
           try {
             const res = await fetch(
               `${API_ORIGIN}/api/game/short-id/${trimmedId}`
             );
 
-            if (res.status === 404) {
+            if ([400, 404].includes(res.status)) {
               setErrorMessage(`Game ${trimmedId} not found.`);
               setLoading(false);
               return;

@@ -2,7 +2,6 @@ import {
   AutomaticAction,
   ProcessRegisterAction,
 } from "../../../dist-common/game-action-types";
-import { MainGameState } from "../../../dist-common/game-types";
 import Game from "../game-class";
 
 import { rotateRobot, moveRobot } from "./program-card-functions";
@@ -71,6 +70,10 @@ const processRegister = (
   return {
     game,
     message: "OK",
+    automaticAction: {
+      action: { playerId: "server", type: "deal-program-cards" },
+      delay: 10,
+    },
   };
 };
 
