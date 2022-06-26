@@ -8,7 +8,7 @@ export default function SetProgramRegistersInstruction({
   return (
     <>
       <p>
-        Select a register then choose on a program card to set it. The first
+        Select a register then choose a program card to set it. The first
         empty register will be selected automatically but you can program them
         in any order by clicking on the register you want.
       </p>
@@ -18,8 +18,8 @@ export default function SetProgramRegistersInstruction({
       </p>
       <p>
         All instructions are executed from the perspective of the robot. i.e. if
-        the robot is facing to the left, Move cars will move it to the left,
-        Back Up will move it to the right, Rotate Left will cause it to point
+        the robot is facing to the left, Move cards will move it to the left,
+        Back Up will move it to the right, Rotate Left will cause it to face
         down etc.
       </p>
       <p>
