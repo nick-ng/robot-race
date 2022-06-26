@@ -115,7 +115,7 @@ export default function CardsAndProgramRegisters({
     <StyledCardsAndProgramRegisters>
       <NextFlag>
         Next: {getFlagEmoji()}
-        {flagsTouched[playerId]}
+        {flagsTouched[playerId] + 1}
       </NextFlag>
       <SubmitButton
         disabled={!fullyProgrammed || youFinishedProgramming}

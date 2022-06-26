@@ -1,3 +1,4 @@
+import { OverGameState } from "src-common/game-types";
 import {
   AutomaticAction,
   ProcessRegisterAction,
@@ -60,10 +61,30 @@ const processRegister = (
     const { payload } = instructionItem;
     switch (payload.action) {
       case "touch-checkpoints":
-        touchCheckpoints(robots, map, flagsTouched, archiveMarkers);
+        const touched = touchCheckpoints(
+          robots,
+          map,
+          flagsTouched,
+          archiveMarkers
+        );
+        if (touched.length > 0) {
+          delay = 400;
+        }
         break;
       default:
     }
+  }
+
+  // check victory conditions
+  for (const n of Object.values(flagsTouched)) {
+    if (n === gameSettings.mapNumberOfFlags) {
+      game.gameState.state = "over";
+    }
+
+    return {
+      game,
+      message: "OK",
+    };
   }
 
   if (instructionQueue.length > 0) {

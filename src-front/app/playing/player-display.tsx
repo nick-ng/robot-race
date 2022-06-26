@@ -52,7 +52,7 @@ export default function PlayerDisplay({ gameData }: PlayerDisplayProps) {
               <div>{player.name}</div>
               <div>
                 Next: {getFlagEmoji()}
-                {flagsTouched[playerId]}
+                {flagsTouched[playerId] + 1}
               </div>
             </div>
           </Player>

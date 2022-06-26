@@ -139,6 +139,7 @@ export interface GameSettings {
   mapName: string;
   map: MapItem[][][];
   mapStartingPositions: Pick<Position, "x" | "y">[];
+  mapNumberOfFlags: number;
 }
 
 export interface Player {
