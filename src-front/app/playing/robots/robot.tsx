@@ -13,7 +13,6 @@ interface RobotProps {
 }
 
 const bounceAnimation = keyframes`
-
 0% {
   bottom: 0.3vw;
 }
@@ -28,7 +27,7 @@ const bounceAnimation = keyframes`
 `;
 
 const bounceAnimationMixin = css`
-animation ${bounceAnimation} 1s linear infinite;
+  animation: ${bounceAnimation} 1s linear infinite;
 `;
 
 const StyledRobot = styled.div<{ isPlayer?: boolean }>`

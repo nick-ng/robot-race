@@ -116,6 +116,7 @@ export const getDefaultGameData = (): GameData => {
       mapName: "a",
       map: getMap(),
       mapStartingPositions: [],
+      mapNumberOfFlags: 999,
     },
     lastActionId: "0-0",
     gameServer: null,

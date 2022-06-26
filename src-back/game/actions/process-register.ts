@@ -79,12 +79,12 @@ const processRegister = (
   for (const n of Object.values(flagsTouched)) {
     if (n === gameSettings.mapNumberOfFlags) {
       game.gameState.state = "over";
-    }
 
-    return {
-      game,
-      message: "OK",
-    };
+      return {
+        game,
+        message: "OK",
+      };
+    }
   }
 
   if (instructionQueue.length > 0) {
