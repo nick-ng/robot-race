@@ -2,7 +2,10 @@ import {
   AutomaticAction,
   FinishSettingRegistersAction,
 } from "../../../dist-common/game-action-types";
-import { InstructionItem } from "../../../dist-common/game-types";
+import {
+  InstructionItem,
+  ProgramCardInstruction,
+} from "../../../dist-common/game-types";
 import Game from "../game-class";
 
 const PROGRAM_REGISTER_COUNT = 5;
@@ -45,7 +48,7 @@ const finishSettingRegisters = (
     const { cardMap } = gameState;
 
     for (let n = 0; n < playerSecrets[playerId].programRegisters.length; n++) {
-      const nthRegisters: InstructionItem[] = [];
+      const nthRegisters: ProgramCardInstruction[] = [];
 
       Object.entries(playerSecrets).forEach((entry) => {
         const [playerId, value] = entry;
@@ -53,13 +56,22 @@ const finishSettingRegisters = (
         const programCardId = programRegisters[n]!;
         const programCard = cardMap[programCardId];
         nthRegisters.push({
+          type: "program-card-instruction",
           playerId,
-          payload: programCard,
+          payload: {
+            ...programCard,
+          },
         });
       });
 
       gameSecrets.instructionQueue.push(
-        ...nthRegisters.sort((a, b) => b.payload.priority - a.payload.priority)
+        ...nthRegisters.sort(
+          (a, b) => (b.payload.priority || 0) - (a.payload.priority || 0)
+        ),
+        {
+          type: "touch-checkpoint-instruction",
+          payload: { action: "touch-checkpoints" },
+        }
       );
     }
 

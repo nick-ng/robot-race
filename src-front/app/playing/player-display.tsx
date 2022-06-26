@@ -6,6 +6,7 @@ import {
   PlayerDetails,
   PlayerGameData,
 } from "../../../dist-common/game-types";
+import { getFlagEmoji } from "../utils";
 import getBorderStyle from "./robots/get-border-style";
 
 interface PlayerDisplayProps {
@@ -18,13 +19,23 @@ const StyledPlayerDisplay = styled.div`
 `;
 
 const Player = styled.div`
-  padding: 0.2em 0.5em;
+  padding: 0.2em;
   border-width: 0.25vw;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+`;
+
+const Emoji = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 `;
 
 export default function PlayerDisplay({ gameData }: PlayerDisplayProps) {
   const { gameState, players } = gameData;
-  const { seatOrder, finishedProgrammingPlayers, robots } =
+  const { seatOrder, finishedProgrammingPlayers, robots, flagsTouched } =
     gameState as MainGameState;
   return (
     <StyledPlayerDisplay>
@@ -34,8 +45,16 @@ export default function PlayerDisplay({ gameData }: PlayerDisplayProps) {
         const style = getBorderStyle(robot?.design || "");
         return (
           <Player key={playerId} style={style}>
-            {finishedProgrammingPlayers.includes(player.id) ? "🙂" : "🤔"}{" "}
-            {player.name}
+            <Emoji>
+              {finishedProgrammingPlayers.includes(playerId) ? "💡" : "💭"}{" "}
+            </Emoji>
+            <div>
+              <div>{player.name}</div>
+              <div>
+                Next: {getFlagEmoji()}
+                {flagsTouched[playerId] + 1}
+              </div>
+            </div>
           </Player>
         );
       })}

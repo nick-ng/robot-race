@@ -1,3 +1,4 @@
+import { OverGameState } from "src-common/game-types";
 import {
   AutomaticAction,
   ProcessRegisterAction,
@@ -5,6 +6,7 @@ import {
 import Game from "../game-class";
 
 import { rotateRobot, moveRobot } from "./program-card-functions";
+import { touchCheckpoints } from "./server-functions";
 
 const processRegister = (
   game: Game,
@@ -14,7 +16,7 @@ const processRegister = (
   message: string;
   automaticAction?: AutomaticAction;
 } => {
-  const { playerSecrets, gameState, gameSecrets } = game;
+  const { gameState, gameSecrets, gameSettings } = game;
   if (gameState.state !== "main") {
     return {
       game,
@@ -22,8 +24,9 @@ const processRegister = (
     };
   }
 
-  const { robots } = gameState;
+  const { robots, flagsTouched, archiveMarkers } = gameState;
   const { instructionQueue } = gameSecrets;
+  const { map } = gameSettings;
 
   if (instructionQueue.length === 0) {
     return {
@@ -32,20 +35,56 @@ const processRegister = (
     };
   }
 
-  const { payload, playerId } = instructionQueue.shift()!;
-  const robot = robots.find((r) => r.playerId === playerId)!;
+  const instructionItem = instructionQueue.shift()!;
 
-  switch (payload.action) {
-    case "Rotate Left":
-    case "Rotate Right":
-    case "U-Turn":
-      rotateRobot(robot, payload.action);
-      break;
-    case "Move 1":
-    case "Move 2":
-    case "Move 3":
-    case "Back Up":
-      moveRobot(robot, robots, payload.action);
+  let delay = 500;
+
+  if (instructionItem.type === "program-card-instruction") {
+    const { playerId, payload } = instructionItem;
+    const robot = robots.find((r) => r.playerId === playerId)!;
+    switch (payload.action) {
+      case "Rotate Left":
+      case "Rotate Right":
+      case "U-Turn":
+        rotateRobot(robot, payload.action);
+        break;
+      case "Move 1":
+      case "Move 2":
+      case "Move 3":
+      case "Back Up":
+        moveRobot(robot, robots, payload.action);
+        break;
+      default:
+    }
+  } else {
+    delay = 10;
+    const { payload } = instructionItem;
+    switch (payload.action) {
+      case "touch-checkpoints":
+        const touched = touchCheckpoints(
+          robots,
+          map,
+          flagsTouched,
+          archiveMarkers
+        );
+        if (touched.length > 0) {
+          delay = 400;
+        }
+        break;
+      default:
+    }
+  }
+
+  // check victory conditions
+  for (const n of Object.values(flagsTouched)) {
+    if (n === gameSettings.mapNumberOfFlags) {
+      game.gameState.state = "over";
+    }
+
+    return {
+      game,
+      message: "OK",
+    };
   }
 
   if (instructionQueue.length > 0) {
@@ -54,16 +93,10 @@ const processRegister = (
       message: "OK",
       automaticAction: {
         action: { playerId: "server", type: "process-registers" },
-        delay: 500,
+        delay,
       },
     };
   }
-
-  Object.values(playerSecrets).forEach((oneSecret) => {
-    for (let n = 0; n < oneSecret.programRegisters.length; n++) {
-      oneSecret.programRegisters[n] = null;
-    }
-  });
 
   gameState.finishedProgrammingPlayers = [];
 

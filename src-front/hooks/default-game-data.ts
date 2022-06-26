@@ -13,6 +13,21 @@ const getMap = (_?: any): MapItem[][][] => {
     }
   }
 
+  map[2][2].push({
+    type: "flag",
+    number: 1,
+  });
+
+  map[7][10].push({
+    type: "flag",
+    number: 2,
+  });
+
+  map[8][1].push({
+    type: "flag",
+    number: 3,
+  });
+
   return map;
 };
 
@@ -42,6 +57,8 @@ export const getDefaultGameData = (): GameData => {
       seatOrder: [PLAYER_UUID],
       finishedProgrammingPlayers: [],
       poweringDownNextTurn: [],
+      flagsTouched: { [PLAYER_UUID]: 0 },
+      archiveMarkers: {},
       robots: [
         {
           playerId: PLAYER_UUID,
@@ -98,6 +115,7 @@ export const getDefaultGameData = (): GameData => {
     gameSettings: {
       mapName: "a",
       map: getMap(),
+      mapStartingPositions: [],
     },
     lastActionId: "0-0",
     gameServer: null,

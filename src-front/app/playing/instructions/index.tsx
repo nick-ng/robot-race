@@ -9,6 +9,7 @@ import {
 
 import SetProgramRegistersInstruction from "./set-program-registers-instruction";
 import FinishedProgrammingInstruction from "./finished-programming-instruction";
+import TouchFlagsInstruction from "./touch-flags-instruction";
 
 interface InstructionProps {
   gameData: PlayerGameData;
@@ -29,7 +30,8 @@ export default function Instructions({
   className,
 }: InstructionProps) {
   const { gameState, yourSecrets } = gameData;
-  const { finishedProgrammingPlayers } = gameState as MainGameState;
+  const { finishedProgrammingPlayers, flagsTouched } =
+    gameState as MainGameState;
   const { programRegisters } = yourSecrets;
 
   const [isOpen, _setIsOpen] = useState(
@@ -55,6 +57,9 @@ export default function Instructions({
       {!finishedProgrammingPlayers.includes(playerDetails.playerId) && (
         <FinishedProgrammingInstruction />
       )}
+      <TouchFlagsInstruction
+        nextFlag={flagsTouched[playerDetails.playerId] + 1}
+      />
     </StyledInstructions>
   );
 }

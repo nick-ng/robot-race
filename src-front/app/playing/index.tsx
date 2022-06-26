@@ -8,6 +8,7 @@ import Map from "./map";
 import PlayerDisplay from "./player-display";
 import CardsAndProgramRegisters from "./cards-and-program-registers";
 import Instructions from "./instructions";
+import GameOver from "./game-over";
 
 interface PlayingProps {
   gameData: PlayerGameData;
@@ -48,7 +49,7 @@ export default function Playing({
   playerDetails,
   sendViaWebSocket,
 }: PlayingProps) {
-  const { shortId } = gameData;
+  const { shortId, gameState } = gameData;
 
   return (
     <StyledPlaying>
@@ -60,18 +61,25 @@ export default function Playing({
           <Map gameData={gameData} playerDetails={playerDetails} />
           <PlayerDisplay gameData={gameData} playerDetails={playerDetails} />
         </DisplayArea>
-        <ControlsArea>
-          <Heading>Robot Race</Heading>
-          <CardsAndProgramRegisters
-            gameData={gameData}
-            playerDetails={playerDetails}
-            sendViaWebSocket={sendViaWebSocket}
-          />
-          <StyledInstructions
-            gameData={gameData}
-            playerDetails={playerDetails}
-          />
-        </ControlsArea>
+        {gameState.state === "main" && (
+          <>
+            <ControlsArea>
+              <Heading>Robot Race</Heading>
+              <CardsAndProgramRegisters
+                gameData={gameData}
+                playerDetails={playerDetails}
+                sendViaWebSocket={sendViaWebSocket}
+              />
+              <StyledInstructions
+                gameData={gameData}
+                playerDetails={playerDetails}
+              />
+            </ControlsArea>
+          </>
+        )}
+        {gameState.state === "over" && (
+          <GameOver gameData={gameData} playerDetails={playerDetails} />
+        )}
       </Row>
     </StyledPlaying>
   );

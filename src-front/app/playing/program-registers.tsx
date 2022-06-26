@@ -43,7 +43,7 @@ export default function ProgramRegisters({
               <ProgramCard
                 cardWidth={cardWidth}
                 isLoading={isLoading || false}
-                key={`programed-register-${register}-${i}`}
+                key={`programed-register-${register}`}
                 clickHandler={() => {
                   handleRegisterSelect(i);
                 }}

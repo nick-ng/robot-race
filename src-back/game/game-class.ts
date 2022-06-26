@@ -53,6 +53,8 @@ export default class Game {
       state: "lobby",
       finishedProgrammingPlayers: [],
       poweringDownNextTurn: [],
+      flagsTouched: {},
+      archiveMarkers: {},
       robots: [],
     };
 
@@ -63,7 +65,7 @@ export default class Game {
     };
 
     const mapName = "";
-    const { map, mapStartingPositions } = getMap(mapName);
+    const { map, mapStartingPositions, mapNumberOfFlags } = getMap(mapName);
 
     const temp: GameData = {
       maxPlayers: 8,
@@ -72,6 +74,7 @@ export default class Game {
         mapName,
         map,
         mapStartingPositions,
+        mapNumberOfFlags,
       },
       gameSecrets: defaultGameSecrets,
       playerSecrets: {},
@@ -208,6 +211,8 @@ export default class Game {
       },
       design: ROBOT_DESIGNS[existingRobots],
     });
+
+    this.gameState.flagsTouched[playerId] = 0;
 
     return {
       type: "success",

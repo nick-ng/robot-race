@@ -7,7 +7,6 @@ import { useGameSocket } from "../hooks/use-game-socket";
 import Loading from "../loading";
 import PingDisplay from "./ping-display";
 import Lobby from "./lobby";
-import GameOver from "./game-over";
 import Playing from "./playing";
 
 interface GameProps {
@@ -36,7 +35,6 @@ export default function Game({ playerDetails }: GameProps) {
         </>
       );
     case "over":
-      return <GameOver gameData={gameData} playerDetails={playerDetails} />;
     default:
       return (
         <>

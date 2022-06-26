@@ -38,15 +38,29 @@ export interface Robot {
     | "outset";
 }
 
-export type InstructionItem = {
+export interface ProgramCardInstruction {
+  type: "program-card-instruction";
   playerId: string;
   payload: ProgramCard;
-};
+}
+
+export interface TouchCheckpointsInstruction {
+  type: "touch-checkpoint-instruction";
+  payload: {
+    action: "touch-checkpoints";
+  };
+}
+
+export type InstructionItem =
+  | ProgramCardInstruction
+  | TouchCheckpointsInstruction;
 
 export interface LobbyGameState {
   state: "lobby";
   finishedProgrammingPlayers: string[];
   poweringDownNextTurn: string[];
+  flagsTouched: { [playerId: string]: number };
+  archiveMarkers: { [playerId: string]: Pick<Position, "x" | "y"> };
   robots: Robot[];
 }
 
@@ -75,6 +89,11 @@ export interface OnePlayerSecrets {
   cardsInHand: string[];
 }
 
+export interface FlagMapItem {
+  type: "flag";
+  number: number;
+}
+
 export interface ConveyorMapItem {
   type: "conveyor";
   direction: "up" | "down" | "left" | "right";
@@ -101,6 +120,7 @@ export interface RepairMapItem {
 }
 
 export type MapItem =
+  | FlagMapItem
   | ConveyorMapItem
   | PitMapItem
   | GearMapItem
@@ -119,6 +139,7 @@ export interface GameSettings {
   mapName: string;
   map: MapItem[][][];
   mapStartingPositions: Pick<Position, "x" | "y">[];
+  mapNumberOfFlags: number;
 }
 
 export interface Player {

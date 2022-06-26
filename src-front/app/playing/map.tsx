@@ -2,11 +2,12 @@ import React from "react";
 import styled from "styled-components";
 
 import {
-  MainGameState,
+  FlagMapItem,
   PlayerDetails,
   PlayerGameData,
 } from "../../../dist-common/game-types";
 
+import { getFlagEmoji } from "../utils";
 import Robots from "./robots";
 
 interface MapProps {
@@ -40,8 +41,7 @@ const StyledMap = styled.div<{ numberColumns: number; cellSize: number }>`
       border: 1px solid grey;
       width: ${({ cellSize }) => cellSize}vw;
       height: ${({ cellSize }) => cellSize}vw;
-      // font-size: ${({ cellSize }) => cellSize * 0.3}vw;
-      font-size: 1.1vw;
+      font-size: ${({ cellSize }) => cellSize * 0.28}vw;
       text-align: center;
 
       ${MapCellToolTip} {
@@ -52,7 +52,7 @@ const StyledMap = styled.div<{ numberColumns: number; cellSize: number }>`
 `;
 
 export default function Map({ gameData, playerDetails }: MapProps) {
-  const { gameState, gameSettings } = gameData;
+  const { gameSettings } = gameData;
   const { map } = gameSettings;
 
   return (
@@ -61,11 +61,17 @@ export default function Map({ gameData, playerDetails }: MapProps) {
         <tbody>
           {map.map((mapRow, n) => (
             <tr key={`map-row-${n}`}>
-              {mapRow.map((mapCell, m) => (
-                <MapCell key={`map-item-${m}-${n}`}>
-                  <MapCellToolTip>{`${m},${n}`}</MapCellToolTip>
-                </MapCell>
-              ))}
+              {mapRow.map((mapCell, m) => {
+                const flag = mapCell.find(
+                  (a) => a.type === "flag"
+                ) as FlagMapItem;
+                return (
+                  <MapCell key={`map-item-${m}-${n}`}>
+                    <MapCellToolTip>{`${m},${n}`}</MapCellToolTip>
+                    {flag ? `${getFlagEmoji()}${flag.number}` : null}
+                  </MapCell>
+                );
+              })}
             </tr>
           ))}
         </tbody>
