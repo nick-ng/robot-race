@@ -7,7 +7,7 @@ import {
 } from "../../dist-common/game-action-types";
 
 import Game from "./game-class";
-import { saveGame, findGame, makeShortId } from "./game-redis";
+import { saveGame, findGame, makeShortId, addAction } from "./game-redis";
 import { sendStartGameAction } from "./game-server";
 
 export const newGame = async (
@@ -57,40 +57,6 @@ export const joinGame = async (
   };
 };
 
-export const startGame = async (
-  gameId: string,
-  playerId: string,
-  playerPassword: string
-) => {
-  const game = await findGame(gameId);
-
-  if (!game) {
-    return { code: 404 };
-  }
-
-  const result = game.gameAction(playerId, playerPassword, {
-    type: "start",
-    playerId,
-  });
-
-  if (result.type !== "success") {
-    return {
-      code: 400,
-      message: result.message,
-      gameData: game.getGameDataForPlayer(playerId, playerPassword),
-    };
-  }
-
-  await saveGame(game.getGameData(), true);
-  await sendStartGameAction(game.id);
-
-  return {
-    code: 200,
-    message: result.message,
-    gameData: game.getGameDataForPlayer(playerId, playerPassword),
-  };
-};
-
 export const getGame = async (
   gameId: string,
   playerId: string,
@@ -121,6 +87,7 @@ export const playGame = (
   automaticAction?: AutomaticAction;
 } => {
   const { action, playerId, password } = actionObject;
+
   const { type, message, automaticAction } = game.gameAction(
     playerId,
     password,
@@ -142,6 +109,52 @@ export const playGame = (
   }
 
   return { game, type, message, automaticAction };
+};
+
+export const startGame = async (
+  gameId: string,
+  playerId: string,
+  playerPassword: string
+) => {
+  const game = await findGame(gameId);
+
+  if (!game) {
+    return { code: 404 };
+  }
+
+  const { message } = playGame(
+    game,
+    {
+      playerId,
+      password: playerPassword,
+      gameId: gameId,
+      type: "action",
+      action: {
+        playerId,
+        type: "start",
+      },
+    },
+    (nextAction) => {
+      addAction(nextAction);
+    }
+  );
+
+  if (message !== "OK") {
+    return {
+      code: 400,
+      message,
+      gameData: game.getGameDataForPlayer(playerId, playerPassword),
+    };
+  }
+
+  await saveGame(game.getGameData(), true);
+  await sendStartGameAction(game.id);
+
+  return {
+    code: 200,
+    message,
+    gameData: game.getGameDataForPlayer(playerId, playerPassword),
+  };
 };
 
 export const stepGame = (

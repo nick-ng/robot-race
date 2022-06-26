@@ -14,7 +14,7 @@ interface RobotsProps {
   playerDetails: PlayerDetails;
 }
 
-export default function Robots({ gameData }: RobotsProps) {
+export default function Robots({ gameData, playerDetails }: RobotsProps) {
   const { gameState, players } = gameData;
   const { seatOrder, robots } = gameState as MainGameState;
 
@@ -23,7 +23,8 @@ export default function Robots({ gameData }: RobotsProps) {
       {robots.map((robot) => (
         <Robot
           key={robot.playerId}
-          player={players.find((a) => a.id === robot.playerId)!}
+          name={players.find((a) => a.id === robot.playerId)?.name}
+          isPlayer={playerDetails.playerId === robot.playerId}
           robot={robot}
         />
       ))}

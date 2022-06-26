@@ -7,9 +7,9 @@ import PreLobby from "./pre-lobby";
 import Game from "./game";
 import Practice from "./practice";
 
-const PLAYER_NAME_STORE = "PIG_DICE_GAME_PLAYER_NAME_STORE";
-const PLAYER_ID_STORE = "PIG_DICE_GAME_PLAYER_ID_STORE";
-const PLAYER_PASSWORD_STORE = "PIG_DICE_GAME_PLAYER_PASSWORD_STORE";
+const PLAYER_NAME_STORE = "ROBOT_RACE_PLAYER_NAME_STORE";
+const PLAYER_ID_STORE = "ROBOT_RACE_PLAYER_ID_STORE";
+const PLAYER_PASSWORD_STORE = "ROBOT_RACE_PLAYER_PASSWORD_STORE";
 
 const StyledApp = styled.div`
   padding: 0 1em;

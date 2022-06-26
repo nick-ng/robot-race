@@ -14,7 +14,20 @@ interface MapProps {
   playerDetails: PlayerDetails;
 }
 
-const MapCell = styled.td``;
+const MapCellToolTip = styled.div`
+  display: none;
+  position: absolute;
+  border: 1px solid grey;
+  background-color: black;
+  top: 0;
+`;
+
+const MapCell = styled.td`
+  position: relative;
+  &:hover ${MapCellToolTip} {
+    display: block;
+  }
+`;
 
 const StyledMap = styled.div<{ numberColumns: number; cellSize: number }>`
   position: relative;
@@ -30,6 +43,10 @@ const StyledMap = styled.div<{ numberColumns: number; cellSize: number }>`
       // font-size: ${({ cellSize }) => cellSize * 0.3}vw;
       font-size: 1.1vw;
       text-align: center;
+
+      ${MapCellToolTip} {
+        left: ${({ cellSize }) => cellSize * 1.05}vw;
+      }
     }
   }
 `;
@@ -45,7 +62,9 @@ export default function Map({ gameData, playerDetails }: MapProps) {
           {map.map((mapRow, n) => (
             <tr key={`map-row-${n}`}>
               {mapRow.map((mapCell, m) => (
-                <MapCell key={`map-item-${m}-${n}`}></MapCell>
+                <MapCell key={`map-item-${m}-${n}`}>
+                  <MapCellToolTip>{`${m},${n}`}</MapCellToolTip>
+                </MapCell>
               ))}
             </tr>
           ))}

@@ -45,17 +45,17 @@ export type InstructionItem = {
 
 export interface LobbyGameState {
   state: "lobby";
-}
-
-export interface MainGameState {
-  state: "main";
-  seatOrder: string[];
   finishedProgrammingPlayers: string[];
   poweringDownNextTurn: string[];
-  cardMap: { [cardId: string]: ProgramCard };
   robots: Robot[];
-  discardedCards: string[];
 }
+
+export type MainGameState = Omit<LobbyGameState, "state"> & {
+  state: "main";
+  seatOrder: string[];
+  cardMap: { [cardId: string]: ProgramCard };
+  discardedCards: string[];
+};
 
 export type OverGameState = Omit<MainGameState, "state"> & {
   state: "over";
@@ -118,6 +118,7 @@ export interface GameSecrets {
 export interface GameSettings {
   mapName: string;
   map: MapItem[][][];
+  mapStartingPositions: Pick<Position, "x" | "y">[];
 }
 
 export interface Player {
