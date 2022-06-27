@@ -7,6 +7,8 @@ import {
   MainGameState,
 } from "../../../dist-common/game-types";
 import { ActionIncomingMessageObject } from "../../../dist-common/game-action-types";
+import canSetRegister from "../../../dist-common/action-validators/can-set-register";
+import canSubmitProgram from "../../../dist-common/action-validators/can-submit-program";
 
 import { getFlagEmoji } from "../utils";
 import CardsInHand from "./cards-in-hand";
@@ -88,7 +90,7 @@ export default function CardsAndProgramRegisters({
 
   const { id, yourSecrets, gameState } = gameData;
   const { cardsInHand, programRegisters } = yourSecrets;
-  const { finishedProgrammingPlayers, flagsTouched } =
+  const { finishedProgrammingPlayers, flagsTouched, robots } =
     gameState as MainGameState;
 
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
@@ -101,6 +103,20 @@ export default function CardsAndProgramRegisters({
 
   useEffect(() => {
     if (selectedCardId !== null && selectedRegisterIndex !== null) {
+      const { canPerform } = canSetRegister(
+        selectedCardId,
+        selectedRegisterIndex,
+        cardsInHand,
+        programRegisters,
+        robots.find((r) => r.playerId === playerId)!
+      );
+
+      if (!canPerform) {
+        setIsLoading(false);
+        setSelectedCardId(null);
+        return;
+      }
+
       setIsLoading(true);
       sendViaWebSocket({
         playerId,
@@ -132,9 +148,7 @@ export default function CardsAndProgramRegisters({
     youFinishedProgramming,
   ]);
 
-  const fullyProgrammed = programRegisters.every(
-    (register) => register !== null
-  );
+  const fullyProgrammed = canSubmitProgram(programRegisters).canPerform;
 
   return (
     <StyledCardsAndProgramRegisters>
@@ -162,11 +176,12 @@ export default function CardsAndProgramRegisters({
           });
         }}
       >
-        {fullyProgrammed
-          ? "Submit Program"
-          : "Submit Program (Set All Registers First)"}
+        Submit Program
       </SubmitButton>
-      <Heading>Registers</Heading>
+      <Heading>
+        Registers ({programRegisters.filter((a) => a).length}/
+        {programRegisters.length} Set)
+      </Heading>
       <StyledProgramRegisters
         cardWidth={6}
         isLoading={isLoading}
