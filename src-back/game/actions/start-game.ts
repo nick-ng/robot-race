@@ -42,11 +42,11 @@ const startGame = (
     cardMap,
   } as MainGameState;
 
-  const { mapStartingPositions } = gameSettings;
+  const { map } = gameSettings;
 
   seatOrder.forEach((playerId, i) => {
     const robot = game.gameState.robots.find((r) => r.playerId === playerId);
-    const mapStartingPosition = mapStartingPositions[i];
+    const mapStartingPosition = map.startingPositions[i];
     if (robot && mapStartingPosition) {
       robot.position.x = mapStartingPosition.x;
       robot.position.y = mapStartingPosition.y;

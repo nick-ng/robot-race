@@ -1,13 +1,14 @@
 import {
   Robot,
   MapItem,
+  Map,
   MainGameState,
   FlagMapItem,
 } from "../../../dist-common/game-types";
 
 export const touchCheckpoints = (
   robots: Robot[],
-  map: MapItem[][][],
+  map: Map,
   flagsTouched: MainGameState["flagsTouched"],
   archiveMarkers: MainGameState["archiveMarkers"]
 ): { playerId: string; mapItems: MapItem[] }[] => {
@@ -16,7 +17,9 @@ export const touchCheckpoints = (
   for (const robot of robots) {
     const { position, playerId } = robot;
 
-    const mapItems = map[position.y][position.x];
+    const mapItems = map.items.filter(
+      (item) => item.x === position.x && item.y === position.y
+    );
 
     try {
       if (mapItems.length > 0) {

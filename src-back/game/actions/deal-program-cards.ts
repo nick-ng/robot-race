@@ -53,6 +53,7 @@ const dealProgramCards = (
     gameSecrets.remainingDeck = gameSecrets.remainingDeck.concat(
       shuffledDiscardedCards
     );
+    gameState.discardedCards = [];
   }
 
   let continueDealing = false;

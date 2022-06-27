@@ -28,7 +28,9 @@ export default function GameOver({ gameData, playerDetails }: GameOverProps) {
   for (const entry of Object.entries(flagsTouched)) {
     const [playerId, n] = entry;
 
-    if (n === gameSettings.mapNumberOfFlags) {
+    if (
+      n === gameSettings.map.items.filter((mi) => mi.type === "flag").length
+    ) {
       winnerId = playerId;
       break;
     }

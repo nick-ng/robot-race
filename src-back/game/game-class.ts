@@ -9,10 +9,12 @@ import {
   GameData,
   PlayerSecrets,
   LobbyGameState,
-  MapItem,
   Robot,
 } from "../../dist-common/game-types";
-import { GameAction } from "../../dist-common/game-action-types";
+import {
+  GameAction,
+  ActionIncomingMessageObject,
+} from "../../dist-common/game-action-types";
 import { performAction } from "./game-actions";
 import getMap from "./actions/get-map";
 
@@ -39,6 +41,7 @@ export default class Game {
   gameState: GameState;
   lastActionId: string;
   gameServer: string | null;
+  resumeAction: ActionIncomingMessageObject | null;
 
   constructor(initial: InitObject) {
     if (!initial.host) {
@@ -64,23 +67,20 @@ export default class Game {
       instructionQueue: [],
     };
 
-    const mapName = "";
-    const { map, mapStartingPositions, mapNumberOfFlags } = getMap(mapName);
+    const mapName = "Exchange";
 
     const temp: GameData = {
       maxPlayers: 8,
       players: [],
       gameSettings: {
-        mapName,
-        map,
-        mapStartingPositions,
-        mapNumberOfFlags,
+        map: getMap(mapName),
       },
       gameSecrets: defaultGameSecrets,
       playerSecrets: {},
       gameState: defaultGameState,
       lastActionId: "0-0",
       gameServer: null,
+      resumeAction: null,
       ...initial,
     };
 
@@ -97,22 +97,18 @@ export default class Game {
     this.gameState = temp.gameState;
     this.lastActionId = temp.lastActionId;
     this.gameServer = temp.gameServer;
+    this.resumeAction = temp.resumeAction || null;
   }
 
   getGameData = (): GameData => {
-    return {
-      id: this.id,
-      shortId: this.shortId,
-      host: this.host,
-      maxPlayers: this.maxPlayers,
-      players: this.players,
-      gameSettings: this.gameSettings,
-      gameSecrets: this.gameSecrets,
-      playerSecrets: this.playerSecrets,
-      gameState: this.gameState,
-      lastActionId: this.lastActionId,
-      gameServer: this.gameServer,
-    };
+    const {
+      getGameData,
+      getGameDataForPlayer,
+      addPlayer,
+      gameAction,
+      ...gameData
+    } = this;
+    return gameData;
   };
 
   getGameDataForPlayer = (playerId: string, playerPassword: string) => {

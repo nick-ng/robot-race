@@ -1,3 +1,5 @@
+import { ActionIncomingMessageObject } from "./game-action-types";
+
 export interface Scores {
   [index: string]: number;
 }
@@ -89,33 +91,38 @@ export interface OnePlayerSecrets {
   cardsInHand: string[];
 }
 
-export interface FlagMapItem {
+export interface BasicMapItem {
+  x: number;
+  y: number;
+}
+
+export interface FlagMapItem extends BasicMapItem {
   type: "flag";
   number: number;
 }
 
-export interface ConveyorMapItem {
+export interface ConveyorMapItem extends BasicMapItem {
   type: "conveyor";
   direction: "up" | "down" | "left" | "right";
   speed: 1 | 2;
 }
 
-export interface PitMapItem {
+export interface PitMapItem extends BasicMapItem {
   type: "pit";
 }
 
-export interface GearMapItem {
+export interface GearMapItem extends BasicMapItem {
   type: "gear";
   direction: "clockwise" | "counter-clockwise"; // CW: Green, CCW: Red
 }
 
-export interface PusherMapItem {
+export interface PusherMapItem extends BasicMapItem {
   type: "pusher";
   direction: "up" | "down" | "left" | "right";
   activeRegisters: number[];
 }
 
-export interface RepairMapItem {
+export interface RepairMapItem extends BasicMapItem {
   type: "repair";
 }
 
@@ -125,6 +132,19 @@ export type MapItem =
   | PitMapItem
   | GearMapItem
   | PusherMapItem;
+
+export interface Map {
+  name: string;
+  items: MapItem[];
+  width: number;
+  height: number;
+  startingPositions: Pick<Position, "x" | "y">[];
+}
+
+export interface GameSettings {
+  map: Map;
+}
+
 export interface PlayerSecrets {
   [key: string]: OnePlayerSecrets;
 }
@@ -133,13 +153,6 @@ export interface GameSecrets {
   password: string;
   remainingDeck: string[];
   instructionQueue: InstructionItem[];
-}
-
-export interface GameSettings {
-  mapName: string;
-  map: MapItem[][][];
-  mapStartingPositions: Pick<Position, "x" | "y">[];
-  mapNumberOfFlags: number;
 }
 
 export interface Player {
@@ -161,6 +174,7 @@ export interface GameData {
   gameState: GameState;
   lastActionId: string;
   gameServer: string | null;
+  resumeAction: ActionIncomingMessageObject | null;
 }
 
 export type InitObject = Partial<GameData> & {

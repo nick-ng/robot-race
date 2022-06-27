@@ -30,7 +30,7 @@ const MapCell = styled.td`
   }
 `;
 
-const StyledMap = styled.div<{ numberColumns: number; cellSize: number }>`
+const StyledMap = styled.div<{ cellSize: number }>`
   position: relative;
 
   table {
@@ -56,18 +56,21 @@ export default function Map({ gameData, playerDetails }: MapProps) {
   const { map } = gameSettings;
 
   return (
-    <StyledMap numberColumns={map[0]?.length || 12} cellSize={2.8}>
+    <StyledMap cellSize={2.8}>
       <table>
         <tbody>
-          {map.map((mapRow, n) => (
-            <tr key={`map-row-${n}`}>
-              {mapRow.map((mapCell, m) => {
-                const flag = mapCell.find(
+          {new Array(map.height).fill(null).map((_, y) => (
+            <tr key={`map-row-${y}`}>
+              {new Array(map.width).fill(null).map((_, x) => {
+                const cellItems = map.items.filter(
+                  (mi) => mi.x === x && mi.y === y
+                );
+                const flag = cellItems.find(
                   (a) => a.type === "flag"
                 ) as FlagMapItem;
                 return (
-                  <MapCell key={`map-item-${m}-${n}`}>
-                    <MapCellToolTip>{`${m},${n}`}</MapCellToolTip>
+                  <MapCell key={`map-item-${x}-${y}`}>
+                    <MapCellToolTip>{`${x},${y}`}</MapCellToolTip>
                     {flag ? `${getFlagEmoji()}${flag.number}` : null}
                   </MapCell>
                 );

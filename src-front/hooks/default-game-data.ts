@@ -1,34 +1,44 @@
-import { GameData, MapItem } from "../../dist-common/game-types";
+import { GameData, Map } from "../../dist-common/game-types";
 import { getCardMap } from "../../dist-common/card-map";
 
 export const PLAYER_UUID = "player-1's-uuid";
 
-const getMap = (_?: any): MapItem[][][] => {
-  const map: MapItem[][][] = [];
-
-  for (let n = 0; n < 12 + 4; n++) {
-    map.push([]);
-    for (let m = 0; m < 12; m++) {
-      map[n].push([]);
-    }
-  }
-
-  map[2][2].push({
-    type: "flag",
-    number: 1,
-  });
-
-  map[7][10].push({
-    type: "flag",
-    number: 2,
-  });
-
-  map[8][1].push({
-    type: "flag",
-    number: 3,
-  });
-
-  return map;
+const getMap = (_?: any): Map => {
+  return {
+    name: "Exchange",
+    items: [
+      {
+        type: "flag",
+        number: 1,
+        x: 7,
+        y: 1,
+      },
+      {
+        type: "flag",
+        number: 2,
+        x: 9,
+        y: 7,
+      },
+      {
+        type: "flag",
+        number: 3,
+        x: 1,
+        y: 4,
+      },
+    ],
+    width: 12,
+    height: 12 + 4,
+    startingPositions: [
+      { x: 5, y: 15 },
+      { x: 6, y: 15 },
+      { x: 3, y: 14 },
+      { x: 8, y: 14 },
+      { x: 1, y: 13 },
+      { x: 10, y: 13 },
+      { x: 0, y: 12 },
+      { x: 11, y: 12 },
+    ],
+  };
 };
 
 export const getDefaultGameData = (): GameData => {
@@ -113,10 +123,7 @@ export const getDefaultGameData = (): GameData => {
       cardMap,
     },
     gameSettings: {
-      mapName: "a",
       map: getMap(),
-      mapStartingPositions: [],
-      mapNumberOfFlags: 999,
     },
     lastActionId: "0-0",
     gameServer: null,
