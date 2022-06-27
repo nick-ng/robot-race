@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import {
@@ -34,18 +34,16 @@ export default function Instructions({
     gameState as MainGameState;
   const { programRegisters } = yourSecrets;
 
-  const [isHidden, _setisHidden] = useState(
-    (): boolean =>
-      localStorage.getItem("ROBOT_RACE_INSTRUCTIONS_HIDDEN") === "true" || false
-  );
+  const startHidden =
+    localStorage.getItem("ROBOT_RACE_INSTRUCTIONS_HIDDEN") === "true";
 
   return (
     <StyledInstructions
-      open={!isHidden}
-      onClick={() => {
+      open={!startHidden}
+      onToggle={(e) => {
         localStorage.setItem(
           "ROBOT_RACE_INSTRUCTIONS_HIDDEN",
-          (!isHidden).toString()
+          (!(e.target as HTMLDetailsElement).open).toString()
         );
       }}
       className={className}
