@@ -94,18 +94,22 @@ export const playGame = (
     action
   );
 
+  game.resumeAction = null;
+
   if (automaticAction) {
     const { action, delay } = automaticAction;
+    const fullAutomaticActionObject: ActionIncomingMessageObject = {
+      playerId: "server",
+      password: game.gameSecrets.password,
+      gameId: game.id,
+      type: "action",
+      action,
+    };
 
+    game.resumeAction = fullAutomaticActionObject;
     setTimeout(() => {
-      performAction({
-        playerId: "server",
-        password: game.gameSecrets.password,
-        gameId: game.id,
-        type: "action",
-        action,
-      });
-    }, delay);
+      performAction(fullAutomaticActionObject);
+    }, Math.max(delay, 50));
   }
 
   return { game, type, message, automaticAction };

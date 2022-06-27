@@ -77,7 +77,9 @@ const processRegister = (
 
   // check victory conditions
   for (const n of Object.values(flagsTouched)) {
-    if (n === gameSettings.mapNumberOfFlags) {
+    if (
+      n === gameSettings.map.items.filter((mi) => mi.type === "flag").length
+    ) {
       game.gameState.state = "over";
 
       return {

@@ -96,13 +96,20 @@ export default class GameServer {
 
     if (game !== null && game.gameState.state !== "over") {
       this.allGames.push(game);
+
+      const updateHandler = this.makeActionListener(game);
+
       streamHelper.addListener({
         streamKey: getGameKeys(game.id).action,
         id: game.id,
         fetchOnAdd: true,
         lastOnly: false,
-        updateHandler: this.makeActionListener(game),
+        updateHandler,
       });
+
+      if (game.resumeAction) {
+        updateHandler("", game.resumeAction, "$");
+      }
     }
   };
 
@@ -210,18 +217,17 @@ export const sendStartGameAction = async (gameId: string) => {
   try {
     const serverStats = await checkStats();
 
-    if (serverStats.length === 0) {
-      return false;
+    let serverId = Math.random() > 0.5 ? "first" : "last";
+    if (serverStats.length > 0) {
+      serverId = serverStats.sort((a, b) => {
+        const aa =
+          FREE_HEAP_WEIGHT * a.heapFree - APM_WEIGHT * a.actionsPerMinute;
+        const bb =
+          FREE_HEAP_WEIGHT * b.heapFree - APM_WEIGHT * b.actionsPerMinute;
+
+        return aa - bb;
+      })[0].id;
     }
-
-    const serverId = serverStats.sort((a, b) => {
-      const aa =
-        FREE_HEAP_WEIGHT * a.heapFree - APM_WEIGHT * a.actionsPerMinute;
-      const bb =
-        FREE_HEAP_WEIGHT * b.heapFree - APM_WEIGHT * b.actionsPerMinute;
-
-      return aa - bb;
-    })[0].id;
 
     redisClient.xAdd(
       GAME_STARTER_KEY,

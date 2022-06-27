@@ -1,4 +1,4 @@
-import { MapItem, Position } from "../../../dist-common/game-types";
+import { Map, MapItem, Position } from "../../../dist-common/game-types";
 
 const mapStartingPositionsA = Object.freeze([
   { x: 5, y: 14 },
@@ -22,42 +22,37 @@ const mapStartingPositionsB = Object.freeze([
   { x: 11, y: 12 },
 ]);
 
-const getMap = (
-  _?: any
-): {
-  map: MapItem[][][];
-  mapStartingPositions: Pick<Position, "x" | "y">[];
-  mapNumberOfFlags: number;
-} => {
-  const map: MapItem[][][] = [];
-
-  for (let n = 0; n < 12 + 4; n++) {
-    map.push([]);
-    for (let m = 0; m < 12; m++) {
-      map[n].push([]);
-    }
+const getMap = (name: string): Map => {
+  switch (name.toLowerCase()) {
+    case "exchange":
+    default:
+      return {
+        name,
+        items: [
+          {
+            type: "flag",
+            number: 1,
+            x: 7,
+            y: 1,
+          },
+          {
+            type: "flag",
+            number: 2,
+            x: 9,
+            y: 7,
+          },
+          {
+            type: "flag",
+            number: 3,
+            x: 1,
+            y: 4,
+          },
+        ],
+        width: 12,
+        height: 12 + 4,
+        startingPositions: [...mapStartingPositionsB],
+      };
   }
-
-  map[1][7].push({
-    type: "flag",
-    number: 1,
-  });
-
-  map[7][9].push({
-    type: "flag",
-    number: 2,
-  });
-
-  map[4][1].push({
-    type: "flag",
-    number: 3,
-  });
-
-  return {
-    map,
-    mapStartingPositions: [...mapStartingPositionsB],
-    mapNumberOfFlags: 3,
-  };
 };
 
 export default getMap;
