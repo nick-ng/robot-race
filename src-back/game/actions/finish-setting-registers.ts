@@ -2,13 +2,10 @@ import {
   AutomaticAction,
   FinishSettingRegistersAction,
 } from "../../../dist-common/game-action-types";
-import {
-  InstructionItem,
-  ProgramCardInstruction,
-} from "../../../dist-common/game-types";
-import Game from "../game-class";
+import { ProgramCardInstruction } from "../../../dist-common/game-types";
+import canSubmitProgram from "../../../dist-common/action-validators/can-submit-program";
 
-const PROGRAM_REGISTER_COUNT = 5;
+import Game from "../game-class";
 
 const finishSettingRegisters = (
   game: Game,
@@ -27,14 +24,14 @@ const finishSettingRegisters = (
   }
 
   const { playerId } = action;
-  if (
-    playerSecrets[playerId].programRegisters.some(
-      (register) => register === null
-    )
-  ) {
+  const { canPerform, message } = canSubmitProgram(
+    playerSecrets[playerId].programRegisters
+  );
+
+  if (!canPerform) {
     return {
       game,
-      message: "You need to fully program your robot.",
+      message,
     };
   }
 
