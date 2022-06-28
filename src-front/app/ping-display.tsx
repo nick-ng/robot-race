@@ -15,7 +15,7 @@ const StyledPingDisplay = styled.div`
   }
 
   a {
-    color: white;
+    color: #ffffff;
   }
 `;
 

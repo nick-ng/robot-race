@@ -1,4 +1,4 @@
-import { Robot } from "../../../dist-common/game-types";
+import { MapItem, Robot } from "../../../dist-common/game-types";
 
 const rotateMap: Readonly<any> = {
   "Rotate Left": {
@@ -35,13 +35,6 @@ const movementDirectionMap = {
   left: { xd: -1, yd: 0 },
 };
 
-const speedMap = {
-  "Move 1": 1,
-  "Move 2": 2,
-  "Move 3": 3,
-  "Back Up": -1,
-};
-
 /**
  * Check which robots will be affected by a push.
  *
@@ -50,7 +43,8 @@ const speedMap = {
 const pushRobots = (
   robots: Robot[],
   direction: { xd: number; yd: number },
-  target: { x: number; y: number }
+  affectedCell: { x: number; y: number }, // map cell being pushed
+  mapItems: MapItem[]
 ): boolean => {
   let canPush = true;
   let pushed = false;
@@ -58,70 +52,73 @@ const pushRobots = (
   const newPositions: { playerId: string | null; x: number; y: number }[] = [
     {
       playerId: null,
-      x: target.x,
-      y: target.y,
+      x: affectedCell.x,
+      y: affectedCell.y,
     },
   ];
 
-  do {
-    pushed = false;
-    for (const robot of robots) {
-      const { position } = robot;
-      if (
-        newPositions[0].x === position.x &&
-        newPositions[0].y === position.y
-      ) {
-        newPositions.unshift({
-          playerId: robot.playerId,
-          x: position.x + direction.xd,
-          y: position.y + direction.yd,
-        });
-        pushed = true;
-      }
-    }
-  } while (pushed);
+  // Figure out if a robot is affected by the push
+  const affectedRobot = robots.find(
+    ({ position }) =>
+      affectedCell.x === position.x && affectedCell.y === position.y
+  );
 
-  if (canPush) {
-    newPositions.forEach((newPosition) => {
-      const robot = robots.find((r) => r.playerId === newPosition.playerId);
-
-      if (robot) {
-        (robot.position.x = newPosition.x), (robot.position.y = newPosition.y);
-      }
-    });
+  if (!affectedRobot) {
+    return true; // Nothing happened but you can push.
   }
 
-  return canPush;
+  const { position } = affectedRobot;
+
+  // 10. calculate the pushed robot's destination
+  const nextPosition = {
+    x: position.x + direction.xd,
+    y: position.y + direction.yd,
+  };
+
+  // 20. check if it will be stopped by a wall
+  const blockingWall = mapItems.find(
+    (mi) =>
+      mi.type === "wall" &&
+      ((mi.x === position.x &&
+        mi.y === position.y &&
+        mi.x1 === nextPosition.x &&
+        mi.y1 === nextPosition.y) ||
+        (mi.x1 === position.x &&
+          mi.y1 === position.y &&
+          mi.x === nextPosition.x &&
+          mi.y === nextPosition.y))
+  );
+
+  if (blockingWall) {
+    return false; // the robot can't be pushed.
+  }
+
+  // 30. check if you need to push a robot out of the destination square (and push)
+  if (!pushRobots(robots, direction, nextPosition, mapItems)) {
+    return false; // the robot couldn't be pushed so you need to stay put.
+  }
+
+  // 40. update robot's position
+  affectedRobot.position.x = nextPosition.x;
+  affectedRobot.position.y = nextPosition.y;
+
+  return true;
 };
 
-export const moveRobot = (
+export const moveRobotOne = (
   robot: Robot,
   robots: Robot[],
-  action: "Move 1" | "Move 2" | "Move 3" | "Back Up"
+  action: "Move 1" | "Move 2" | "Move 3" | "Back Up",
+  mapItems: MapItem[]
 ): void => {
-  const otherRobots = robots.filter((a) => a.playerId !== robot.playerId);
-
   const { xd, yd } = movementDirectionMap[robot.position.facing];
-  let speed = speedMap[action];
+
   const step = action === "Back Up" ? -1 : 1;
-  do {
-    const newPosition = {
-      playerId: robot.playerId,
-      x: robot.position.x + xd * step,
-      y: robot.position.y + yd * step,
-    };
 
-    const canPush = pushRobots(
-      otherRobots,
-      { xd: xd * step, yd: yd * step },
-      { x: newPosition.x, y: newPosition.y }
-    );
-
-    if (canPush) {
-      robot.position.x = newPosition.x;
-      robot.position.y = newPosition.y;
-    }
-
-    speed--;
-  } while (speed > 0);
+  pushRobots(
+    robots,
+    { xd: xd * step, yd: yd * step },
+    { x: robot.position.x, y: robot.position.y },
+    mapItems
+  );
 };

@@ -5,7 +5,7 @@ import {
 } from "../../../dist-common/game-action-types";
 import Game from "../game-class";
 
-import { rotateRobot, moveRobot } from "./program-card-functions";
+import { rotateRobot, moveRobotOne } from "./program-card-functions";
 import { touchCheckpoints } from "./server-functions";
 
 const processRegister = (
@@ -48,11 +48,13 @@ const processRegister = (
       case "U-Turn":
         rotateRobot(robot, payload.action);
         break;
-      case "Move 1":
-      case "Move 2":
       case "Move 3":
+        moveRobotOne(robot, robots, payload.action, map.items);
+      case "Move 2":
+        moveRobotOne(robot, robots, payload.action, map.items);
+      case "Move 1":
       case "Back Up":
-        moveRobot(robot, robots, payload.action);
+        moveRobotOne(robot, robots, payload.action, map.items);
         break;
       default:
     }

@@ -5,8 +5,8 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   body {
-    color: white;
-    background-color: black;
+    color: #ffffff;
+    background-color: #000000;
     font-family: sans-serif;
     margin: 0;
     padding: 0;

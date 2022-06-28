@@ -39,7 +39,7 @@ const StyledProgramCard = styled.button<{
   width: ${({ cardWidth }) => cardWidth}vw;
   height: ${({ cardWidth }) => cardWidth * 1.4}vw;
   font-size: ${({ cardWidth }) => cardWidth * 0.12}vw;
-  background-color: ${({ chosen }) => (chosen ? "#777777" : "gainsboro")};
+  background-color: ${({ chosen }) => (chosen ? "#777777" : "#dcdcdc")};
 
   cursor: ${({ isLoading }) => (isLoading ? "wait" : "pointer")};
 

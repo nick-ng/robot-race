@@ -25,6 +25,20 @@ const getMap = (_?: any): Map => {
         x: 1,
         y: 4,
       },
+      {
+        type: "wall",
+        x: 6,
+        y: 1,
+        x1: 7,
+        y1: 1,
+      },
+      {
+        type: "wall",
+        x: 4,
+        y: 8,
+        x1: 4,
+        y1: 9,
+      },
     ],
     width: 12,
     height: 12 + 4,
@@ -76,8 +90,8 @@ export const getDefaultGameData = (): GameData => {
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 0,
-            y: 0,
+            x: 4,
+            y: 3,
             facing: "down",
           },
           design: "outset",
@@ -88,8 +102,8 @@ export const getDefaultGameData = (): GameData => {
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 6,
-            y: 6,
+            x: 4,
+            y: 8,
             facing: "up",
           },
           design: "ridge",
@@ -100,8 +114,8 @@ export const getDefaultGameData = (): GameData => {
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 7,
-            y: 7,
+            x: 4,
+            y: 6,
             facing: "left",
           },
           design: "double",
@@ -112,8 +126,8 @@ export const getDefaultGameData = (): GameData => {
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 3,
-            y: 3,
+            x: 4,
+            y: 5,
             facing: "right",
           },
           design: "dashed",
@@ -127,6 +141,7 @@ export const getDefaultGameData = (): GameData => {
     },
     lastActionId: "0-0",
     gameServer: null,
+    resumeAction: null,
   };
 
   return defaultGameData;

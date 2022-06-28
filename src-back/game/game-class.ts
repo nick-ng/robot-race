@@ -21,12 +21,12 @@ import getMap from "./actions/get-map";
 const ROBOT_DESIGNS: readonly Robot["design"][] = Object.freeze([
   "double",
   "ridge",
-  "grey",
+  "#808080",
   "outset",
   "dotted",
   "dashed",
-  "white",
-  "black",
+  "#ffffff",
+  "#000000",
 ]);
 
 export default class Game {

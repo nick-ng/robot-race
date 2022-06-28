@@ -31,6 +31,7 @@ const bounceAnimationMixin = css`
 `;
 
 const StyledRobot = styled.div<{ isPlayer?: boolean }>`
+  pointer-events: none;
   position: absolute;
   display: flex;
   justify-content: center;
