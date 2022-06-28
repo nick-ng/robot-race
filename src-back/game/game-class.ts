@@ -16,7 +16,7 @@ import {
   ActionIncomingMessageObject,
 } from "../../dist-common/game-action-types";
 import { performAction } from "./game-actions";
-import getMap from "./actions/get-map";
+import { getMap } from "../../dist-common/maps";
 
 const ROBOT_DESIGNS: readonly Robot["design"][] = Object.freeze([
   "double",

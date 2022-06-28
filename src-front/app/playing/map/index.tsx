@@ -44,6 +44,10 @@ const MapCell = styled.td`
   border: 1px dashed #808080;
   text-align: center;
 
+  &:focus {
+    outline: 1px solid #008000;
+  }
+
   &:focus ${MapCellToolTip} {
     display: block;
   }
@@ -66,13 +70,10 @@ const MapCellItem = styled.span`
 const StyledMap = styled.div<{ cellSize: number }>`
   position: relative;
 
-  p {
-    display: inline-block;
-  }
-
   table {
     background-color: #2f2f2f;
     border-collapse: collapse;
+    margin-bottom: 0.5em;
 
     ${MapCell} {
       width: ${({ cellSize }) => cellSize}vw;
@@ -137,7 +138,7 @@ export default function Map({ gameData, playerDetails }: MapProps) {
         </tbody>
       </table>
       <Robots gameData={gameData} playerDetails={playerDetails} />
-      <p>Click on a map square to learn about what's on it</p>
+      <span>Click on a map square to learn see what's on it</span>
     </StyledMap>
   );
 }

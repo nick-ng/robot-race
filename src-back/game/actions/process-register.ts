@@ -1,4 +1,3 @@
-import { OverGameState } from "src-common/game-types";
 import {
   AutomaticAction,
   ProcessRegisterAction,

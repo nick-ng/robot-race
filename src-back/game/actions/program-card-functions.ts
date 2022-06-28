@@ -46,17 +46,6 @@ const pushRobots = (
   affectedCell: { x: number; y: number }, // map cell being pushed
   mapItems: MapItem[]
 ): boolean => {
-  let canPush = true;
-  let pushed = false;
-
-  const newPositions: { playerId: string | null; x: number; y: number }[] = [
-    {
-      playerId: null,
-      x: affectedCell.x,
-      y: affectedCell.y,
-    },
-  ];
-
   // Figure out if a robot is affected by the push
   const affectedRobot = robots.find(
     ({ position }) =>

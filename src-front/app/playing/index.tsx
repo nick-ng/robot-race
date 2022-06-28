@@ -22,8 +22,15 @@ const StyledInstructions = styled(Instructions)`
   margin-top: 0.5em;
 `;
 
-const Heading = styled.h1`
-  margin-top: 0;
+const Heading = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    margin: 0;
+  }
 `;
 
 const Row = styled.div`
@@ -54,9 +61,6 @@ export default function Playing({
   return (
     <StyledPlaying>
       <Row>
-        <div>Game ID: {shortId}</div>
-      </Row>
-      <Row>
         <DisplayArea>
           <Map gameData={gameData} playerDetails={playerDetails} />
           <PlayerDisplay gameData={gameData} playerDetails={playerDetails} />
@@ -64,7 +68,10 @@ export default function Playing({
         {gameState.state === "main" && (
           <>
             <ControlsArea>
-              <Heading>Robot Race</Heading>
+              <Heading>
+                <h1>Robot Race</h1>
+                <div>Game ID: {shortId}</div>
+              </Heading>
               <CardsAndProgramRegisters
                 gameData={gameData}
                 playerDetails={playerDetails}
