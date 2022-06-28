@@ -60,7 +60,7 @@ const buttonRatio = 5;
 const SubmitButton = styled.button<{ isLoading?: boolean }>`
   box-sizing: border-box;
   border: ${buttonRatio * 0.05}vw outset;
-  background-color: gainsboro;
+  background-color: #dcdcdc;
   padding: 0.5em;
   width: 100%;
 

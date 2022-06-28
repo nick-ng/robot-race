@@ -22,7 +22,7 @@ const Details = styled.details`
 `;
 
 const QuiteZone = styled.div`
-  background-color: white;
+  background-color: #ffffff;
   padding: 16px;
   display: inline-block;
 `;

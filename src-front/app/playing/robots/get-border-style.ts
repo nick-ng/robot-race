@@ -5,15 +5,15 @@ const getBorderStyle = (design: string) => {
     case "double":
       return {
         borderStyle: design,
-        borderColor: "white",
+        borderColor: "#ffffff",
       };
     case "ridge":
     case "outset":
       return {
         borderStyle: design,
       };
-    case "white":
-    case "black":
+    case "#ffffff":
+    case "#000000":
       return {
         borderStyle: "solid",
         borderColor: design,
@@ -21,7 +21,7 @@ const getBorderStyle = (design: string) => {
     default:
       return {
         borderStyle: "solid",
-        borderColor: "gainsboro",
+        borderColor: "#dcdcdc",
       };
   }
 };

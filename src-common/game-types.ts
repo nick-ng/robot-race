@@ -30,9 +30,9 @@ export interface Robot {
   lives: number;
   position: Position;
   design:
-    | "white"
-    | "black"
-    | "grey"
+    | "#ffffff"
+    | "#000000"
+    | "#808080"
     | "dotted"
     | "dashed"
     | "double"
@@ -101,6 +101,12 @@ export interface FlagMapItem extends BasicMapItem {
   number: number;
 }
 
+export interface WallMapItem extends BasicMapItem {
+  type: "wall";
+  x1: number;
+  y1: number;
+}
+
 export interface ConveyorMapItem extends BasicMapItem {
   type: "conveyor";
   direction: "up" | "down" | "left" | "right";
@@ -128,6 +134,7 @@ export interface RepairMapItem extends BasicMapItem {
 
 export type MapItem =
   | FlagMapItem
+  | WallMapItem
   | ConveyorMapItem
   | PitMapItem
   | GearMapItem

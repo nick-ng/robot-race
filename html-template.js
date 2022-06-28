@@ -7,7 +7,7 @@ module.exports = `
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
-      background-color: black;
+      background-color: #000000;
     }
   </style>
 </head>

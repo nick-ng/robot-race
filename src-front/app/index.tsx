@@ -12,7 +12,11 @@ const PLAYER_ID_STORE = "ROBOT_RACE_PLAYER_ID_STORE";
 const PLAYER_PASSWORD_STORE = "ROBOT_RACE_PLAYER_PASSWORD_STORE";
 
 const StyledApp = styled.div`
-  padding: 0 1em;
+  padding: 0 0.5em;
+`;
+
+const TopBar = styled.div`
+  margin-bottom: 0.5em;
 `;
 
 const Form = styled.form`
@@ -40,57 +44,59 @@ export default function App() {
 
   return (
     <StyledApp>
-      {playerDetails.playerName && <span>{playerDetails.playerName}</span>}
-      {!playerDetails.playerName && (
-        <Form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (!tempPlayerName) {
-              alert("Cannot have a blank name");
-              return;
-            }
+      <TopBar>
+        {playerDetails.playerName && <span>{playerDetails.playerName}</span>}
+        {!playerDetails.playerName && (
+          <Form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!tempPlayerName) {
+                alert("Cannot have a blank name");
+                return;
+              }
 
-            const tempDetails = {
-              ...playerDetails,
-              playerName: tempPlayerName,
-            };
+              const tempDetails = {
+                ...playerDetails,
+                playerName: tempPlayerName,
+              };
 
-            if (!playerDetails.playerId) {
-              tempDetails.playerId = randomUUID();
-              localStorage.setItem(PLAYER_ID_STORE, tempDetails.playerId);
-            }
+              if (!playerDetails.playerId) {
+                tempDetails.playerId = randomUUID();
+                localStorage.setItem(PLAYER_ID_STORE, tempDetails.playerId);
+              }
 
-            if (!playerDetails.playerPassword) {
-              tempDetails.playerPassword = randomUUID();
-              localStorage.setItem(
-                PLAYER_PASSWORD_STORE,
-                tempDetails.playerPassword
-              );
-            }
+              if (!playerDetails.playerPassword) {
+                tempDetails.playerPassword = randomUUID();
+                localStorage.setItem(
+                  PLAYER_PASSWORD_STORE,
+                  tempDetails.playerPassword
+                );
+              }
 
-            localStorage.setItem(PLAYER_NAME_STORE, tempPlayerName);
-            setPlayerDetails(tempDetails);
-          }}
-        >
-          <label>Please enter your name</label>
-          <input
-            type="text"
-            value={tempPlayerName}
-            onChange={(e) => {
-              setTempPlayerName(
-                e.target.value.replaceAll(/[^a-z0-9\-_ ]/gi, "")
-              );
+              localStorage.setItem(PLAYER_NAME_STORE, tempPlayerName);
+              setPlayerDetails(tempDetails);
             }}
-          />
-          <button>Save</button>
-          <p>
-            Entering a name and click save or pressing enter will generate a
-            unique ID and password which will be stored in your browser's local
-            storage. These are used to identify you when hosting and joining
-            games.
-          </p>
-        </Form>
-      )}
+          >
+            <label>Please enter your name</label>
+            <input
+              type="text"
+              value={tempPlayerName}
+              onChange={(e) => {
+                setTempPlayerName(
+                  e.target.value.replaceAll(/[^a-z0-9\-_ ]/gi, "")
+                );
+              }}
+            />
+            <button>Save</button>
+            <p>
+              Entering a name and click save or pressing enter will generate a
+              unique ID and password which will be stored in your browser's
+              local storage. These are used to identify you when hosting and
+              joining games.
+            </p>
+          </Form>
+        )}
+      </TopBar>
       {havePlayerCredentials && (
         <Routes>
           <Route
