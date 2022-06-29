@@ -67,7 +67,7 @@ export default class Game {
       instructionQueue: [],
     };
 
-    const mapName = "Exchange";
+    const mapName = "Risky Exchange";
 
     const temp: GameData = {
       maxPlayers: 8,
@@ -197,6 +197,7 @@ export default class Game {
 
     this.gameState.robots.push({
       playerId,
+      status: "stand-by",
       damagePoints: 0,
       lockedRegisters: [],
       lives: 3,

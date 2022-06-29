@@ -14,15 +14,15 @@ interface RobotProps {
 
 const bounceAnimation = keyframes`
 0% {
-  bottom: 0.3vw;
+  bottom: 0.2vw;
 }
 
 50% {
-  bottom: -0.1vw;
+  bottom: -0.2vw;
 }
 
 100% {
-  bottom: 0.3vw;
+  bottom: 0.2vw;
 }
 `;
 
@@ -30,7 +30,21 @@ const bounceAnimationMixin = css`
   animation: ${bounceAnimation} 1s linear infinite;
 `;
 
-const StyledRobot = styled.div<{ isPlayer?: boolean }>`
+const fallAnimation = keyframes`
+0% {
+  transform: rotate(0turn);
+}
+
+100% {
+  transform: rotate(1turn);
+}
+`;
+
+const fallAnimationMixin = css`
+  animation: ${fallAnimation} 1s linear infinite;
+`;
+
+const StyledRobot = styled.div<{ isPlayer?: boolean; isFalling?: boolean }>`
   pointer-events: none;
   position: absolute;
   display: flex;
@@ -46,6 +60,7 @@ const StyledRobot = styled.div<{ isPlayer?: boolean }>`
   transition: 450ms ease-in-out;
 
   & > div {
+    ${({ isFalling }) => (isFalling ? fallAnimationMixin : "")}
     transition: 450ms ease-in-out;
     position: absolute;
     margin: auto;
@@ -56,7 +71,8 @@ const StyledRobot = styled.div<{ isPlayer?: boolean }>`
   }
 
   span {
-    ${({ isPlayer }) => (isPlayer ? bounceAnimationMixin : "")}
+    ${({ isPlayer, isFalling }) =>
+      isPlayer && !isFalling ? bounceAnimationMixin : ""}
     font-size: 1.1vw;
     position: absolute;
     margin: auto;
@@ -88,6 +104,7 @@ export default function Robot({ name, robot, isPlayer }: RobotProps) {
   return (
     <StyledRobot
       isPlayer={isPlayer}
+      isFalling={robot.status === "falling"}
       style={{
         ...style,
         top: offsets.y,

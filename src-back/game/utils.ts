@@ -1,10 +1,8 @@
-import { randomUUID } from "crypto";
-
 export const shuffle = <T>(inputArray: T[]): T[] =>
   [...inputArray]
     .map((data) => ({
       data,
-      sortValue: randomUUID(),
+      sortValue: Math.random(),
     }))
-    .sort((a, b) => a.sortValue.localeCompare(b.sortValue))
+    .sort((a, b) => a.sortValue - b.sortValue)
     .map(({ data }) => data);

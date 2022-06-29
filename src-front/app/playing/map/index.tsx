@@ -11,6 +11,7 @@ import Robots from "../robots";
 
 import { getFlagText, getFlagToolTip } from "./flag";
 import { getWallStyles, getWallToolTip } from "./wall";
+import { getPitStyles, getPitToolTip } from "./pit";
 
 interface MapProps {
   gameData: PlayerGameData;
@@ -71,9 +72,12 @@ const StyledMap = styled.div<{ cellSize: number }>`
   position: relative;
 
   table {
-    background-color: #2f2f2f;
     border-collapse: collapse;
     margin-bottom: 0.5em;
+
+    tr {
+      background-color: #2f2f2f;
+    }
 
     ${MapCell} {
       width: ${({ cellSize }) => cellSize}vw;
@@ -102,18 +106,18 @@ export default function Map({ gameData, playerDetails }: MapProps) {
                   (mi) => mi.x === x && mi.y === y
                 );
 
-                const flag = cellItems.find(
-                  (a) => a.type === "flag"
-                ) as FlagMapItem;
-
                 const texts = [getFlagText(cellItems)].map((text) => (
                   <MapCellItem key={text}>{text}</MapCellItem>
                 ));
 
-                const styles = { ...getWallStyles(cellItems) };
+                const styles = {
+                  ...getWallStyles(cellItems),
+                  ...getPitStyles(cellItems),
+                };
 
                 const toolTipElements = [
                   ...new Set([
+                    getPitToolTip(cellItems),
                     getFlagToolTip(cellItems),
                     getWallToolTip(map.items, x, y),
                   ]),
@@ -138,7 +142,6 @@ export default function Map({ gameData, playerDetails }: MapProps) {
         </tbody>
       </table>
       <Robots gameData={gameData} playerDetails={playerDetails} />
-      <span>Click on a map square to learn see what's on it</span>
     </StyledMap>
   );
 }

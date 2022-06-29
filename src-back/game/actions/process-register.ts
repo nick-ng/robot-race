@@ -5,7 +5,8 @@ import {
 import Game from "../game-class";
 
 import { rotateRobot, moveRobotOne } from "./program-card-functions";
-import { touchCheckpoints } from "./server-functions";
+import { touchCheckpoints, fallInHoles } from "./server-functions";
+import { isRobotDestroyed } from "./utils";
 
 const processRegister = (
   game: Game,
@@ -49,11 +50,14 @@ const processRegister = (
         break;
       case "Move 3":
         moveRobotOne(robot, robots, payload.action, map.items);
+        fallInHoles(robots, map);
       case "Move 2":
         moveRobotOne(robot, robots, payload.action, map.items);
+        fallInHoles(robots, map);
       case "Move 1":
       case "Back Up":
         moveRobotOne(robot, robots, payload.action, map.items);
+        fallInHoles(robots, map);
         break;
       default:
     }
@@ -64,7 +68,7 @@ const processRegister = (
       case "touch-checkpoints":
         const touched = touchCheckpoints(
           robots,
-          map,
+          map.items,
           flagsTouched,
           archiveMarkers
         );
@@ -90,6 +94,19 @@ const processRegister = (
     }
   }
 
+  // don't need to process instructions of dead players
+  for (const robot of robots) {
+    if (isRobotDestroyed(robot)) {
+      const { playerId } = robot;
+      gameSecrets.instructionQueue = instructionQueue.filter((item) => {
+        if (item.playerId && playerId === item.playerId) {
+          return false;
+        }
+        return true;
+      });
+    }
+  }
+
   if (instructionQueue.length > 0) {
     return {
       game,
@@ -107,7 +124,7 @@ const processRegister = (
     game,
     message: "OK",
     automaticAction: {
-      action: { playerId: "server", type: "deal-program-cards" },
+      action: { playerId: "server", type: "clean-up" },
       delay: 10,
     },
   };

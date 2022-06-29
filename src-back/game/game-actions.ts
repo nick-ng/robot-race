@@ -9,6 +9,7 @@ import dealProgramCards from "./actions/deal-program-cards";
 import setRegister from "./actions/set-register";
 import finishSettingRegisters from "./actions/finish-setting-registers";
 import processRegister from "./actions/process-register";
+import cleanUp from "./actions/clean-up";
 
 /**
  * If performAction gets called, the game has already verified the player's identity
@@ -32,6 +33,8 @@ export const performAction = (
       return finishSettingRegisters(game, action);
     case "process-registers":
       return processRegister(game, action);
+    case "clean-up":
+      return cleanUp(game, action);
     default:
       return { game, message: "OK" };
   }

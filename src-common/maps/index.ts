@@ -1,6 +1,6 @@
 import { Map } from "../game-types";
 
-import exchange from "./exchange";
+import riskyExchange from "./risky-exchange";
 
 const mapStartingPositionsA = Object.freeze([
   { x: 5, y: 14 },
@@ -26,9 +26,9 @@ const mapStartingPositionsB = Object.freeze([
 
 export const getMap = (name: string): Map => {
   switch (name.toLowerCase()) {
-    case "exchange":
+    case "risky exchange":
     default:
-      return exchange;
+      return riskyExchange;
   }
 };
 
