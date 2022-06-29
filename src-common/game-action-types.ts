@@ -25,12 +25,17 @@ export interface ProcessRegisterAction extends BasicAction {
   type: "process-registers";
 }
 
+export interface CleanUpAction extends BasicAction {
+  type: "clean-up";
+}
+
 export type GameAction =
   | StartAction
   | DealProgramCardsAction
   | SetRegisterAction
   | FinishSettingRegistersAction
-  | ProcessRegisterAction;
+  | ProcessRegisterAction
+  | CleanUpAction;
 
 interface BasicIncomingMessageObject {
   playerId: string;

@@ -2,7 +2,6 @@ import {
   GameAction,
   AutomaticAction,
 } from "../../../dist-common/game-action-types";
-
 import { MainGameState } from "../../../dist-common/game-types";
 import { getCardMap } from "../../../dist-common/card-map";
 import Game from "../game-class";

@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 
 import {
   MainGameState,
@@ -20,14 +19,16 @@ export default function Robots({ gameData, playerDetails }: RobotsProps) {
 
   return (
     <>
-      {robots.map((robot) => (
-        <Robot
-          key={robot.playerId}
-          name={players.find((a) => a.id === robot.playerId)?.name}
-          isPlayer={playerDetails.playerId === robot.playerId}
-          robot={robot}
-        />
-      ))}
+      {robots
+        .filter((robot) => robot.status !== "stand-by")
+        .map((robot) => (
+          <Robot
+            key={robot.playerId}
+            name={players.find((a) => a.id === robot.playerId)?.name}
+            isPlayer={playerDetails.playerId === robot.playerId}
+            robot={robot}
+          />
+        ))}
     </>
   );
 }

@@ -25,6 +25,7 @@ export interface Position {
 
 export interface Robot {
   playerId: string;
+  status: "ok" | "falling" | "stand-by";
   damagePoints: number;
   lockedRegisters: number[];
   lives: number;
@@ -48,6 +49,7 @@ export interface ProgramCardInstruction {
 
 export interface TouchCheckpointsInstruction {
   type: "touch-checkpoint-instruction";
+  playerId?: never;
   payload: {
     action: "touch-checkpoints";
   };

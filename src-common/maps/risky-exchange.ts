@@ -1,7 +1,7 @@
 import { Map } from "../game-types";
 
-const exchange: Map = {
-  name: "Exchange",
+const riskyExchange: Map = {
+  name: "Risky Exchange",
   width: 12,
   height: 12 + 4,
   startingPositions: [
@@ -74,7 +74,9 @@ const exchange: Map = {
     { type: "wall", x: 10, y: 13, x1: 11, y1: 13 },
     { type: "wall", x: 5, y: 14, x1: 6, y1: 14 },
     { type: "wall", x: 5, y: 15, x1: 6, y1: 15 },
+    { type: "pit", x: 0, y: 10 },
+    { type: "pit", x: 2, y: 1 },
   ],
 };
 
-export default exchange;
+export default riskyExchange;

@@ -1,4 +1,5 @@
 import { MapItem, Robot } from "../../../dist-common/game-types";
+import { isRobotDestroyed } from "./utils";
 
 const rotateMap: Readonly<any> = {
   "Rotate Left": {
@@ -47,10 +48,15 @@ const pushRobots = (
   mapItems: MapItem[]
 ): boolean => {
   // Figure out if a robot is affected by the push
-  const affectedRobot = robots.find(
-    ({ position }) =>
-      affectedCell.x === position.x && affectedCell.y === position.y
-  );
+  const affectedRobot = robots.find((robot) => {
+    const { position, status } = robot;
+    return (
+      !isRobotDestroyed(robot) &&
+      status === "ok" &&
+      affectedCell.x === position.x &&
+      affectedCell.y === position.y
+    );
+  });
 
   if (!affectedRobot) {
     return true; // Nothing happened but you can push.
