@@ -30,6 +30,7 @@ export interface Robot {
   lockedRegisters: number[];
   lives: number;
   position: Position;
+  archiveMarkerId: number;
   design:
     | "#ffffff"
     | "#000000"
@@ -64,7 +65,6 @@ export interface LobbyGameState {
   finishedProgrammingPlayers: string[];
   poweringDownNextTurn: string[];
   flagsTouched: { [playerId: string]: number };
-  archiveMarkers: { [playerId: string]: Pick<Position, "x" | "y"> };
   robots: Robot[];
 }
 
@@ -96,6 +96,10 @@ export interface OnePlayerSecrets {
 export interface BasicMapItem {
   x: number;
   y: number;
+}
+
+export interface DockMapItem extends BasicMapItem {
+  type: "dock";
 }
 
 export interface FlagMapItem extends BasicMapItem {
@@ -134,7 +138,8 @@ export interface RepairMapItem extends BasicMapItem {
   type: "repair";
 }
 
-export type MapItem =
+export type MapItemNoId =
+  | DockMapItem
   | FlagMapItem
   | WallMapItem
   | ConveyorMapItem
@@ -142,12 +147,13 @@ export type MapItem =
   | GearMapItem
   | PusherMapItem;
 
+export type MapItem = MapItemNoId & { id: number };
+
 export interface Map {
   name: string;
   items: MapItem[];
   width: number;
   height: number;
-  startingPositions: Pick<Position, "x" | "y">[];
 }
 
 export interface GameSettings {

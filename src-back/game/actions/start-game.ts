@@ -45,14 +45,13 @@ const startGame = (
 
   seatOrder.forEach((playerId, i) => {
     const robot = game.gameState.robots.find((r) => r.playerId === playerId);
-    const mapStartingPosition = map.startingPositions[i];
-    if (robot && mapStartingPosition) {
-      robot.position.x = mapStartingPosition.x;
-      robot.position.y = mapStartingPosition.y;
-      game.gameState.archiveMarkers[playerId] = {
-        x: mapStartingPosition.x,
-        y: mapStartingPosition.y,
-      };
+    const mapDocks = map.items.filter((mi) => mi.type === "dock");
+    const startingDock = mapDocks[i];
+    if (robot && startingDock) {
+      robot.position.x = startingDock.x;
+      robot.position.y = startingDock.y;
+      robot.archiveMarkerId = startingDock.id;
+      robot.status = "ok";
     }
   });
   game.gameState.robots;

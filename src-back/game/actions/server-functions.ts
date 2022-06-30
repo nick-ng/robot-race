@@ -9,8 +9,7 @@ import {
 export const touchCheckpoints = (
   robots: Robot[],
   mapItems: MapItem[],
-  flagsTouched: MainGameState["flagsTouched"],
-  archiveMarkers: MainGameState["archiveMarkers"]
+  flagsTouched: MainGameState["flagsTouched"]
 ): { playerId: string; cellItems: MapItem[] }[] => {
   const touched: { playerId: string; cellItems: MapItem[] }[] = [];
 
@@ -33,12 +32,12 @@ export const touchCheckpoints = (
         });
 
         const flag = cellItems.find((a) => a.type === "flag") as
-          | FlagMapItem
+          | (FlagMapItem & MapItem)
           | undefined;
         const currentFlag = flagsTouched[playerId];
         if (flag && flag.number === currentFlag + 1) {
           flagsTouched[playerId] = flag.number;
-          archiveMarkers[playerId] = { x: position.x, y: position.y };
+          robot.archiveMarkerId = flag.id;
         }
       }
     } catch (e) {
