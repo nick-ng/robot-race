@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css, keyframes } from "styled-components";
 
-import { Player, Robot } from "../../../../dist-common/game-types";
+import { Player, Robot } from "dist-common/game-types";
 import { positionToOffsets } from "../utils";
 
 import getBorderStyle from "./get-border-style";

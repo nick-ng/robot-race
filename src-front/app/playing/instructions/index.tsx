@@ -5,7 +5,7 @@ import {
   MainGameState,
   PlayerDetails,
   PlayerGameData,
-} from "../../../../dist-common/game-types";
+} from "dist-common/game-types";
 
 import SetProgramRegistersInstruction from "./set-program-registers-instruction";
 import FinishedProgrammingInstruction from "./finished-programming-instruction";

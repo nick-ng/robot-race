@@ -1,6 +1,6 @@
-import { GameData, Map } from "../../dist-common/game-types";
-import { getCardMap } from "../../dist-common/card-map";
-import { getMap } from "../../dist-common/maps";
+import { GameData, Map } from "dist-common/game-types";
+import { getCardMap } from "dist-common/card-map";
+import { getMap } from "dist-common/maps";
 
 export const PLAYER_UUID = "player-1's-uuid";
 

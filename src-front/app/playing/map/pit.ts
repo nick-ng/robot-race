@@ -1,4 +1,4 @@
-import { MapItem } from "../../../../dist-common/game-types";
+import { MapItem } from "dist-common/game-types";
 
 export const getPitStyles = (cellItems: MapItem[]) => {
   if (cellItems.find((c) => c.type === "pit")) {

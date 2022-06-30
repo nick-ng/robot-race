@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
-import { WebsocketIncomingMessageObject } from "../../dist-common/game-action-types";
-import { PlayerGameData, PlayerDetails } from "../../dist-common/game-types";
+import { WebsocketIncomingMessageObject } from "dist-common/game-action-types";
+import { PlayerGameData, PlayerDetails } from "dist-common/game-types";
 
 declare const API_ORIGIN: string;
 const WEBSOCKET_URL = (API_ORIGIN || location.origin).replace(/^http/i, "ws");

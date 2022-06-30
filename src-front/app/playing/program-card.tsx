@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { ProgramCard } from "../../../dist-common/game-types";
+import { ProgramCard } from "dist-common/game-types";
 
 interface BaseProgramCardProps {
   cardWidth?: number;

@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import {
   ActionIncomingMessageObject,
   AutomaticAction,
-} from "../../dist-common/game-action-types";
-import { GameData, PlayerGameData } from "../../dist-common/game-types";
+} from "dist-common/game-action-types";
+import { GameData, PlayerGameData } from "dist-common/game-types";
 
 import { getPlayerData } from "./utils";
 import { getDefaultGameData } from "./default-game-data";

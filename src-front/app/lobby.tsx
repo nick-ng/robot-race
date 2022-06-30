@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import QRCode from "react-qr-code";
 
-import { PlayerGameData, PlayerDetails } from "../../dist-common/game-types";
+import { PlayerGameData, PlayerDetails } from "dist-common/game-types";
 
 declare const API_ORIGIN: string;
 

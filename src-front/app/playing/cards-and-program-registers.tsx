@@ -5,10 +5,10 @@ import {
   PlayerGameData,
   PlayerDetails,
   MainGameState,
-} from "../../../dist-common/game-types";
-import { ActionIncomingMessageObject } from "../../../dist-common/game-action-types";
-import canSetRegister from "../../../dist-common/action-validators/can-set-register";
-import canSubmitProgram from "../../../dist-common/action-validators/can-submit-program";
+} from "dist-common/game-types";
+import { ActionIncomingMessageObject } from "dist-common/game-action-types";
+import canSetRegister from "dist-common/action-validators/can-set-register";
+import canSubmitProgram from "dist-common/action-validators/can-submit-program";
 
 import { getFlagEmoji } from "../utils";
 import CardsInHand from "./cards-in-hand";

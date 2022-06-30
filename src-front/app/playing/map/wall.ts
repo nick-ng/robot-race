@@ -1,4 +1,4 @@
-import { MapItem } from "../../../../dist-common/game-types";
+import { MapItem } from "dist-common/game-types";
 
 export const getWallStyles = (cellItems: MapItem[]) => {
   return cellItems.reduce((acc, mapItem) => {

@@ -1,11 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-import {
-  PlayerDetails,
-  PlayerGameData,
-} from "../../../../dist-common/game-types";
-import { ActionIncomingMessageObject } from "../../../../dist-common/game-action-types";
+import { PlayerDetails, PlayerGameData } from "dist-common/game-types";
+import { ActionIncomingMessageObject } from "dist-common/game-action-types";
 
 import Robots from "../robots";
 

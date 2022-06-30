@@ -5,7 +5,7 @@ import {
   MainGameState,
   PlayerDetails,
   PlayerGameData,
-} from "../../../dist-common/game-types";
+} from "dist-common/game-types";
 import { getFlagEmoji } from "../utils";
 import getBorderStyle from "./robots/get-border-style";
 
