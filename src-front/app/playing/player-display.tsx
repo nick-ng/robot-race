@@ -21,16 +21,18 @@ const StyledPlayerDisplay = styled.div`
 const Player = styled.div`
   padding: 0.2em;
   border-width: 0.25vw;
+  min-width: 10em;
   display: flex;
   flex-direction: row;
   align-items: stretch;
 `;
 
 const Emoji = styled.div`
+  width: 1.5em;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
 `;
 
 export default function PlayerDisplay({ gameData }: PlayerDisplayProps) {
