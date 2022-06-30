@@ -1,3 +1,5 @@
+import { Robot } from "./game-types";
+
 interface BasicAction {
   playerId: string;
   type: string;
@@ -27,6 +29,13 @@ export interface ProcessRegisterAction extends BasicAction {
 
 export interface CleanUpAction extends BasicAction {
   type: "clean-up";
+}
+
+export interface SpawnRobotAction extends BasicAction {
+  type: "spawn-robot";
+  facing: Robot["position"]["facing"];
+  x: number;
+  y: number;
 }
 
 export type GameAction =

@@ -1,3 +1,5 @@
+import { Robot, MainGameState } from "./game-types";
+
 export const sleep = (ms: number) =>
   new Promise((resolve, _reject) => {
     setTimeout(() => {
@@ -23,4 +25,13 @@ export const prevPlayer = (turnOrder: string[], activePlayer: string) => {
   }
 
   return turnOrder[prevIndex];
+};
+
+export const getRespawnOrder = (
+  robots: Robot[],
+  seatOrder: MainGameState["seatOrder"]
+) => {
+  return seatOrder.filter((playerId) =>
+    robots.find((r) => r.status === "stand-by" && r.playerId === playerId)
+  );
 };

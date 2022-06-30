@@ -1,7 +1,4 @@
-import {
-  GameAction,
-  AutomaticAction,
-} from "../../dist-common/game-action-types";
+import { GameAction, AutomaticAction } from "dist-common/game-action-types";
 import Game from "./game-class";
 
 import startGame from "./actions/start-game";

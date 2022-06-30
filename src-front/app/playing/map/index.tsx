@@ -2,10 +2,10 @@ import React from "react";
 import styled from "styled-components";
 
 import {
-  FlagMapItem,
   PlayerDetails,
   PlayerGameData,
 } from "../../../../dist-common/game-types";
+import { ActionIncomingMessageObject } from "../../../../dist-common/game-action-types";
 
 import Robots from "../robots";
 
@@ -16,6 +16,7 @@ import { getPitStyles, getPitToolTip } from "./pit";
 interface MapProps {
   gameData: PlayerGameData;
   playerDetails: PlayerDetails;
+  sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
 }
 
 const MapCellToolTip = styled.div`
@@ -91,7 +92,11 @@ const StyledMap = styled.div<{ cellSize: number }>`
   }
 `;
 
-export default function Map({ gameData, playerDetails }: MapProps) {
+export default function Map({
+  gameData,
+  playerDetails,
+  sendViaWebSocket,
+}: MapProps) {
   const { gameSettings } = gameData;
   const { map } = gameSettings;
 

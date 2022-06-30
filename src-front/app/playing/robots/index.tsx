@@ -1,16 +1,18 @@
 import React from "react";
+import { ActionIncomingMessageObject } from "dist-common/game-action-types";
 
 import {
   MainGameState,
   PlayerDetails,
   PlayerGameData,
-} from "../../../../dist-common/game-types";
+} from "dist-common/game-types";
 
 import Robot from "./robot";
 
 interface RobotsProps {
   gameData: PlayerGameData;
   playerDetails: PlayerDetails;
+  sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
 }
 
 export default function Robots({ gameData, playerDetails }: RobotsProps) {

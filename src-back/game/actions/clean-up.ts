@@ -38,6 +38,13 @@ const cleanUp = (
     }
   }
 
+  if (robots.some((robot) => robot.status === "stand-by")) {
+    return {
+      game,
+      message: "OK",
+    };
+  }
+
   return {
     game,
     message: "OK",

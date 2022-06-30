@@ -45,6 +45,13 @@ const DisplayArea = styled.div`
   flex-shrink: 0;
 `;
 
+const MapLeftSpacer = styled.div`
+  width: 1.5vw;
+  writing-mode: vertical-rl;
+  transform: rotate(0.5turn);
+  padding: 0 0.5em 0.5em;
+`;
+
 const ControlsArea = styled.div`
   flex-basis: 30vw;
   flex-grow: 0;
@@ -62,7 +69,14 @@ export default function Playing({
     <StyledPlaying>
       <Row>
         <DisplayArea>
-          <Map gameData={gameData} playerDetails={playerDetails} />
+          <MapLeftSpacer>
+            Click on a map square to see what's on it
+          </MapLeftSpacer>
+          <Map
+            gameData={gameData}
+            playerDetails={playerDetails}
+            sendViaWebSocket={sendViaWebSocket}
+          />
           <PlayerDisplay gameData={gameData} playerDetails={playerDetails} />
         </DisplayArea>
         {gameState.state === "main" && (
