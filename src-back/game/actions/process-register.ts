@@ -24,7 +24,7 @@ const processRegister = (
     };
   }
 
-  const { robots, flagsTouched, archiveMarkers } = gameState;
+  const { robots, flagsTouched } = gameState;
   const { instructionQueue } = gameSecrets;
   const { map } = gameSettings;
 
@@ -66,12 +66,7 @@ const processRegister = (
     const { payload } = instructionItem;
     switch (payload.action) {
       case "touch-checkpoints":
-        const touched = touchCheckpoints(
-          robots,
-          map.items,
-          flagsTouched,
-          archiveMarkers
-        );
+        const touched = touchCheckpoints(robots, map.items, flagsTouched);
         if (touched.length > 0) {
           delay = 400;
         }

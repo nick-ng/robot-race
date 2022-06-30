@@ -57,7 +57,6 @@ export default class Game {
       finishedProgrammingPlayers: [],
       poweringDownNextTurn: [],
       flagsTouched: {},
-      archiveMarkers: {},
       robots: [],
     };
 
@@ -206,6 +205,7 @@ export default class Game {
         y: 0,
         facing: "up",
       },
+      archiveMarkerId: -1,
       design: ROBOT_DESIGNS[existingRobots],
     });
 

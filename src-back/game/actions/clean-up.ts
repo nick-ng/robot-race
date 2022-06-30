@@ -13,8 +13,9 @@ const cleanUp = (
   message: string;
   automaticAction?: AutomaticAction;
 } => {
-  const { gameState } = game;
-  const { robots, archiveMarkers } = gameState;
+  const { gameState, gameSettings } = game;
+  const { robots } = gameState;
+  const { map } = gameSettings;
   // 10. repair and draw option cards in seat order
 
   // 20. discard program cards from non-locked registers
@@ -26,10 +27,14 @@ const cleanUp = (
       robot.damagePoints = 2;
 
       // temporary until you handle respawning properly
-      const archiveMarker = archiveMarkers[robot.playerId];
-      robot.position.x = archiveMarker.x;
-      robot.position.y = archiveMarker.y;
-      robot.status = "ok";
+      const archiveMarker = map.items.find(
+        (mi) => mi.id === robot.archiveMarkerId
+      );
+      if (archiveMarker) {
+        robot.position.x = archiveMarker.x;
+        robot.position.y = archiveMarker.y;
+        robot.status = "ok";
+      }
     }
   }
 
