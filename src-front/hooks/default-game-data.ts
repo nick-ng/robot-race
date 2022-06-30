@@ -31,12 +31,6 @@ export const getDefaultGameData = (): GameData => {
       finishedProgrammingPlayers: [],
       poweringDownNextTurn: [],
       flagsTouched: { [PLAYER_UUID]: 0 },
-      archiveMarkers: {
-        [PLAYER_UUID]: { x: 5, y: 15 },
-        ["Test-1"]: { x: 6, y: 15 },
-        ["Test-2"]: { x: 3, y: 14 },
-        ["Test-3"]: { x: 8, y: 14 },
-      },
       robots: [
         {
           playerId: PLAYER_UUID,
@@ -49,6 +43,7 @@ export const getDefaultGameData = (): GameData => {
             y: 15,
             facing: "up",
           },
+          archiveMarkerId: 0,
           design: "outset",
         },
         {
@@ -62,6 +57,7 @@ export const getDefaultGameData = (): GameData => {
             y: 1,
             facing: "down",
           },
+          archiveMarkerId: 1,
           design: "ridge",
         },
         {
@@ -75,6 +71,7 @@ export const getDefaultGameData = (): GameData => {
             y: 0,
             facing: "right",
           },
+          archiveMarkerId: 2,
           design: "double",
         },
         {
@@ -88,6 +85,7 @@ export const getDefaultGameData = (): GameData => {
             y: 15,
             facing: "up",
           },
+          archiveMarkerId: 3,
           design: "dashed",
         },
       ],
