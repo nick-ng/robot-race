@@ -1,7 +1,4 @@
-import {
-  GameAction,
-  AutomaticAction,
-} from "../../dist-common/game-action-types";
+import { GameAction, AutomaticAction } from "dist-common/game-action-types";
 import Game from "./game-class";
 
 import startGame from "./actions/start-game";
@@ -10,6 +7,7 @@ import setRegister from "./actions/set-register";
 import finishSettingRegisters from "./actions/finish-setting-registers";
 import processRegister from "./actions/process-register";
 import cleanUp from "./actions/clean-up";
+import spawnRobot from "./actions/spawn-robot";
 
 /**
  * If performAction gets called, the game has already verified the player's identity
@@ -35,6 +33,8 @@ export const performAction = (
       return processRegister(game, action);
     case "clean-up":
       return cleanUp(game, action);
+    case "spawn-robot":
+      return spawnRobot(game, action);
     default:
       return { game, message: "OK" };
   }

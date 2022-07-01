@@ -1,4 +1,4 @@
-import { MapItem, FlagMapItem } from "../../../../dist-common/game-types";
+import { MapItem, FlagMapItem } from "dist-common/game-types";
 import { getFlagEmoji } from "../../utils";
 
 export const getFlagText = (cellItems: MapItem[]) => {

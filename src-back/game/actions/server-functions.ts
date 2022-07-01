@@ -60,14 +60,16 @@ export const fallInHoles = (robots: Robot[], map: Map) => {
       position.y >= height
     ) {
       robot.status = "falling";
-      return;
+      continue;
     }
 
-    map.items.forEach((mapItem) => {
-      const { x, y, type } = mapItem;
-      if (position.x === x && position.y === y && ["pit"].includes(type)) {
-        robot.status = "falling";
-      }
-    });
+    if (
+      map.items.some(
+        ({ x, y, type }) =>
+          position.x === x && position.y === y && ["pit"].includes(type)
+      )
+    ) {
+      robot.status = "falling";
+    }
   }
 };

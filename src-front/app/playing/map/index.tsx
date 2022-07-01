@@ -1,22 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import {
-  FlagMapItem,
+  MainGameState,
   PlayerDetails,
   PlayerGameData,
-} from "../../../../dist-common/game-types";
+} from "dist-common/game-types";
+import { ActionIncomingMessageObject } from "dist-common/game-action-types";
+import canSpawnRobot from "dist-common/action-validators/can-spawn-robot";
 
 import Robots from "../robots";
+import RobotSpawner from "./robot-spawner";
 
 import { getFlagText, getFlagToolTip } from "./flag";
 import { getWallStyles, getWallToolTip } from "./wall";
 import { getPitStyles, getPitToolTip } from "./pit";
-
-interface MapProps {
-  gameData: PlayerGameData;
-  playerDetails: PlayerDetails;
-}
 
 const MapCellToolTip = styled.div`
   z-index: 10;
@@ -73,7 +71,6 @@ const StyledMap = styled.div<{ cellSize: number }>`
 
   table {
     border-collapse: collapse;
-    margin-bottom: 0.5em;
 
     tr {
       background-color: #2f2f2f;
@@ -91,7 +88,17 @@ const StyledMap = styled.div<{ cellSize: number }>`
   }
 `;
 
-export default function Map({ gameData, playerDetails }: MapProps) {
+interface MapProps {
+  gameData: PlayerGameData;
+  playerDetails: PlayerDetails;
+  sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
+}
+
+export default function Map({
+  gameData,
+  playerDetails,
+  sendViaWebSocket,
+}: MapProps) {
   const { gameSettings } = gameData;
   const { map } = gameSettings;
 
@@ -142,6 +149,11 @@ export default function Map({ gameData, playerDetails }: MapProps) {
         </tbody>
       </table>
       <Robots gameData={gameData} playerDetails={playerDetails} />
+      <RobotSpawner
+        gameData={gameData}
+        playerDetails={playerDetails}
+        sendViaWebSocket={sendViaWebSocket}
+      />
     </StyledMap>
   );
 }

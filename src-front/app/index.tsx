@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Routes, Route, useParams, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import styled from "styled-components";
 
 import randomUUID from "src-front/utils/random-uuid";
@@ -22,10 +22,6 @@ const TopBar = styled.div`
   margin-bottom: 0.5em;
 `;
 
-const ClickOnMapSquareMessage = styled.div`
-  margin-left: 1em;
-`;
-
 const Form = styled.form`
   label,
   input,
@@ -35,8 +31,6 @@ const Form = styled.form`
 `;
 
 export default function App() {
-  const { gameId } = useParams();
-  const { pathname } = useLocation();
   const [playerDetails, setPlayerDetails] = useState(() => {
     return {
       playerName: localStorage.getItem(PLAYER_NAME_STORE) || "",
@@ -55,11 +49,6 @@ export default function App() {
     <StyledApp>
       <TopBar>
         {playerDetails.playerName && <span>{playerDetails.playerName}</span>}
-        {(pathname || gameId) && (
-          <ClickOnMapSquareMessage>
-            Click on a map square to learn see what's on it
-          </ClickOnMapSquareMessage>
-        )}
         {!playerDetails.playerName && (
           <Form
             onSubmit={(e) => {

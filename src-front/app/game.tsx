@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 
-import { PlayerDetails } from "../../dist-common/game-types";
+import { PlayerDetails } from "dist-common/game-types";
 
 import { useGameSocket } from "../hooks/use-game-socket";
 import Loading from "../loading";

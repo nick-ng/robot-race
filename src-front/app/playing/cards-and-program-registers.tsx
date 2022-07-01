@@ -5,20 +5,14 @@ import {
   PlayerGameData,
   PlayerDetails,
   MainGameState,
-} from "../../../dist-common/game-types";
-import { ActionIncomingMessageObject } from "../../../dist-common/game-action-types";
-import canSetRegister from "../../../dist-common/action-validators/can-set-register";
-import canSubmitProgram from "../../../dist-common/action-validators/can-submit-program";
+} from "dist-common/game-types";
+import { ActionIncomingMessageObject } from "dist-common/game-action-types";
+import canSetRegister from "dist-common/action-validators/can-set-register";
+import canSubmitProgram from "dist-common/action-validators/can-submit-program";
 
 import { getFlagEmoji } from "../utils";
 import CardsInHand from "./cards-in-hand";
 import ProgramRegisters from "./program-registers";
-
-interface CardsAndProgramRegistersProps {
-  gameData: PlayerGameData;
-  playerDetails: PlayerDetails;
-  sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
-}
 
 const StyledCardsAndProgramRegisters = styled.div`
   display: inline-block;
@@ -80,6 +74,12 @@ const SubmitButton = styled.button<{ isLoading?: boolean }>`
     border-style: ${({ disabled }) => (disabled ? "outset" : "inset")};
   }
 `;
+
+interface CardsAndProgramRegistersProps {
+  gameData: PlayerGameData;
+  playerDetails: PlayerDetails;
+  sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
+}
 
 export default function CardsAndProgramRegisters({
   gameData,

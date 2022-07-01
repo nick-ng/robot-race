@@ -25,17 +25,14 @@ const cleanUp = (
     if (isRobotDestroyed(robot)) {
       robot.status = "stand-by";
       robot.damagePoints = 2;
-
-      // temporary until you handle respawning properly
-      const archiveMarker = map.items.find(
-        (mi) => mi.id === robot.archiveMarkerId
-      );
-      if (archiveMarker) {
-        robot.position.x = archiveMarker.x;
-        robot.position.y = archiveMarker.y;
-        robot.status = "ok";
-      }
     }
+  }
+
+  if (robots.some((robot) => robot.status === "stand-by")) {
+    return {
+      game,
+      message: "OK",
+    };
   }
 
   return {

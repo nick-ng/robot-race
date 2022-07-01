@@ -1,10 +1,11 @@
 import React from "react";
+import { ActionIncomingMessageObject } from "dist-common/game-action-types";
 
 import {
   MainGameState,
   PlayerDetails,
   PlayerGameData,
-} from "../../../../dist-common/game-types";
+} from "dist-common/game-types";
 
 import Robot from "./robot";
 
