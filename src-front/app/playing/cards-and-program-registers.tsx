@@ -14,12 +14,6 @@ import { getFlagEmoji } from "../utils";
 import CardsInHand from "./cards-in-hand";
 import ProgramRegisters from "./program-registers";
 
-interface CardsAndProgramRegistersProps {
-  gameData: PlayerGameData;
-  playerDetails: PlayerDetails;
-  sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
-}
-
 const StyledCardsAndProgramRegisters = styled.div`
   display: inline-block;
 `;
@@ -80,6 +74,12 @@ const SubmitButton = styled.button<{ isLoading?: boolean }>`
     border-style: ${({ disabled }) => (disabled ? "outset" : "inset")};
   }
 `;
+
+interface CardsAndProgramRegistersProps {
+  gameData: PlayerGameData;
+  playerDetails: PlayerDetails;
+  sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
+}
 
 export default function CardsAndProgramRegisters({
   gameData,

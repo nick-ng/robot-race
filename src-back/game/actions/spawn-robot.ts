@@ -78,7 +78,7 @@ const spawnRobot = (
   if (robots.filter((r) => r.status === "stand-by").length <= 0) {
     return {
       game,
-      message: "ok",
+      message: "OK",
       automaticAction: {
         action: { playerId: "server", type: "deal-program-cards" },
         delay: 10,

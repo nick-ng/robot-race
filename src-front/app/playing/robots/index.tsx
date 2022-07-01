@@ -12,7 +12,6 @@ import Robot from "./robot";
 interface RobotsProps {
   gameData: PlayerGameData;
   playerDetails: PlayerDetails;
-  sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
 }
 
 export default function Robots({ gameData, playerDetails }: RobotsProps) {

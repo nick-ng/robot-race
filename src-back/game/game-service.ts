@@ -143,7 +143,7 @@ export const startGame = async (
     }
   );
 
-  if (message !== "OK") {
+  if (message.toUpperCase() !== "OK") {
     return {
       code: 400,
       message,

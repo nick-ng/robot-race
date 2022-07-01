@@ -15,6 +15,10 @@ const GlobalStyle = createGlobalStyle`
   a {
     color: lightskyblue;
   }
+
+  button {
+    cursor: pointer;
+  }
 `;
 
 import App from "./app";

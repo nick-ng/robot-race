@@ -44,7 +44,8 @@ export type GameAction =
   | SetRegisterAction
   | FinishSettingRegistersAction
   | ProcessRegisterAction
-  | CleanUpAction;
+  | CleanUpAction
+  | SpawnRobotAction;
 
 interface BasicIncomingMessageObject {
   playerId: string;
