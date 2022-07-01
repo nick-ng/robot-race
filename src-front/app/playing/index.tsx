@@ -1,20 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 
-import { PlayerGameData, PlayerDetails } from "dist-common/game-types";
+import {
+  PlayerGameData,
+  PlayerDetails,
+  MainGameState,
+} from "dist-common/game-types";
 import { ActionIncomingMessageObject } from "dist-common/game-action-types";
 
 import Map from "./map";
 import PlayerDisplay from "./player-display";
 import CardsAndProgramRegisters from "./cards-and-program-registers";
+import GameMessage from "./game-message";
 import Instructions from "./instructions";
 import GameOver from "./game-over";
-
-interface PlayingProps {
-  gameData: PlayerGameData;
-  playerDetails: PlayerDetails;
-  sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
-}
 
 const StyledPlaying = styled.div``;
 
@@ -58,12 +57,20 @@ const ControlsArea = styled.div`
   flex-shrink: 0;
 `;
 
+interface PlayingProps {
+  gameData: PlayerGameData;
+  playerDetails: PlayerDetails;
+  sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
+}
+
 export default function Playing({
   gameData,
   playerDetails,
   sendViaWebSocket,
 }: PlayingProps) {
   const { shortId, gameState } = gameData;
+  const { robots } = gameState as MainGameState;
+  const robot = robots.find((r) => r.playerId === playerDetails.playerId);
 
   return (
     <StyledPlaying>
@@ -86,11 +93,14 @@ export default function Playing({
                 <h1>Robot Race</h1>
                 <div>Game ID: {shortId}</div>
               </Heading>
-              <CardsAndProgramRegisters
-                gameData={gameData}
-                playerDetails={playerDetails}
-                sendViaWebSocket={sendViaWebSocket}
-              />
+              {!robots.some((r) => r.status === "stand-by") && (
+                <CardsAndProgramRegisters
+                  gameData={gameData}
+                  playerDetails={playerDetails}
+                  sendViaWebSocket={sendViaWebSocket}
+                />
+              )}
+              <GameMessage gameData={gameData} playerDetails={playerDetails} />
               <StyledInstructions
                 gameData={gameData}
                 playerDetails={playerDetails}

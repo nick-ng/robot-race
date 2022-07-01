@@ -10,6 +10,7 @@ import {
 import SetProgramRegistersInstruction from "./set-program-registers-instruction";
 import FinishedProgrammingInstruction from "./finished-programming-instruction";
 import TouchFlagsInstruction from "./touch-flags-instruction";
+import RespawnRobotInstruction from "./respawn-robot-instruction";
 
 interface InstructionProps {
   gameData: PlayerGameData;
@@ -29,13 +30,22 @@ export default function Instructions({
   playerDetails,
   className,
 }: InstructionProps) {
-  const { gameState, yourSecrets } = gameData;
-  const { finishedProgrammingPlayers, flagsTouched } =
+  const { gameState, gameSettings, yourSecrets } = gameData;
+  const { map } = gameSettings;
+  const { finishedProgrammingPlayers, flagsTouched, robots } =
     gameState as MainGameState;
   const { programRegisters } = yourSecrets;
 
   const startHidden =
     localStorage.getItem("ROBOT_RACE_INSTRUCTIONS_HIDDEN") === "true";
+
+  const robot = robots.find((r) => r.playerId === playerDetails.playerId);
+  const archiveMarker = map.items.find(
+    (mi) => mi.id === robot?.archiveMarkerId
+  )!;
+
+  const isRobotOnField =
+    robot && robot.status === "ok" && robot.damagePoints < 10;
 
   return (
     <StyledInstructions
@@ -49,15 +59,31 @@ export default function Instructions({
       className={className}
     >
       <summary>Instructions</summary>
-      {programRegisters.filter((a) => a !== null).length < 5 && (
-        <SetProgramRegistersInstruction />
+      {isRobotOnField &&
+        programRegisters.filter((a) => a !== null).length < 5 && (
+          <SetProgramRegistersInstruction />
+        )}
+      {isRobotOnField &&
+        !finishedProgrammingPlayers.includes(playerDetails.playerId) && (
+          <FinishedProgrammingInstruction />
+        )}
+      {isRobotOnField && (
+        <TouchFlagsInstruction
+          nextFlag={flagsTouched[playerDetails.playerId] + 1}
+        />
       )}
-      {!finishedProgrammingPlayers.includes(playerDetails.playerId) && (
-        <FinishedProgrammingInstruction />
+      {!isRobotOnField && (
+        <RespawnRobotInstruction
+          isBlocked={Boolean(
+            robots.find(
+              (r) =>
+                r.status === "ok" &&
+                r.position.x === archiveMarker.x &&
+                r.position.y === archiveMarker.y
+            )
+          )}
+        />
       )}
-      <TouchFlagsInstruction
-        nextFlag={flagsTouched[playerDetails.playerId] + 1}
-      />
     </StyledInstructions>
   );
 }

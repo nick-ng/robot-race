@@ -38,16 +38,16 @@ const BUTTON_OFFSETS = Object.freeze({
 const SPAWN_LOCATION_OFFSETS: { id: string; x: -1 | 0 | 1; y: -1 | 0 | 1 }[] =
   [];
 
-for (const x of [-1, 0, 1]) {
-  for (const y of [-1, 0, 1]) {
+for (const x of [-1, 0, 1] as const) {
+  for (const y of [-1, 0, 1] as const) {
     if (x === 0 && y === 0) {
       continue;
     }
 
     SPAWN_LOCATION_OFFSETS.push({
       id: `(${x})(${y})`,
-      x: x as -1 | 0 | 1,
-      y: y as -1 | 0 | 1,
+      x,
+      y,
     });
   }
 }
