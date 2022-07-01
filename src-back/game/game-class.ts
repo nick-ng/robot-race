@@ -248,7 +248,7 @@ export default class Game {
 
     const { message, automaticAction } = performAction(this, action);
 
-    if (message !== "OK") {
+    if (message.toUpperCase() !== "OK") {
       return {
         type: "error",
         message,
