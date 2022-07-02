@@ -16,7 +16,16 @@ const StyledStraightConveyor = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+
+  opacity: 0.3;
 `;
+
+const facingMap = {
+  up: "0turn",
+  right: "0.25turn",
+  down: "0.5turn",
+  left: "0.75turn",
+} as const;
 
 interface StraightConveyorProps {
   cellItems: MapItemNoId[];
@@ -31,10 +40,23 @@ export default function StraightConveyor({ cellItems }: StraightConveyorProps) {
     return null;
   }
 
+  let imageUrl = "/conveyor-1.png";
+
+  switch (straightConveyorItem.speed) {
+    case 2:
+      imageUrl = "/conveyor-2.png";
+      break;
+    default:
+      imageUrl = "/conveyor-1.png";
+  }
+
   return (
-    <StyledStraightConveyor>
-      {straightConveyorItem.direction[0]}
-      {straightConveyorItem.speed}
-    </StyledStraightConveyor>
+    <StyledStraightConveyor
+      style={{
+        transform: `rotate(${facingMap[straightConveyorItem.direction]})`,
+        backgroundImage: `url("${imageUrl}")`,
+        backgroundSize: "contain",
+      }}
+    />
   );
 }

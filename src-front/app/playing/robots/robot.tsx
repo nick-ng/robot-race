@@ -44,7 +44,10 @@ const fallAnimationMixin = css`
   animation: ${fallAnimation} 1s linear infinite;
 `;
 
-const StyledRobot = styled.div<{ isPlayer?: boolean; isFalling?: boolean }>`
+export const StyledRobot = styled.div<{
+  isPlayer?: boolean;
+  isFalling?: boolean;
+}>`
   position: absolute;
   display: flex;
   justify-content: center;
@@ -55,6 +58,7 @@ const StyledRobot = styled.div<{ isPlayer?: boolean; isFalling?: boolean }>`
   border-radius: 0vw;
   width: 2vw;
   height: 2vw;
+  background-color: #2f2f2f;
 
   transition: 450ms ease-in-out;
 
