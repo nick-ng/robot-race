@@ -9,12 +9,9 @@ import {
 } from "dist-common/game-types";
 import { ActionIncomingMessageObject } from "dist-common/game-action-types";
 
+import Board from "./board";
 import Robots from "../robots";
 import RobotSpawner from "./robot-spawner";
-
-import { getFlagText, getFlagToolTip } from "./flag";
-import { getWallStyles, getWallToolTip } from "./wall";
-import { getPitStyles, getPitToolTip } from "./pit";
 
 export const MapCellToolTip = styled.div`
   z-index: 10;
@@ -66,37 +63,9 @@ export const MapCellItem = styled.span`
   justify-content: center;
 `;
 
-export const StyledMap = styled.div<{ cellSize: number }>`
+export const StyledMap = styled.div`
   position: relative;
-
-  table {
-    border-collapse: collapse;
-
-    tr {
-      background-color: #2f2f2f;
-    }
-
-    ${MapCell} {
-      width: ${({ cellSize }) => cellSize}vw;
-      height: ${({ cellSize }) => cellSize}vw;
-      font-size: ${({ cellSize }) => cellSize * 0.28}vw;
-
-      ${MapCellToolTip} {
-        left: ${({ cellSize }) => cellSize * 1.1}vw;
-      }
-    }
-  }
 `;
-
-export const getAllTexts = (cellItems: MapItemNoId[]) =>
-  [getFlagText(cellItems)].map((text) => (
-    <MapCellItem key={text}>{text}</MapCellItem>
-  ));
-
-export const getAllStyles = (cellItems: MapItemNoId[]) => ({
-  ...getWallStyles(cellItems),
-  ...getPitStyles(cellItems),
-});
 
 interface MapProps {
   gameData: PlayerGameData;
@@ -113,45 +82,8 @@ export default function Map({
   const { map } = gameSettings;
 
   return (
-    <StyledMap cellSize={2.8}>
-      <table>
-        <tbody>
-          {new Array(map.height).fill(null).map((_, y) => (
-            <tr key={`map-row-${y}`}>
-              {new Array(map.width).fill(null).map((_, x) => {
-                const cellItems = map.items.filter(
-                  (mi) => mi.x === x && mi.y === y
-                );
-
-                const texts = getAllTexts(cellItems);
-                const styles = getAllStyles(cellItems);
-
-                const toolTipElements = [
-                  ...new Set([
-                    getPitToolTip(cellItems),
-                    getFlagToolTip(cellItems),
-                    getWallToolTip(map.items, x, y),
-                  ]),
-                  `${x},${y}`,
-                ]
-                  .filter((a) => a)
-                  .map((text) => <p key={text}>{text}</p>);
-
-                return (
-                  <MapCell
-                    key={`map-item-${x}-${y}`}
-                    style={styles}
-                    tabIndex={0}
-                  >
-                    <MapCellToolTip>{toolTipElements}</MapCellToolTip>
-                    {texts}
-                  </MapCell>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <StyledMap>
+      <Board map={map} cellSize={2.8} />
       <Robots gameData={gameData} playerDetails={playerDetails} />
       <RobotSpawner
         gameData={gameData}

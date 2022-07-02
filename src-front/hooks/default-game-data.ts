@@ -53,8 +53,8 @@ export const getDefaultGameData = (): GameData => {
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 1,
-            y: 1,
+            x: 6,
+            y: 7,
             facing: "down",
           },
           archiveMarkerId: 1,
@@ -67,8 +67,8 @@ export const getDefaultGameData = (): GameData => {
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 0,
-            y: 0,
+            x: 5,
+            y: 7,
             facing: "right",
           },
           archiveMarkerId: 2,
@@ -81,8 +81,8 @@ export const getDefaultGameData = (): GameData => {
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 11,
-            y: 15,
+            x: 6,
+            y: 10,
             facing: "up",
           },
           archiveMarkerId: 3,

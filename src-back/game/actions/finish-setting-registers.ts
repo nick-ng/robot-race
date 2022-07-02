@@ -61,15 +61,20 @@ const finishSettingRegisters = (
         });
       });
 
-      gameSecrets.instructionQueue.push(
+      // 4. Complete Registers
+      gameSecrets.instructionQueue = gameSecrets.instructionQueue.concat([
+        // A. Reveal Program Cards
+        // B. Robots Move
         ...nthRegisters.sort(
           (a, b) => (b.payload.priority || 0) - (a.payload.priority || 0)
         ),
-        {
-          type: "touch-checkpoint-instruction",
-          payload: { action: "touch-checkpoints" },
-        }
-      );
+        // C. Board Elements Move
+        { type: "conveyors-move-instruction", payload: { minSpeed: 2 } },
+        { type: "conveyors-move-instruction", payload: { minSpeed: 1 } },
+        // D. Lasers Fire
+        // E. Touch Checkpoints
+        { type: "touch-checkpoint-instruction" },
+      ]);
     }
 
     return {

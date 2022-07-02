@@ -48,16 +48,23 @@ export interface ProgramCardInstruction {
   payload: ProgramCard;
 }
 
+export interface ConveyorsMoveInstruction {
+  type: "conveyors-move-instruction";
+  playerId?: never;
+  payload: {
+    minSpeed: number;
+  };
+}
+
 export interface TouchCheckpointsInstruction {
   type: "touch-checkpoint-instruction";
   playerId?: never;
-  payload: {
-    action: "touch-checkpoints";
-  };
+  payload?: never;
 }
 
 export type InstructionItem =
   | ProgramCardInstruction
+  | ConveyorsMoveInstruction
   | TouchCheckpointsInstruction;
 
 export interface LobbyGameState {
@@ -114,8 +121,8 @@ export interface WallMapItem extends BasicMapItem {
   y1: number;
 }
 
-export interface ConveyorMapItem extends BasicMapItem {
-  type: "conveyor";
+export interface StraightConveyorMapItem extends BasicMapItem {
+  type: "straight-conveyor";
   direction: "up" | "down" | "left" | "right";
   speed: 1 | 2;
 }
@@ -143,7 +150,7 @@ export type MapItemNoId =
   | DockMapItem
   | FlagMapItem
   | WallMapItem
-  | ConveyorMapItem
+  | StraightConveyorMapItem
   | PitMapItem
   | GearMapItem
   | PusherMapItem;

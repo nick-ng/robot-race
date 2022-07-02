@@ -11,10 +11,10 @@ import {
 import {
   MapCell,
   MapCellItem,
-  StyledMap,
+  StyledBoard,
   getAllStyles,
-  getAllTexts,
-} from "../playing/map";
+  getAllElements,
+} from "../playing/map/board";
 
 export const EditorToolTip = styled.div`
   z-index: 10;
@@ -39,6 +39,10 @@ export const MapItemPreview = styled.div`
   top: 0;
   left: 0;
   text-align: center;
+`;
+
+export const RelativeDiv = styled.div`
+  position: relative;
 `;
 
 const StyledMapEditor = styled.div`
@@ -107,6 +111,11 @@ const getExtraOptions = (
           number: freeNumbers[0],
         };
       }
+    case "straight-conveyor":
+      return {
+        direction: "up",
+        speed: 1,
+      };
     case "wall":
       return {
         direction: "up",
@@ -138,7 +147,7 @@ export default function MapEditor() {
       return;
     }
 
-    if (["wall"].includes(chosenItem)) {
+    if (!["dock", "flag"].includes(chosenItem)) {
       return;
     }
 
@@ -230,10 +239,11 @@ export default function MapEditor() {
                   <option value="dock">Dock Bay</option>
                   <option value="flag">Flag</option>
                   <option value="wall">Wall</option>
+                  <option value="straight-conveyor">Straight Conveyor</option>
                 </select>
               </td>
             </tr>
-            {["wall"].includes(chosenItem) && (
+            {["wall", "straight-conveyor"].includes(chosenItem) && (
               <tr>
                 <td>Direction</td>
                 <td>
@@ -260,11 +270,28 @@ export default function MapEditor() {
                 </td>
               </tr>
             )}
+            {["straight-conveyor"].includes(chosenItem) && (
+              <tr>
+                <td>Speed</td>
+                <td>
+                  <input
+                    value={(extraOptions as { speed: number }).speed}
+                    type="number"
+                    onChange={(e) => {
+                      setExtraOptions((prev) => ({
+                        ...prev,
+                        speed: parseInt(e.target.value, 10),
+                      }));
+                    }}
+                  />
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </Controls>
-      <StyledMap cellSize={2.8}>
-        <table>
+      <RelativeDiv>
+        <StyledBoard cellSize={2.8}>
           <tbody>
             {new Array(dimensions.height).fill(null).map((_, y) => (
               <tr key={`map-row-${y}`}>
@@ -273,21 +300,7 @@ export default function MapEditor() {
                     (mi) => mi.x === x && mi.y === y
                   );
 
-                  const dockMapItem = cellItems.find(
-                    (ci) => ci.type === "dock"
-                  );
-
-                  const dockText = dockMapItem ? (
-                    <MapCellItem
-                      key={`dock-${(dockMapItem as DockMapItem).number}`}
-                    >
-                      🤖{(dockMapItem as DockMapItem).number}
-                    </MapCellItem>
-                  ) : null;
-
-                  const texts = [...getAllTexts(cellItems), dockText].filter(
-                    (a) => a
-                  );
+                  const elements = getAllElements(cellItems);
                   const styles = getAllStyles(cellItems);
 
                   let chosenItemTexts = null;
@@ -311,7 +324,7 @@ export default function MapEditor() {
                           {(extraOptions as Pick<DockMapItem, "number">).number}
                         </MapCellItem>
                       ) : (
-                        getAllTexts([
+                        getAllElements([
                           { type: chosenItem, ...extraOptions } as MapItemNoId,
                         ])
                       );
@@ -376,7 +389,7 @@ export default function MapEditor() {
                       <EditorToolTip>
                         {x}, {y}
                       </EditorToolTip>
-                      {texts}
+                      {elements}
                       <MapItemPreview style={chosenItemStyles}>
                         {chosenItemTexts}
                       </MapItemPreview>
@@ -386,8 +399,8 @@ export default function MapEditor() {
               </tr>
             ))}
           </tbody>
-        </table>
-      </StyledMap>
+        </StyledBoard>
+      </RelativeDiv>
       <MapOutput value={JSON.stringify(map, null, "  ")} onChange={() => {}} />
       <ImportControls>
         <div>Import</div>
