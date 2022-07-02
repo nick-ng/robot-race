@@ -1,6 +1,6 @@
-import { MapItem } from "dist-common/game-types";
+import { MapItemNoId } from "dist-common/game-types";
 
-export const getWallStyles = (cellItems: MapItem[]) => {
+export const getWallStyles = (cellItems: MapItemNoId[]) => {
   return cellItems.reduce((acc, mapItem) => {
     if (mapItem.type !== "wall") {
       return acc;
@@ -33,7 +33,11 @@ export const getWallStyles = (cellItems: MapItem[]) => {
   }, {});
 };
 
-export const getWallToolTip = (mapItems: MapItem[], x: number, y: number) => {
+export const getWallToolTip = (
+  mapItems: MapItemNoId[],
+  x: number,
+  y: number
+) => {
   if (
     mapItems.filter(
       (mi) =>
