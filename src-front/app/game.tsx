@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import { PlayerDetails } from "dist-common/game-types";
 
 import { useGameSocket } from "../hooks/use-game-socket";
+import { useOptions } from "../hooks/options-context";
 import Loading from "../loading";
-import PingDisplay from "./ping-display";
 import Lobby from "./lobby";
 import Playing from "./playing";
 
@@ -19,6 +19,11 @@ export default function Game({ playerDetails }: GameProps) {
     gameId!,
     playerDetails
   );
+  const { setOptions } = useOptions();
+
+  useEffect(() => {
+    setOptions({ ping: roundTripTime });
+  }, [roundTripTime]);
 
   if (typeof gameData === "undefined") {
     return <Loading />;
@@ -28,23 +33,15 @@ export default function Game({ playerDetails }: GameProps) {
 
   switch (gameState.state) {
     case "lobby":
-      return (
-        <>
-          <Lobby gameData={gameData} playerDetails={playerDetails} />
-          <PingDisplay roundTripTime={roundTripTime} />
-        </>
-      );
+      return <Lobby gameData={gameData} playerDetails={playerDetails} />;
     case "over":
     default:
       return (
-        <>
-          <Playing
-            gameData={gameData}
-            playerDetails={playerDetails}
-            sendViaWebSocket={sendViaWebSocket}
-          />
-          <PingDisplay roundTripTime={roundTripTime} />
-        </>
+        <Playing
+          gameData={gameData}
+          playerDetails={playerDetails}
+          sendViaWebSocket={sendViaWebSocket}
+        />
       );
   }
 }

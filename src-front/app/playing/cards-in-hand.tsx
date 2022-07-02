@@ -39,18 +39,20 @@ export default function CardsInHand({
   return (
     <StyledCardsInHand className={className}>
       <Cards width={(cardWidth || 9) * 6}>
-        {cardsInHand.map((cardId) => (
-          <ProgramCard
-            cardWidth={cardWidth}
-            card={cardMap[cardId]}
-            isLoading={isLoading || false}
-            key={cardId}
-            chosen={chosenCard === cardId || false}
-            clickHandler={() => {
-              handleCardChoice(cardId);
-            }}
-          />
-        ))}
+        {cardsInHand
+          .sort((a, b) => cardMap[b]?.priority - cardMap[a]?.priority)
+          .map((cardId) => (
+            <ProgramCard
+              cardWidth={cardWidth}
+              card={cardMap[cardId]}
+              isLoading={isLoading || false}
+              key={cardId}
+              chosen={chosenCard === cardId || false}
+              clickHandler={() => {
+                handleCardChoice(cardId);
+              }}
+            />
+          ))}
       </Cards>
     </StyledCardsInHand>
   );

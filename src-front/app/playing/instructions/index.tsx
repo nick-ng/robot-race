@@ -7,6 +7,8 @@ import {
   PlayerGameData,
 } from "dist-common/game-types";
 
+import { useOptions } from "../../../hooks/options-context";
+
 import SetProgramRegistersInstruction from "./set-program-registers-instruction";
 import FinishedProgrammingInstruction from "./finished-programming-instruction";
 import TouchFlagsInstruction from "./touch-flags-instruction";
@@ -18,12 +20,7 @@ interface InstructionProps {
   className?: string;
 }
 
-const StyledInstructions = styled.details`
-  summary {
-    text-decoration: underline;
-    cursor: pointer;
-  }
-`;
+const StyledInstructions = styled.details``;
 
 export default function Instructions({
   gameData,
@@ -35,6 +32,7 @@ export default function Instructions({
   const { finishedProgrammingPlayers, flagsTouched, robots } =
     gameState as MainGameState;
   const { programRegisters } = yourSecrets;
+  const { options } = useOptions();
 
   const startHidden =
     localStorage.getItem("ROBOT_RACE_INSTRUCTIONS_HIDDEN") === "true";
@@ -61,7 +59,9 @@ export default function Instructions({
       <summary>Instructions</summary>
       {isRobotOnField &&
         programRegisters.filter((a) => a !== null).length < 5 && (
-          <SetProgramRegistersInstruction />
+          <SetProgramRegistersInstruction
+            smallerPriorityFirst={options.smallerPriorityFirst}
+          />
         )}
       {isRobotOnField &&
         !finishedProgrammingPlayers.includes(playerDetails.playerId) && (
