@@ -8,6 +8,7 @@ import PreLobby from "./pre-lobby";
 import Game from "./game";
 import Practice from "./practice";
 import Options from "./options";
+import MapEditor from "./map-editor";
 
 const PLAYER_NAME_STORE = "ROBOT_RACE_PLAYER_NAME_STORE";
 const PLAYER_ID_STORE = "ROBOT_RACE_PLAYER_ID_STORE";
@@ -134,6 +135,7 @@ export default function App() {
             element={<PreLobby playerDetails={playerDetails} />}
           />
           <Route path="/practice" element={<Practice />} />
+          <Route path="/editor" element={<MapEditor />} />
           <Route
             path=":gameId"
             element={<Game playerDetails={playerDetails} />}

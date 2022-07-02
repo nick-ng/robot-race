@@ -1,6 +1,6 @@
-import { MapItem } from "dist-common/game-types";
+import { MapItemNoId } from "dist-common/game-types";
 
-export const getPitStyles = (cellItems: MapItem[]) => {
+export const getPitStyles = (cellItems: MapItemNoId[]) => {
   if (cellItems.find((c) => c.type === "pit")) {
     return {
       boxShadow: "inset 0 0 1px #ff0000",
@@ -11,7 +11,7 @@ export const getPitStyles = (cellItems: MapItem[]) => {
   return {};
 };
 
-export const getPitToolTip = (cellItems: MapItem[]) => {
+export const getPitToolTip = (cellItems: MapItemNoId[]) => {
   if (cellItems.find((c) => c.type === "pit")) {
     return "Falling into a pit will destroy your robot. Watch out!";
   }

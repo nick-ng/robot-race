@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import {
-  MainGameState,
   PlayerDetails,
   PlayerGameData,
+  MapItem,
+  MapItemNoId,
 } from "dist-common/game-types";
 import { ActionIncomingMessageObject } from "dist-common/game-action-types";
-import canSpawnRobot from "dist-common/action-validators/can-spawn-robot";
 
 import Robots from "../robots";
 import RobotSpawner from "./robot-spawner";
@@ -16,7 +16,7 @@ import { getFlagText, getFlagToolTip } from "./flag";
 import { getWallStyles, getWallToolTip } from "./wall";
 import { getPitStyles, getPitToolTip } from "./pit";
 
-const MapCellToolTip = styled.div`
+export const MapCellToolTip = styled.div`
   z-index: 10;
   display: none;
   position: absolute;
@@ -37,7 +37,7 @@ const MapCellToolTip = styled.div`
   }
 `;
 
-const MapCell = styled.td`
+export const MapCell = styled.td`
   position: relative;
   box-sizing: border-box;
   border: 1px dashed #808080;
@@ -52,7 +52,7 @@ const MapCell = styled.td`
   }
 `;
 
-const MapCellItem = styled.span`
+export const MapCellItem = styled.span`
   pointer-events: none;
   position: absolute;
   margin: auto;
@@ -66,7 +66,7 @@ const MapCellItem = styled.span`
   justify-content: center;
 `;
 
-const StyledMap = styled.div<{ cellSize: number }>`
+export const StyledMap = styled.div<{ cellSize: number }>`
   position: relative;
 
   table {
@@ -87,6 +87,16 @@ const StyledMap = styled.div<{ cellSize: number }>`
     }
   }
 `;
+
+export const getAllTexts = (cellItems: MapItemNoId[]) =>
+  [getFlagText(cellItems)].map((text) => (
+    <MapCellItem key={text}>{text}</MapCellItem>
+  ));
+
+export const getAllStyles = (cellItems: MapItemNoId[]) => ({
+  ...getWallStyles(cellItems),
+  ...getPitStyles(cellItems),
+});
 
 interface MapProps {
   gameData: PlayerGameData;
@@ -113,14 +123,8 @@ export default function Map({
                   (mi) => mi.x === x && mi.y === y
                 );
 
-                const texts = [getFlagText(cellItems)].map((text) => (
-                  <MapCellItem key={text}>{text}</MapCellItem>
-                ));
-
-                const styles = {
-                  ...getWallStyles(cellItems),
-                  ...getPitStyles(cellItems),
-                };
+                const texts = getAllTexts(cellItems);
+                const styles = getAllStyles(cellItems);
 
                 const toolTipElements = [
                   ...new Set([

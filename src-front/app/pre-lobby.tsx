@@ -10,7 +10,11 @@ interface PreLobbyProps {
   playerDetails: PlayerDetails;
 }
 
-const StyledPreLobby = styled.div``;
+const StyledPreLobby = styled.div`
+  li {
+    margin: 0.5em 0;
+  }
+`;
 
 const HostGameButton = styled.button<{ isLoading: boolean }>`
   margin-bottom: 1em;
@@ -119,10 +123,15 @@ export default function PreLobby({ playerDetails }: PreLobbyProps) {
         </JoinGameButton>
       </Form>
       <p>{errorMessage}</p>
-      <p>
-        All your friends asleep, too busy for you, or you don't have any? Try{" "}
-        <Link to="/practice">Practice Mode</Link>
-      </p>
+      <h3>Other Stuff</h3>
+      <ul>
+        <li>
+          <Link to="/practice">Practice Mode</Link>
+        </li>
+        <li>
+          <Link to="/editor">Map Editor</Link>
+        </li>
+      </ul>
     </StyledPreLobby>
   );
 }

@@ -1,14 +1,14 @@
 import { Map, MapItemNoId } from "../game-types";
 
 const itemsNoId: MapItemNoId[] = [
-  { type: "dock", x: 5, y: 15 },
-  { type: "dock", x: 6, y: 15 },
-  { type: "dock", x: 3, y: 14 },
-  { type: "dock", x: 8, y: 14 },
-  { type: "dock", x: 1, y: 13 },
-  { type: "dock", x: 10, y: 13 },
-  { type: "dock", x: 0, y: 12 },
-  { type: "dock", x: 11, y: 12 },
+  { type: "dock", number: 1, x: 5, y: 15 },
+  { type: "dock", number: 2, x: 6, y: 15 },
+  { type: "dock", number: 3, x: 3, y: 14 },
+  { type: "dock", number: 4, x: 8, y: 14 },
+  { type: "dock", number: 5, x: 1, y: 13 },
+  { type: "dock", number: 6, x: 10, y: 13 },
+  { type: "dock", number: 7, x: 0, y: 12 },
+  { type: "dock", number: 8, x: 11, y: 12 },
   {
     type: "flag",
     number: 1,

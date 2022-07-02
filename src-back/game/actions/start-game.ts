@@ -45,8 +45,9 @@ const startGame = (
 
   seatOrder.forEach((playerId, i) => {
     const robot = game.gameState.robots.find((r) => r.playerId === playerId);
-    const mapDocks = map.items.filter((mi) => mi.type === "dock");
-    const startingDock = mapDocks[i];
+    const startingDock = map.items.find(
+      (mi) => mi.type === "dock" && mi.number === i + 1
+    );
     if (robot && startingDock) {
       robot.position.x = startingDock.x;
       robot.position.y = startingDock.y;

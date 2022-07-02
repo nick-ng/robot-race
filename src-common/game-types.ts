@@ -100,6 +100,7 @@ export interface BasicMapItem {
 
 export interface DockMapItem extends BasicMapItem {
   type: "dock";
+  number: number;
 }
 
 export interface FlagMapItem extends BasicMapItem {
