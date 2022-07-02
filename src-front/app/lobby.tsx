@@ -15,10 +15,6 @@ const StyledLobby = styled.div``;
 
 const Details = styled.details`
   margin: 1em 0;
-
-  summary {
-    cursor: pointer;
-  }
 `;
 
 const QuiteZone = styled.div`

@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 
+import OptionsContextProvider from "./hooks/options-context";
+
 const GlobalStyle = createGlobalStyle`
   body {
     color: #ffffff;
@@ -16,8 +18,14 @@ const GlobalStyle = createGlobalStyle`
     color: lightskyblue;
   }
 
-  button {
+  summary,
+  button,
+  input[type="checkbox"] {
     cursor: pointer;
+  }
+
+  summary {
+    text-decoration: underline;
   }
 `;
 
@@ -28,7 +36,9 @@ root.render(
   <StrictMode>
     <GlobalStyle />
     <BrowserRouter>
-      <App />
+      <OptionsContextProvider>
+        <App />
+      </OptionsContextProvider>
     </BrowserRouter>
   </StrictMode>
 );

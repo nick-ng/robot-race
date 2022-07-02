@@ -3,6 +3,8 @@ import styled from "styled-components";
 
 import { ProgramCard } from "dist-common/game-types";
 
+import { useOptions } from "../../hooks/options-context";
+
 interface BaseProgramCardProps {
   cardWidth?: number;
   isLoading?: boolean;
@@ -68,6 +70,9 @@ export default function ProgramCard({
   chosen,
   clickHandler,
 }: ProgramCardProps) {
+  const {
+    options: { smallerPriorityFirst },
+  } = useOptions();
   if (card) {
     const cardImagePath = IMAGE_MAP[card.action];
     return (
@@ -77,7 +82,9 @@ export default function ProgramCard({
         cardWidth={cardWidth || 9}
         onClick={clickHandler}
       >
-        <div>Priority {card.priority}</div>
+        <div>
+          Priority {smallerPriorityFirst ? 85 - card.priority : card.priority}
+        </div>
         <img src={`/${cardImagePath}`} />
         <div>{card.action}</div>
       </StyledProgramCard>
