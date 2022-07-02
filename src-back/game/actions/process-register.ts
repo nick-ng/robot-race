@@ -72,6 +72,7 @@ const processRegister = (
           map.items,
           instructionItem.payload.minSpeed
         );
+        fallInHoles(robots, map);
         if (moved) {
           delay = 500;
         }
