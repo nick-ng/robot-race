@@ -3,7 +3,7 @@ import { getFlagEmoji } from "../../utils";
 
 export const getFlagText = (cellItems: MapItemNoId[]) => {
   const flag = cellItems.find((a) => a.type === "flag") as FlagMapItem;
-  if (cellItems.find((a) => a.type === "flag")) {
+  if (flag) {
     return `${getFlagEmoji()}${flag.number}`;
   }
 

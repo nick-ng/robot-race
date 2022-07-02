@@ -6,6 +6,7 @@ import Game from "../game-class";
 
 import { rotateRobot, moveRobotOne } from "./program-card-functions";
 import { touchCheckpoints, fallInHoles } from "./server-functions";
+import { conveyorsMove } from "./conveyors";
 import { isRobotDestroyed } from "./utils";
 
 const processRegister = (
@@ -63,9 +64,19 @@ const processRegister = (
     }
   } else {
     delay = 10;
-    const { payload } = instructionItem;
-    switch (payload.action) {
-      case "touch-checkpoints":
+    switch (instructionItem.type) {
+      case "conveyors-move-instruction":
+        // Express conveyor belts move 1 space / Express and normal conveyor belts move 1 space
+        const moved = conveyorsMove(
+          robots,
+          map.items,
+          instructionItem.payload.minSpeed
+        );
+        if (moved) {
+          delay = 500;
+        }
+        break;
+      case "touch-checkpoint-instruction":
         const touched = touchCheckpoints(robots, map.items, flagsTouched);
         if (touched.length > 0) {
           delay = 400;
