@@ -1,3 +1,4 @@
+import { MainGameState } from "src-common/game-types";
 import {
   AutomaticAction,
   CleanUpAction,
@@ -14,15 +15,16 @@ const cleanUp = (
   automaticAction?: AutomaticAction;
 } => {
   const { gameState, gameSettings } = game;
-  const { robots } = gameState;
+  const { robots, seatOrder } = gameState as MainGameState;
   const { map } = gameSettings;
   // 10. repair and draw option cards in seat order
 
   // 20. discard program cards from non-locked registers
 
   // 30. respawn robots
-  for (const robot of robots) {
-    if (isRobotDestroyed(robot)) {
+  for (const playerId of seatOrder) {
+    const robot = robots.find((r) => r.playerId === playerId)!;
+    if (isRobotDestroyed(robot) && robot.lives > 0) {
       robot.status = "stand-by";
       robot.damagePoints = 2;
     }

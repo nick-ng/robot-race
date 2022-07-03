@@ -72,6 +72,7 @@ const finishSettingRegisters = (
         { type: "conveyors-move-instruction", payload: { minSpeed: 2 } },
         { type: "conveyors-move-instruction", payload: { minSpeed: 1 } },
         // D. Lasers Fire
+        { type: "lasers-fire-instruction", payload: { shooter: "robots" } },
         // E. Touch Checkpoints
         { type: "touch-checkpoint-instruction" },
       ]);

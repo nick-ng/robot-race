@@ -17,7 +17,7 @@ import {
 } from "../playing/map/board";
 
 export const EditorToolTip = styled.div`
-  z-index: 10;
+  z-index: 15;
   display: none;
   position: absolute;
   border: 1px solid #808080;

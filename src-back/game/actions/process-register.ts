@@ -7,7 +7,8 @@ import Game from "../game-class";
 import { rotateRobot, moveRobotOne } from "./program-card-functions";
 import { touchCheckpoints, fallInHoles } from "./server-functions";
 import { conveyorsMove } from "./conveyors";
-import { isRobotDestroyed } from "./utils";
+import { shootRobotLasersVertical } from "./lasers";
+import { isRobotDestroyed, destroyRobots } from "./utils";
 
 const processRegister = (
   game: Game,
@@ -73,11 +74,17 @@ const processRegister = (
           instructionItem.payload.minSpeed
         );
         fallInHoles(robots, map);
-        console.log("moved", moved);
         if (moved) {
           delay = 500;
         }
         break;
+      case "lasers-fire-instruction":
+        destroyRobots(robots);
+        const shotsFired = shootRobotLasersVertical(robots, map.items);
+        destroyRobots(robots);
+        if (shotsFired) {
+          delay = 400;
+        }
       case "touch-checkpoint-instruction":
         const touched = touchCheckpoints(robots, map.items, flagsTouched);
         if (touched.length > 0) {
