@@ -69,7 +69,7 @@ export const getDefaultGameData = (): GameData => {
           position: {
             x: 5,
             y: 7,
-            facing: "right",
+            facing: "down",
           },
           archiveMarkerId: 2,
           design: "double",
