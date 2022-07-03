@@ -99,7 +99,9 @@ export default function CardsAndProgramRegisters({
   >(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const robot = robots.find((r) => r.playerId === playerDetails.playerId)!;
   const youFinishedProgramming = finishedProgrammingPlayers.includes(playerId);
+  const fullyProgrammed = canSubmitProgram(programRegisters).canPerform;
 
   useEffect(() => {
     if (selectedCardId !== null && selectedRegisterIndex !== null) {
@@ -108,7 +110,8 @@ export default function CardsAndProgramRegisters({
         selectedRegisterIndex,
         cardsInHand,
         programRegisters,
-        robots.find((r) => r.playerId === playerId)!
+        robots.find((r) => r.playerId === playerId)!,
+        finishedProgrammingPlayers
       );
 
       if (!canPerform) {
@@ -148,8 +151,6 @@ export default function CardsAndProgramRegisters({
     youFinishedProgramming,
   ]);
 
-  const fullyProgrammed = canSubmitProgram(programRegisters).canPerform;
-
   return (
     <StyledCardsAndProgramRegisters>
       <NextFlag>
@@ -185,6 +186,9 @@ export default function CardsAndProgramRegisters({
       <StyledProgramRegisters
         cardWidth={6}
         isLoading={isLoading}
+        lockedRegisters={
+          youFinishedProgramming ? [0, 1, 2, 3, 4] : robot.lockedRegisters
+        }
         gameData={gameData}
         handleRegisterSelect={(registerIndex) => {
           if (isLoading) {
@@ -214,18 +218,20 @@ export default function CardsAndProgramRegisters({
         chosenRegister={selectedRegisterIndex}
       />
       <Heading>Program Cards</Heading>
-      <StyledCardsInHand
-        cardWidth={5}
-        isLoading={isLoading}
-        gameData={gameData}
-        handleCardChoice={(cardId) => {
-          if (isLoading) {
-            return;
-          }
-          setSelectedCardId(cardId);
-        }}
-        chosenCard={selectedCardId}
-      />
+      {!youFinishedProgramming && (
+        <StyledCardsInHand
+          cardWidth={5}
+          isLoading={isLoading}
+          gameData={gameData}
+          handleCardChoice={(cardId) => {
+            if (isLoading) {
+              return;
+            }
+            setSelectedCardId(cardId);
+          }}
+          chosenCard={selectedCardId}
+        />
+      )}
     </StyledCardsAndProgramRegisters>
   );
 }

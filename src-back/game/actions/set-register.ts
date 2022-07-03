@@ -16,14 +16,15 @@ const setRegister = (
 
   const { playerId, cardId, registerIndex } = action;
   const { cardsInHand, programRegisters } = playerSecrets[playerId];
-  const { robots } = gameState;
+  const { robots, finishedProgrammingPlayers } = gameState;
 
   const { canPerform, message } = canSetRegister(
     cardId,
     registerIndex,
     cardsInHand,
     programRegisters,
-    robots.find((r) => r.playerId === playerId)!
+    robots.find((r) => r.playerId === playerId)!,
+    finishedProgrammingPlayers
   );
   if (!canPerform) {
     return {

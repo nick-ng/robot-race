@@ -1,11 +1,12 @@
-import { Robot, OnePlayerSecrets } from "../game-types";
+import { Robot, OnePlayerSecrets, MainGameState } from "../game-types";
 
 const canSetRegister = (
   cardId: string | null,
   registerIndex: number,
   cardsInHand: OnePlayerSecrets["cardsInHand"],
   programRegisters: OnePlayerSecrets["programRegisters"],
-  robot: Robot
+  robot: Robot,
+  finishedProgrammingPlayers: MainGameState["finishedProgrammingPlayers"]
 ):
   | { canPerform: true; message?: never }
   | { canPerform: false; message: string } => {
@@ -16,6 +17,10 @@ const canSetRegister = (
     !robot
   ) {
     return { canPerform: false, message: "Missing parameters." };
+  }
+
+  if (finishedProgrammingPlayers.includes(robot.playerId)) {
+    return { canPerform: false, message: "You've submitted your program." };
   }
 
   if (!cardId && !programRegisters[registerIndex]) {
