@@ -120,6 +120,8 @@ const getExtraOptions = (
       return {
         direction: "up",
       };
+    case "repair":
+      return {};
     default:
       return null;
   }
@@ -240,6 +242,7 @@ export default function MapEditor() {
                   <option value="flag">Flag</option>
                   <option value="wall">Wall</option>
                   <option value="straight-conveyor">Straight Conveyor</option>
+                  <option value="repair">Repair</option>
                 </select>
               </td>
             </tr>
@@ -289,6 +292,16 @@ export default function MapEditor() {
             )}
           </tbody>
         </table>
+        <button
+          disabled={items.length === 0}
+          onClick={() => {
+            if (items.length > 0) {
+              setItems((prevItems) => prevItems.slice(0, prevItems.length - 1));
+            }
+          }}
+        >
+          Undo
+        </button>
       </Controls>
       <RelativeDiv>
         <StyledBoard cellSize={2.8}>

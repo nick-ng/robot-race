@@ -39,6 +39,11 @@ export const repairRobot = (robot: Robot) => {
 
   const regsiterDamage = robot.damagePoints - 4;
 
+  if (regsiterDamage <= 0) {
+    robot.lockedRegisters = [];
+    return;
+  }
+
   while (regsiterDamage < robot.lockedRegisters.length) {
     const existingLockedRegisters = robot.lockedRegisters.sort((a, b) => a - b);
 
