@@ -51,6 +51,7 @@ export const StyledRobot = styled.div<{
 }>`
   pointer-events: ${({ isDestroyed }) => (isDestroyed ? "none" : "auto")};
   z-index: ${({ isDestroyed }) => (isDestroyed ? "5" : "10")};
+  opacity: ${({ isDestroyed }) => (isDestroyed ? "0.2" : "1")};
   position: absolute;
   display: flex;
   justify-content: center;

@@ -7,7 +7,7 @@ import {
   WallMapItem,
   StraightConveyorMapItem,
 } from "../../../dist-common/game-types";
-import { isRobotDestroyed } from "./utils";
+import { damageRobot, isRobotDestroyed } from "./utils";
 
 const directionMap = {
   up: { xd: 0, yd: -1 },
@@ -64,7 +64,7 @@ export const shootRobotLasersVertical = (
 
         if (targetRobot) {
           shotsFired = true;
-          targetRobot.damagePoints = targetRobot.damagePoints + 1;
+          damageRobot(targetRobot);
         }
       }
 

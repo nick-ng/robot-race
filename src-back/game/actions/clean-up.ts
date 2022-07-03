@@ -4,7 +4,7 @@ import {
   CleanUpAction,
 } from "../../../dist-common/game-action-types";
 import Game from "../game-class";
-import { isRobotDestroyed } from "./utils";
+import { isRobotDestroyed, setRobotDamage } from "./utils";
 
 const cleanUp = (
   game: Game,
@@ -26,7 +26,7 @@ const cleanUp = (
     const robot = robots.find((r) => r.playerId === playerId)!;
     if (isRobotDestroyed(robot) && robot.lives > 0) {
       robot.status = "stand-by";
-      robot.damagePoints = 2;
+      setRobotDamage(robot, 2);
     }
   }
 
