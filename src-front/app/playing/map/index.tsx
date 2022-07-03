@@ -14,7 +14,7 @@ import Robots from "../robots";
 import RobotSpawner from "./robot-spawner";
 
 export const MapCellToolTip = styled.div`
-  z-index: 10;
+  z-index: 15;
   display: none;
   position: absolute;
   border: 1px solid #808080;
