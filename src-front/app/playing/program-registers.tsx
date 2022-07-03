@@ -9,6 +9,7 @@ interface ProgramRegistersProps {
   gameData: PlayerGameData;
   handleRegisterSelect: (registerIndex: number) => void;
   isLoading?: boolean;
+  lockedRegisters: number[];
   chosenRegister?: number | null;
   cardWidth?: number;
   className?: string;
@@ -25,6 +26,7 @@ export default function ProgramRegisters({
   gameData,
   handleRegisterSelect,
   isLoading,
+  lockedRegisters,
   chosenRegister,
   cardWidth,
   className,
@@ -37,12 +39,14 @@ export default function ProgramRegisters({
     <StyledProgramRegisters className={className}>
       <Cards>
         {programRegisters.map((register, i) => {
+          const isLocked = lockedRegisters.includes(i);
           if (register) {
             const card = cardMap[register];
             return (
               <ProgramCard
                 cardWidth={cardWidth}
                 isLoading={isLoading || false}
+                isLocked={isLocked}
                 key={`programed-register-${register}`}
                 clickHandler={() => {
                   handleRegisterSelect(i);
@@ -57,6 +61,7 @@ export default function ProgramRegisters({
             <ProgramCard
               cardWidth={cardWidth}
               isLoading={isLoading || false}
+              isLocked={isLocked}
               key={`blank-program-register-${i}`}
               clickHandler={() => {
                 handleRegisterSelect(i);
