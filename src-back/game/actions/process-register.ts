@@ -7,7 +7,7 @@ import Game from "../game-class";
 import { rotateRobot, moveRobotOne } from "./program-card-functions";
 import { touchCheckpoints, fallInHoles } from "./server-functions";
 import { conveyorsMove } from "./conveyors";
-import { shootRobotLasersVertical } from "./lasers";
+import { shootRobotLasers } from "./lasers";
 import { isRobotDestroyed, destroyRobots } from "./utils";
 
 const processRegister = (
@@ -80,7 +80,7 @@ const processRegister = (
         break;
       case "lasers-fire-instruction":
         destroyRobots(robots);
-        const shotsFired = shootRobotLasersVertical(robots, map.items);
+        const shotsFired = shootRobotLasers(robots, map.items);
         destroyRobots(robots);
         if (shotsFired) {
           delay = 400;
