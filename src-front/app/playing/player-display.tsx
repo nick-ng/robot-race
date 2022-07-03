@@ -38,6 +38,11 @@ const Emoji = styled.div`
 const WithToolRight = styled.div<{ toolTip?: string }>`
   position: relative;
 
+  img {
+    vertical-align: text-top;
+    height: 1em;
+  }
+
   &:after {
     display: none;
     position: absolute;
@@ -83,7 +88,8 @@ export default function PlayerDisplay({ gameData }: PlayerDisplayProps) {
                   : `${getFlagEmoji()}${flagsTouched[playerId] + 1}`}
               </div>
               <WithToolRight toolTip="How much damage your robot can take ❤️ and how many lives you have left 🤖">
-                ❤️ {10 - (robot?.damagePoints || 0)}/10, 🤖: {robot?.lives}
+                ❤️ {10 - (robot?.damagePoints || 0)}/10,&nbsp;
+                <img src="/robot.svg" />: {robot?.lives}
               </WithToolRight>
             </div>
           </Player>
