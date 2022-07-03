@@ -60,3 +60,11 @@ export default function StraightConveyor({ cellItems }: StraightConveyorProps) {
     />
   );
 }
+
+export const getStraightConveyorToolTip = (cellItems: MapItemNoId[]) => {
+  if (cellItems.find((a) => a.type === "straight-conveyor")) {
+    return "Conveyors will move your robot 1 square after each program register. Express conveyors will move your robot 2 squares instead.";
+  }
+
+  return null;
+};

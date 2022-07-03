@@ -162,7 +162,8 @@ export type MapItemNoId =
   | StraightConveyorMapItem
   | PitMapItem
   | GearMapItem
-  | PusherMapItem;
+  | PusherMapItem
+  | RepairMapItem;
 
 export type MapItem = MapItemNoId & { id: number };
 

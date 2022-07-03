@@ -7,7 +7,10 @@ import { getDockText } from "./dock";
 import { getFlagText, getFlagToolTip } from "./flag";
 import { getWallStyles, getWallToolTip } from "./wall";
 import { getPitStyles, getPitToolTip } from "./pit";
-import StraightConveyor from "./straight-conveyor";
+import Repair, { getRepairToolTip } from "./repair";
+import StraightConveyor, {
+  getStraightConveyorToolTip,
+} from "./straight-conveyor";
 
 export const MapCellToolTip = styled.div`
   z-index: 15;
@@ -63,7 +66,10 @@ export const getAllElements = (cellItems: MapItemNoId[]) =>
   [getFlagText(cellItems), getDockText(cellItems)]
     .filter((a) => a)
     .map((text) => <MapCellItem key={text}>{text}</MapCellItem>)
-    .concat([<StraightConveyor cellItems={cellItems} />]);
+    .concat([
+      <StraightConveyor cellItems={cellItems} />,
+      <Repair cellItems={cellItems} />,
+    ]);
 
 export const getAllStyles = (cellItems: MapItemNoId[]) => ({
   ...getWallStyles(cellItems),
@@ -114,6 +120,8 @@ export default function Board({ map, cellSize, showDocks }: BoardProps) {
                 ...new Set([
                   getPitToolTip(cellItems),
                   getFlagToolTip(cellItems),
+                  getRepairToolTip(cellItems),
+                  getStraightConveyorToolTip(cellItems),
                   getWallToolTip(map.items, x, y),
                 ]),
                 `${x},${y}`,

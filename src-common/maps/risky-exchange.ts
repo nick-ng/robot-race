@@ -662,6 +662,9 @@ const items: MapItem[] = [
     y: 14,
     id: 128,
   },
+  { type: "repair", x: 0, y: 0, id: 129 },
+  { type: "repair", x: 11, y: 11, id: 130 },
+  { type: "repair", x: 7, y: 7, id: 131 },
 ];
 
 const riskyExchange: Map = {
