@@ -5,6 +5,7 @@ import { Player, Robot } from "dist-common/game-types";
 import { positionToOffsets } from "../utils";
 
 import getBorderStyle from "./get-border-style";
+import RobotSvg from "./robot-svg";
 
 interface RobotProps {
   name?: string;
@@ -78,7 +79,7 @@ export const StyledRobot = styled.div<{
     bottom: 0;
   }
 
-  span {
+  img {
     ${({ isPlayer, isFalling }) =>
       isPlayer && !isFalling ? bounceAnimationMixin : ""}
     font-size: 1.1vw;
@@ -92,6 +93,8 @@ export const StyledRobot = styled.div<{
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    width: 90%;
+    height: 90%;
   }
 
   &:hover {
@@ -127,7 +130,7 @@ export default function Robot({ name, robot, isPlayer }: RobotProps) {
       }}
     >
       <div style={{ transform: `rotate(${facingMap[position.facing]})` }}>
-        <span>{isDestroyed ? "🪦" : "🤖"}</span>
+        <img src="/robot.svg" />
       </div>
     </StyledRobot>
   );
