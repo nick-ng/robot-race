@@ -109,7 +109,7 @@ export const playGame = (
     game.resumeAction = fullAutomaticActionObject;
     setTimeout(() => {
       performAction(fullAutomaticActionObject);
-    }, Math.max(delay, 50));
+    }, Math.max(delay, 20));
   }
 
   return { game, type, message, automaticAction };

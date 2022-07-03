@@ -63,7 +63,7 @@ const processRegister = (
       default:
     }
   } else {
-    delay = 10;
+    delay = 0;
     switch (instructionItem.type) {
       case "conveyors-move-instruction":
         // Express conveyor belts move 1 space / Express and normal conveyor belts move 1 space
@@ -73,6 +73,7 @@ const processRegister = (
           instructionItem.payload.minSpeed
         );
         fallInHoles(robots, map);
+        console.log("moved", moved);
         if (moved) {
           delay = 500;
         }
@@ -132,7 +133,7 @@ const processRegister = (
     message: "OK",
     automaticAction: {
       action: { playerId: "server", type: "clean-up" },
-      delay: 10,
+      delay: 0,
     },
   };
 };

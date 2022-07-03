@@ -35,10 +35,34 @@ const Emoji = styled.div`
   justify-content: center;
 `;
 
+const WithToolRight = styled.div<{ toolTip?: string }>`
+  position: relative;
+
+  &:after {
+    display: none;
+    position: absolute;
+    left: 105%;
+    top: 0;
+    content: "${({ toolTip }) => toolTip}";
+    width: 11em;
+    background-color: #000000;
+    padding: 0.5em;
+    border: 1px solid #808080;
+  }
+
+  &:hover:after {
+    display: block;
+  }
+`;
+
 export default function PlayerDisplay({ gameData }: PlayerDisplayProps) {
-  const { gameState, players } = gameData;
+  const { gameState, gameSettings, players } = gameData;
+  const { map } = gameSettings;
   const { seatOrder, finishedProgrammingPlayers, robots, flagsTouched } =
     gameState as MainGameState;
+
+  const totalFlags = map.items.filter((mi) => mi.type === "flag").length;
+
   return (
     <StyledPlayerDisplay>
       {seatOrder.map((playerId) => {
@@ -53,9 +77,14 @@ export default function PlayerDisplay({ gameData }: PlayerDisplayProps) {
             <div>
               <div>{player.name}</div>
               <div>
-                Next: {getFlagEmoji()}
-                {flagsTouched[playerId] + 1}
+                Next:{" "}
+                {flagsTouched[playerId] === totalFlags
+                  ? "🏆"
+                  : `${getFlagEmoji()}${flagsTouched[playerId] + 1}`}
               </div>
+              <WithToolRight toolTip="How much damage your robot can take ❤️ and how many lives you have left 🤖">
+                ❤️ {10 - (robot?.damagePoints || 0)}/10, 🤖: {robot?.lives}
+              </WithToolRight>
             </div>
           </Player>
         );

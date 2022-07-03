@@ -40,7 +40,7 @@ const cleanUp = (
     message: "OK",
     automaticAction: {
       action: { playerId: "server", type: "deal-program-cards" },
-      delay: 10,
+      delay: 0,
     },
   };
 };
