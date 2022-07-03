@@ -32,6 +32,8 @@ export const getRespawnOrder = (
   seatOrder: MainGameState["seatOrder"]
 ) => {
   return seatOrder.filter((playerId) =>
-    robots.find((r) => r.status === "stand-by" && r.playerId === playerId)
+    robots.find(
+      (r) => r.status === "stand-by" && r.playerId === playerId && r.lives > 0
+    )
   );
 };

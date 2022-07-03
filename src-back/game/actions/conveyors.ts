@@ -27,6 +27,7 @@ export const conveyorsMove = (
   }));
 
   // 20. Move all temporary robots on conveyors minus walls
+  const maybeMovedRobots = [];
   for (const tempRobot of tempRobots) {
     const conveyorItem = mapItems.find(
       (mi) =>
@@ -40,12 +41,13 @@ export const conveyorsMove = (
       const { xd, yd } = movementDirectionMap[conveyorItem.direction];
       tempRobot.x = tempRobot.x + xd;
       tempRobot.y = tempRobot.y + yd;
+      maybeMovedRobots.push(tempRobot);
     }
   }
 
   // 30. Check which temporary robots don't overlap other temporary robots
   const movedRobots = [];
-  for (const tempRobot of tempRobots) {
+  for (const tempRobot of maybeMovedRobots) {
     const otherTempRobots = tempRobots.filter(
       (tr) => tr.playerId !== tempRobot.playerId
     );

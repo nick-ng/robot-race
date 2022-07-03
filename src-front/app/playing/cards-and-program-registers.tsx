@@ -217,7 +217,7 @@ export default function CardsAndProgramRegisters({
         }}
         chosenRegister={selectedRegisterIndex}
       />
-      <Heading>Program Cards</Heading>
+      <Heading>Program Cards (Max {9 - robot.damagePoints})</Heading>
       {!youFinishedProgramming && (
         <StyledCardsInHand
           cardWidth={5}
