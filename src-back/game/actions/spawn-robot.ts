@@ -66,14 +66,13 @@ const spawnRobot = (
 
     robot.position.x = x;
     robot.position.y = y;
-    robot.position.facing = facing;
-    robot.status = "ok";
   } else {
     robot.position.x = archiveMarker.x;
     robot.position.y = archiveMarker.y;
-    robot.position.facing = facing;
-    robot.status = "ok";
   }
+  robot.position.facing = facing;
+  robot.status = "ok";
+  robot.lives = robot.lives - 1;
 
   if (robots.filter((r) => r.status === "stand-by").length <= 0) {
     return {
@@ -81,7 +80,7 @@ const spawnRobot = (
       message: "OK",
       automaticAction: {
         action: { playerId: "server", type: "deal-program-cards" },
-        delay: 10,
+        delay: 0,
       },
     };
   }

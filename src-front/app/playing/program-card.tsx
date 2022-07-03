@@ -89,7 +89,6 @@ export default function ProgramCard({
   isLocked,
   clickHandler,
 }: ProgramCardProps) {
-  console.log("isLocked", isLocked);
   const {
     options: { smallerPriorityFirst },
   } = useOptions();

@@ -7,7 +7,8 @@ import Game from "../game-class";
 import { rotateRobot, moveRobotOne } from "./program-card-functions";
 import { touchCheckpoints, fallInHoles } from "./server-functions";
 import { conveyorsMove } from "./conveyors";
-import { isRobotDestroyed } from "./utils";
+import { shootRobotLasers } from "./lasers";
+import { isRobotDestroyed, destroyRobots } from "./utils";
 
 const processRegister = (
   game: Game,
@@ -63,7 +64,7 @@ const processRegister = (
       default:
     }
   } else {
-    delay = 10;
+    delay = 0;
     switch (instructionItem.type) {
       case "conveyors-move-instruction":
         // Express conveyor belts move 1 space / Express and normal conveyor belts move 1 space
@@ -77,6 +78,13 @@ const processRegister = (
           delay = 500;
         }
         break;
+      case "lasers-fire-instruction":
+        destroyRobots(robots);
+        const shotsFired = shootRobotLasers(robots, map.items);
+        destroyRobots(robots);
+        if (shotsFired) {
+          delay = 400;
+        }
       case "touch-checkpoint-instruction":
         const touched = touchCheckpoints(robots, map.items, flagsTouched);
         if (touched.length > 0) {
@@ -132,7 +140,7 @@ const processRegister = (
     message: "OK",
     automaticAction: {
       action: { playerId: "server", type: "clean-up" },
-      delay: 10,
+      delay: 0,
     },
   };
 };

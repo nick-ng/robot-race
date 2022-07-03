@@ -25,7 +25,7 @@ export interface Position {
 
 export interface Robot {
   playerId: string;
-  status: "ok" | "falling" | "stand-by";
+  status: "ok" | "falling" | "destroyed" | "stand-by";
   damagePoints: number;
   lockedRegisters: number[];
   lives: number;
@@ -56,6 +56,14 @@ export interface ConveyorsMoveInstruction {
   };
 }
 
+export interface LasersFireInstruction {
+  type: "lasers-fire-instruction";
+  playerId?: never;
+  payload: {
+    shooter: "map" | "robots";
+  };
+}
+
 export interface TouchCheckpointsInstruction {
   type: "touch-checkpoint-instruction";
   playerId?: never;
@@ -65,6 +73,7 @@ export interface TouchCheckpointsInstruction {
 export type InstructionItem =
   | ProgramCardInstruction
   | ConveyorsMoveInstruction
+  | LasersFireInstruction
   | TouchCheckpointsInstruction;
 
 export interface LobbyGameState {

@@ -47,7 +47,11 @@ const fallAnimationMixin = css`
 export const StyledRobot = styled.div<{
   isPlayer?: boolean;
   isFalling?: boolean;
+  isDestroyed?: boolean;
 }>`
+  pointer-events: ${({ isDestroyed }) => (isDestroyed ? "none" : "auto")};
+  z-index: ${({ isDestroyed }) => (isDestroyed ? "5" : "10")};
+  opacity: ${({ isDestroyed }) => (isDestroyed ? "0.2" : "1")};
   position: absolute;
   display: flex;
   justify-content: center;
@@ -103,16 +107,19 @@ const facingMap = {
 };
 
 export default function Robot({ name, robot, isPlayer }: RobotProps) {
-  const { position, design } = robot;
+  const { position, design, status, damagePoints } = robot;
 
   const offsets = positionToOffsets(position);
 
   const style = getBorderStyle(design);
 
+  const isDestroyed = damagePoints >= 10;
+
   return (
     <StyledRobot
       isPlayer={isPlayer}
-      isFalling={robot.status === "falling"}
+      isFalling={status === "falling"}
+      isDestroyed={isDestroyed}
       style={{
         ...style,
         top: offsets.y,
@@ -120,7 +127,7 @@ export default function Robot({ name, robot, isPlayer }: RobotProps) {
       }}
     >
       <div style={{ transform: `rotate(${facingMap[position.facing]})` }}>
-        <span>🤖</span>
+        <span>{isDestroyed ? "🪦" : "🤖"}</span>
       </div>
     </StyledRobot>
   );
