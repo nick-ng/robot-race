@@ -30,6 +30,7 @@ const StyledProgramCard = styled.button<{
   justify-content: flex-start;
   align-items: center;
   box-sizing: border-box;
+  border-color: #dddddd;
   border-width: ${({ cardWidth }) => cardWidth * 0.05}vw;
   border-style: ${({ chosen, isLocked }) => {
     if (isLocked) {

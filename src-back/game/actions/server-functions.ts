@@ -5,6 +5,7 @@ import {
   MainGameState,
   FlagMapItem,
 } from "../../../dist-common/game-types";
+import { isRobotDestroyed, repairRobot } from "./utils";
 
 export const touchCheckpoints = (
   robots: Robot[],
@@ -21,8 +22,11 @@ export const touchCheckpoints = (
     }
 
     const cellItems = mapItems.filter(
-      (item) => item.x === position.x && item.y === position.y
-    );
+      (item) =>
+        item.x === position.x &&
+        item.y === position.y &&
+        ["flag", "repair"].includes(item.type)
+    ) as MapItem[];
 
     try {
       if (cellItems.length > 0) {
@@ -31,13 +35,18 @@ export const touchCheckpoints = (
           cellItems,
         });
 
+        robot.archiveMarkerId = cellItems[0].id;
+
+        if (!isRobotDestroyed(robot)) {
+          repairRobot(robot);
+        }
+
         const flag = cellItems.find((a) => a.type === "flag") as
           | (FlagMapItem & MapItem)
           | undefined;
         const currentFlag = flagsTouched[playerId];
         if (flag && flag.number === currentFlag + 1) {
           flagsTouched[playerId] = flag.number;
-          robot.archiveMarkerId = flag.id;
         }
       }
     } catch (e) {

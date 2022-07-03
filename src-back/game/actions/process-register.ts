@@ -85,6 +85,7 @@ const processRegister = (
         if (shotsFired) {
           delay = 400;
         }
+        break;
       case "touch-checkpoint-instruction":
         const touched = touchCheckpoints(robots, map.items, flagsTouched);
         if (touched.length > 0) {

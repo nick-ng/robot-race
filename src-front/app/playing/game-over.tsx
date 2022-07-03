@@ -42,7 +42,7 @@ export default function GameOver({ gameData, playerDetails }: GameOverProps) {
   return (
     <StyledGameOver>
       <Heading>Robot Race</Heading>
-      <h2>{winnerIsYou ? "You Won!" : `${winner?.name} won`}</h2>
+      <h2>{winnerIsYou ? "🏆You Won!🏆" : `${winner?.name} won`}</h2>
     </StyledGameOver>
   );
 }

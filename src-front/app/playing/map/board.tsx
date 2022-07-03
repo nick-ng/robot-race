@@ -67,8 +67,8 @@ export const getAllElements = (cellItems: MapItemNoId[]) =>
     .filter((a) => a)
     .map((text) => <MapCellItem key={text}>{text}</MapCellItem>)
     .concat([
-      <StraightConveyor cellItems={cellItems} />,
-      <Repair cellItems={cellItems} />,
+      <StraightConveyor key={`straight-conveyor`} cellItems={cellItems} />,
+      <Repair key={`repair`} cellItems={cellItems} />,
     ]);
 
 export const getAllStyles = (cellItems: MapItemNoId[]) => ({
