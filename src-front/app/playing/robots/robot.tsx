@@ -130,7 +130,7 @@ export default function Robot({ name, robot, isPlayer }: RobotProps) {
       }}
     >
       <div style={{ transform: `rotate(${facingMap[position.facing]})` }}>
-        <img src="/robot.svg" />
+        <img src="/robot-triangle.svg" />
       </div>
     </StyledRobot>
   );
