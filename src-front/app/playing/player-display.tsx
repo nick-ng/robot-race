@@ -87,9 +87,9 @@ export default function PlayerDisplay({ gameData }: PlayerDisplayProps) {
                   ? "🏆"
                   : `${getFlagEmoji()}${flagsTouched[playerId] + 1}`}
               </div>
-              <WithToolRight toolTip="How much damage your robot can take ❤️ and how many lives you have left 🤖">
+              <WithToolRight toolTip="How much damage your robot can take ❤️ and how many lives you have left">
                 ❤️ {10 - (robot?.damagePoints || 0)}/10,&nbsp;
-                <img src="/robot.svg" />: {robot?.lives}
+                <img src="/robot-triangle.svg" />: {robot?.lives}
               </WithToolRight>
             </div>
           </Player>
