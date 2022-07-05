@@ -33,6 +33,7 @@ export const usePracticeGameData = (
   ) => {
     const { action } = messageObject;
     setTimeout(async () => {
+      const tic = Date.now();
       const res = await fetch(`${API_ORIGIN}/api/game/advance-game-state`, {
         method: "POST",
         headers: {
@@ -43,6 +44,7 @@ export const usePracticeGameData = (
           action,
         }),
       });
+      const requestTime = Date.now() - tic;
 
       const { gameData: newGameData, automaticAction } = (await res.json()) as {
         gameData: GameData;
@@ -63,7 +65,7 @@ export const usePracticeGameData = (
             },
             newGameData
           );
-        }, automaticAction.delay);
+        }, automaticAction.delay - 2 * requestTime);
       }
     }, 1);
   };
