@@ -1,21 +1,25 @@
-import { GameData, Map } from "dist-common/game-types";
+import { GameData } from "dist-common/game-types";
 import { getCardMap } from "dist-common/card-map";
 import { getMap } from "dist-common/maps";
 
-export const PLAYER_UUID = "player-1's-uuid";
-
-export const getDefaultGameData = (): GameData => {
+export const getMissionData = (
+  playerId: string
+): {
+  gameData: GameData;
+  missionHeading: string;
+  missionObjectives: string[];
+} => {
   const cardMap = getCardMap();
 
-  const defaultGameData: GameData = {
+  const gameData: GameData = {
     id: "1",
     shortId: "1",
-    host: PLAYER_UUID,
+    host: playerId,
     maxPlayers: 8,
-    players: [{ id: PLAYER_UUID, name: "Practice Player" }],
+    players: [{ id: playerId, name: "Practice Player" }],
     playerSecrets: {
-      [PLAYER_UUID]: {
-        password: PLAYER_UUID,
+      [playerId]: {
+        password: playerId,
         programRegisters: [null, null, null, null, null],
         cardsInHand: [],
       },
@@ -27,20 +31,20 @@ export const getDefaultGameData = (): GameData => {
     },
     gameState: {
       state: "main",
-      seatOrder: [PLAYER_UUID],
+      seatOrder: [playerId],
       finishedProgrammingPlayers: [],
       poweringDownNextTurn: [],
-      flagsTouched: { [PLAYER_UUID]: 0 },
+      flagsTouched: { [playerId]: 0 },
       robots: [
         {
-          playerId: PLAYER_UUID,
+          playerId,
           status: "ok",
           damagePoints: 0,
           lockedRegisters: [],
           lives: 3,
           position: {
             x: 5,
-            y: 14,
+            y: 15,
             facing: "up",
           },
           archiveMarkerId: 8,
@@ -53,9 +57,9 @@ export const getDefaultGameData = (): GameData => {
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 5,
-            y: 0,
-            facing: "down",
+            x: 7,
+            y: 9,
+            facing: "right",
           },
           archiveMarkerId: 1,
           design: "ridge",
@@ -68,8 +72,8 @@ export const getDefaultGameData = (): GameData => {
           lives: 3,
           position: {
             x: 5,
-            y: 7,
-            facing: "down",
+            y: 4,
+            facing: "up",
           },
           archiveMarkerId: 2,
           design: "double",
@@ -81,8 +85,8 @@ export const getDefaultGameData = (): GameData => {
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 5,
-            y: 6,
+            x: 7,
+            y: 13,
             facing: "up",
           },
           archiveMarkerId: 3,
@@ -95,8 +99,8 @@ export const getDefaultGameData = (): GameData => {
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 7,
-            y: 1,
+            x: 8,
+            y: 4,
             facing: "up",
           },
           archiveMarkerId: 8,
@@ -109,8 +113,8 @@ export const getDefaultGameData = (): GameData => {
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 5,
-            y: 15,
+            x: 9,
+            y: 8,
             facing: "left",
           },
           archiveMarkerId: 8,
@@ -128,5 +132,11 @@ export const getDefaultGameData = (): GameData => {
     resumeAction: null,
   };
 
-  return defaultGameData;
+  return {
+    gameData,
+    missionHeading: "Free Practice",
+    missionObjectives: ["Practice on the map Risky Exchange."],
+  };
 };
+
+export default getMissionData;

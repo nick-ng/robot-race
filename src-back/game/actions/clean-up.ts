@@ -14,9 +14,8 @@ const cleanUp = (
   message: string;
   automaticAction?: AutomaticAction;
 } => {
-  const { gameState, gameSettings } = game;
+  const { gameState } = game;
   const { robots, seatOrder } = gameState as MainGameState;
-  const { map } = gameSettings;
   // 10. repair and draw option cards in seat order
 
   // 20. discard program cards from non-locked registers

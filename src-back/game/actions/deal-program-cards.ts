@@ -1,7 +1,6 @@
 import { DealProgramCardsAction } from "../../../dist-common/game-action-types";
+import { shuffle } from "../../../dist-common/card-map";
 import Game from "../game-class";
-
-import { shuffle } from "../utils";
 
 const dealProgramCards = (
   game: Game,

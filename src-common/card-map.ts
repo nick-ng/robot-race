@@ -93,25 +93,25 @@ const cardList: readonly ProgramCard["action"][] = Object.freeze([
   "Move 3",
 ]);
 
-export const getCardMap = (): { [cardId: string]: ProgramCard } => {
-  if (process.env.NODE_ENV === "development") {
-    console.debug("Move 1", cardList.filter((a) => a === "Move 1").length, 18);
-    console.debug("Move 2", cardList.filter((a) => a === "Move 2").length, 12);
-    console.debug("Move 3", cardList.filter((a) => a === "Move 3").length, 6);
-    console.debug("Back Up", cardList.filter((a) => a === "Back Up").length, 6);
-    console.debug(
-      "Rotate Right",
-      cardList.filter((a) => a === "Rotate Right").length,
-      18
-    );
-    console.debug(
-      "Rotate Left",
-      cardList.filter((a) => a === "Rotate Left").length,
-      18
-    );
-    console.debug("U-Turn", cardList.filter((a) => a === "U-Turn").length, 6);
-  }
+if (process.env.NODE_ENV === "development") {
+  console.debug("Move 1", cardList.filter((a) => a === "Move 1").length, 18);
+  console.debug("Move 2", cardList.filter((a) => a === "Move 2").length, 12);
+  console.debug("Move 3", cardList.filter((a) => a === "Move 3").length, 6);
+  console.debug("Back Up", cardList.filter((a) => a === "Back Up").length, 6);
+  console.debug(
+    "Rotate Right",
+    cardList.filter((a) => a === "Rotate Right").length,
+    18
+  );
+  console.debug(
+    "Rotate Left",
+    cardList.filter((a) => a === "Rotate Left").length,
+    18
+  );
+  console.debug("U-Turn", cardList.filter((a) => a === "U-Turn").length, 6);
+}
 
+export const getCardMap = (): { [cardId: string]: ProgramCard } => {
   return cardList.reduce((prev, curr, i) => {
     const priority = i + 1;
     const id = `program-card-${priority.toString().padStart(2, "0")}`;
@@ -125,3 +125,12 @@ export const getCardMap = (): { [cardId: string]: ProgramCard } => {
     return prev;
   }, {} as { [cardId: string]: ProgramCard });
 };
+
+export const shuffle = <T>(inputArray: T[]): T[] =>
+  [...inputArray]
+    .map((data) => ({
+      data,
+      sortValue: Math.random(),
+    }))
+    .sort((a, b) => a.sortValue - b.sortValue)
+    .map(({ data }) => data);

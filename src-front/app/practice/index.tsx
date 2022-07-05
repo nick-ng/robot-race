@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { useParams, Link } from "react-router-dom";
 
 import { usePracticeGameData } from "../../hooks/use-practice-game-data";
-import { PLAYER_UUID } from "../../hooks/default-game-data";
+
+const PLAYER_UUID = "practice-player";
 
 import Playing from "../playing";
 
@@ -11,9 +13,23 @@ const StyledPractice = styled.div`
   flex-direction: row;
 `;
 
+const MissionObjectives = styled.div`
+  margin-left: 0.5em;
+  flex-shrink: 1;
+`;
+
 export default function Practice() {
-  const { gameData, fullGameData, sendViaWebSocket } =
-    usePracticeGameData(PLAYER_UUID);
+  const { missionName } = useParams();
+  const {
+    gameData,
+    fullGameData,
+    sendViaWebSocket,
+    missionHeading,
+    missionObjectives,
+    nextMission,
+  } = usePracticeGameData(PLAYER_UUID, missionName);
+
+  const state = gameData.gameState.state;
 
   return (
     <StyledPractice>
@@ -26,9 +42,18 @@ export default function Practice() {
         gameData={gameData}
         sendViaWebSocket={sendViaWebSocket}
       />
-      {process.env.NODE_ENV === "development" && (
-        <pre>{JSON.stringify(fullGameData, null, "  ")}</pre>
-      )}
+      <MissionObjectives>
+        <h3>{missionHeading}</h3>
+        {missionObjectives.map((text) => (
+          <p key={text}>{text}</p>
+        ))}
+        {state === "over" && nextMission && (
+          <Link to={`/mission/${nextMission}`}>Next Mission</Link>
+        )}
+        {process.env.NODE_ENV === "development" && (
+          <pre>{JSON.stringify(fullGameData, null, "  ")}</pre>
+        )}
+      </MissionObjectives>
     </StyledPractice>
   );
 }

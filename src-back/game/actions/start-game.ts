@@ -3,9 +3,8 @@ import {
   AutomaticAction,
 } from "../../../dist-common/game-action-types";
 import { MainGameState } from "../../../dist-common/game-types";
-import { getCardMap } from "../../../dist-common/card-map";
+import { getCardMap, shuffle } from "../../../dist-common/card-map";
 import Game from "../game-class";
-import { shuffle } from "../utils";
 
 const startGame = (
   game: Game,

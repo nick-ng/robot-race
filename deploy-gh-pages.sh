@@ -5,8 +5,8 @@ git pull
 git branch -D gh-pages
 rm -rf ./dist-front/
 API_ORIGIN=https://peaceful-cliffs-61555.herokuapp.com npm run build-front
-cp ./dist-front/index.html ./dist-front/404.html
 cp ./static/* ./dist-front
+cp ./dist-front/index.html ./dist-front/404.html
 echo robot-race.pux.one > ./dist-front/CNAME
 
 git checkout --orphan gh-pages

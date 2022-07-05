@@ -66,7 +66,7 @@ export default function PreLobby({ playerDetails }: PreLobbyProps) {
           setLoading(false);
 
           if (message.toUpperCase() === "OK") {
-            navigate(`/${gameData.id}`);
+            navigate(`/game/${gameData.id}`);
           }
         }}
       >
@@ -78,7 +78,7 @@ export default function PreLobby({ playerDetails }: PreLobbyProps) {
 
           const trimmedId = tempGameId.replaceAll(/[^a-z0-9\-]/g, "");
           if (trimmedId.length === 36) {
-            navigate(`/${tempGameId}`);
+            navigate(`/game/${tempGameId}`);
             return;
           }
 
@@ -100,7 +100,7 @@ export default function PreLobby({ playerDetails }: PreLobbyProps) {
             }
 
             const resText = await res.text();
-            navigate(`/${resText}`);
+            navigate(`/game/${resText}`);
             setLoading(false);
           } catch (e) {
             console.error(
@@ -123,10 +123,25 @@ export default function PreLobby({ playerDetails }: PreLobbyProps) {
         </JoinGameButton>
       </Form>
       <p>{errorMessage}</p>
+      <h3>Missions</h3>
+      <ul>
+        <li>
+          <Link to="/mission/1-movement">1: Movement</Link>
+        </li>
+        <li>
+          <Link to="/mission/2-movement">2: More Movement</Link>
+        </li>
+        <li>
+          <Link to="/mission/3-turns">3: Turns</Link>
+        </li>
+        <li>
+          <Link to="/mission/4-walls">4: Walls</Link>
+        </li>
+      </ul>
       <h3>Other Stuff</h3>
       <ul>
         <li>
-          <Link to="/practice">Practice Mode</Link>
+          <Link to="/mission/free-practice">Free Practice</Link>
         </li>
         <li>
           <Link to="/editor">Map Editor</Link>
