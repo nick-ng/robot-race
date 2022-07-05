@@ -7,18 +7,25 @@ import {
 import { GameData, PlayerGameData } from "dist-common/game-types";
 
 import { getPlayerData } from "./utils";
-import { getDefaultGameData } from "./default-game-data";
+
+import { getMissionData } from "../missions";
 
 declare const API_ORIGIN: string;
 
 export const usePracticeGameData = (
-  playerId: string
+  playerId: string,
+  missionName?: string
 ): {
   gameData: PlayerGameData;
   fullGameData: GameData;
   sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
+  missionHeading: string;
+  missionObjectives: string[];
+  nextMission?: string;
 } => {
-  const [gameData, setGameData] = useState<GameData>(getDefaultGameData());
+  const { missionHeading, missionObjectives, nextMission, ...missionData } =
+    getMissionData(playerId, missionName);
+  const [gameData, setGameData] = useState<GameData>(missionData.gameData);
 
   const sendViaWebSocket = (
     messageObject: ActionIncomingMessageObject,
@@ -62,6 +69,12 @@ export const usePracticeGameData = (
   };
 
   useEffect(() => {
+    const { missionHeading, missionObjectives, nextMission, ...missionData } =
+      getMissionData(playerId, missionName);
+    setGameData(missionData.gameData);
+  }, [missionName]);
+
+  useEffect(() => {
     sendViaWebSocket({
       playerId: "server",
       password: gameData.gameSecrets.password,
@@ -72,11 +85,14 @@ export const usePracticeGameData = (
         type: "deal-program-cards",
       },
     });
-  }, []);
+  }, [gameData.gameSettings.map.name]);
 
   return {
     gameData: getPlayerData(gameData, playerId),
     fullGameData: gameData,
     sendViaWebSocket,
+    missionHeading,
+    missionObjectives,
+    nextMission,
   };
 };

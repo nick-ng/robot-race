@@ -15,7 +15,9 @@ import GameMessage from "./game-message";
 import Instructions from "./instructions";
 import GameOver from "./game-over";
 
-const StyledPlaying = styled.div``;
+const StyledPlaying = styled.div`
+  flex-shrink: 0;
+`;
 
 const StyledInstructions = styled(Instructions)`
   margin-top: 0.5em;
@@ -70,7 +72,6 @@ export default function Playing({
 }: PlayingProps) {
   const { shortId, gameState } = gameData;
   const { robots } = gameState as MainGameState;
-  const robot = robots.find((r) => r.playerId === playerDetails.playerId);
 
   return (
     <StyledPlaying>

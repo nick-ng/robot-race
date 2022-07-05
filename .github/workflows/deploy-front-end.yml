@@ -20,8 +20,8 @@ jobs:
           npm ci
           npm run build-back
           API_ORIGIN=https://${{secrets.HEROKU_APP_NAME}}.herokuapp.com npm run build-front
-          cp ./dist-front/index.html ./dist-front/404.html
           cp ./static/* ./dist-front
+          cp ./dist-front/index.html ./dist-front/404.html
           echo robot-race.pux.one > ./dist-front/CNAME
           git checkout --orphan gh-pages
           git reset

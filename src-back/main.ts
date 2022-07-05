@@ -69,7 +69,7 @@ app.get("/server-stats", (_req, res) => {
 
 // redirect all other requests to index.html
 app.use((_req, res) => {
-  res.sendFile(path.resolve(process.cwd(), "dist-front", "index.html"));
+  res.sendFile(path.resolve(process.cwd(), "static", "index.html"));
 });
 
 // starting listening

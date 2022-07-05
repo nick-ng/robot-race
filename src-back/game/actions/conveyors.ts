@@ -1,9 +1,6 @@
 import {
   Robot,
-  Map,
   MapItem,
-  MainGameState,
-  FlagMapItem,
   StraightConveyorMapItem,
 } from "../../../dist-common/game-types";
 

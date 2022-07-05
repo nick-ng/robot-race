@@ -120,6 +120,7 @@ const getExtraOptions = (
       return {
         direction: "up",
       };
+    case "pit":
     case "repair":
       return {};
     default:
@@ -241,6 +242,7 @@ export default function MapEditor() {
                   <option value="dock">Dock Bay</option>
                   <option value="flag">Flag</option>
                   <option value="wall">Wall</option>
+                  <option value="pit">Pit</option>
                   <option value="straight-conveyor">Straight Conveyor</option>
                   <option value="repair">Repair</option>
                 </select>

@@ -134,10 +134,11 @@ export default function App() {
             path="/"
             element={<PreLobby playerDetails={playerDetails} />}
           />
+          <Route path="/mission/:missionName" element={<Practice />} />
           <Route path="/practice" element={<Practice />} />
           <Route path="/editor" element={<MapEditor />} />
           <Route
-            path=":gameId"
+            path="/game/:gameId"
             element={<Game playerDetails={playerDetails} />}
           />
         </Routes>
