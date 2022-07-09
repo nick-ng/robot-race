@@ -11,9 +11,11 @@ import { ActionIncomingMessageObject } from "dist-common/game-action-types";
 import Map from "./map";
 import PlayerDisplay from "./player-display";
 import CardsAndProgramRegisters from "./cards-and-program-registers";
-import GameMessage from "./game-message";
+import RespawnMessage from "./respawn-message";
+import PowerDownControl from "./power-down-controls";
 import Instructions from "./instructions";
 import GameOver from "./game-over";
+import { getFlagEmoji } from "../utils";
 
 const StyledPlaying = styled.div`
   flex-shrink: 0;
@@ -32,6 +34,11 @@ const Heading = styled.div`
   h1 {
     margin: 0;
   }
+`;
+
+const BigMessage = styled.div`
+  font-size: 18pt;
+  margin-bottom: 0.5em;
 `;
 
 const Row = styled.div`
@@ -70,8 +77,10 @@ export default function Playing({
   playerDetails,
   sendViaWebSocket,
 }: PlayingProps) {
+  const { playerId } = playerDetails;
   const { shortId, gameState } = gameData;
-  const { robots } = gameState as MainGameState;
+  const { flagsTouched, robots } = gameState as MainGameState;
+  const robot = robots.find((r) => r.playerId === playerId)!;
 
   return (
     <StyledPlaying>
@@ -94,6 +103,23 @@ export default function Playing({
                 <h1>Robot Race</h1>
                 <div>Game ID: {shortId}</div>
               </Heading>
+              <BigMessage>
+                <div>
+                  Next: {getFlagEmoji()}
+                  {flagsTouched[playerId] + 1}
+                </div>
+                <div>
+                  Robot Health: {10 - robot.damagePoints}/10, Lives:{" "}
+                  {robot.lives}
+                </div>
+              </BigMessage>
+              <hr />
+              {robot.status === "powered-down" && (
+                <BigMessage>
+                  Your robot is powered down. Waiting for other players to
+                  finish their turns.
+                </BigMessage>
+              )}
               {!robots.some((r) => r.status === "stand-by") && (
                 <CardsAndProgramRegisters
                   gameData={gameData}
@@ -101,7 +127,15 @@ export default function Playing({
                   sendViaWebSocket={sendViaWebSocket}
                 />
               )}
-              <GameMessage gameData={gameData} playerDetails={playerDetails} />
+              <RespawnMessage
+                gameData={gameData}
+                playerDetails={playerDetails}
+              />
+              <PowerDownControl
+                gameData={gameData}
+                playerDetails={playerDetails}
+                sendViaWebSocket={sendViaWebSocket}
+              />
               <StyledInstructions
                 gameData={gameData}
                 playerDetails={playerDetails}

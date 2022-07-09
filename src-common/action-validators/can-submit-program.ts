@@ -1,10 +1,14 @@
 import { OnePlayerSecrets } from "../game-types";
 
 const canSubmitProgram = (
-  programRegisters: OnePlayerSecrets["programRegisters"]
+  programRegisters?: OnePlayerSecrets["programRegisters"]
 ):
   | { canPerform: true; message?: never }
   | { canPerform: false; message: string } => {
+  if (!programRegisters) {
+    return { canPerform: false, message: "Invalid program register." };
+  }
+
   if (programRegisters.some((register) => register === null)) {
     return { canPerform: false, message: "Some registers are still empty." };
   }

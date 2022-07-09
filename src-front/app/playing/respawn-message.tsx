@@ -6,37 +6,40 @@ import {
   PlayerDetails,
   MainGameState,
 } from "dist-common/game-types";
+import { getRespawnOrder } from "dist-common/utils";
 import canSpawnRobot from "dist-common/action-validators/can-spawn-robot";
 
-const StyledGameMessage = styled.div``;
+const StyledRespawnMessage = styled.div``;
 
-interface GameMessageProps {
+interface RespawnMessageProps {
   gameData: PlayerGameData;
   playerDetails: PlayerDetails;
 }
 
-export default function GameMessage({
+export default function RespawnMessage({
   gameData,
   playerDetails,
-}: GameMessageProps) {
+}: RespawnMessageProps) {
   const { gameState, players } = gameData;
   const { robots, seatOrder } = gameState as MainGameState;
 
-  const nextPlayerToSpawn = seatOrder.find((playerId) =>
-    robots.find((r) => r.status === "stand-by" && r.playerId === playerId)
-  );
+  const respawnOrder = getRespawnOrder(robots, seatOrder);
+
+  if (respawnOrder.length === 0) {
+    return null;
+  }
 
   return (
-    <StyledGameMessage>
+    <StyledRespawnMessage>
       {canSpawnRobot(playerDetails.playerId, robots, seatOrder).canPerform && (
         <p>Place your robot and choose their facing.</p>
       )}
-      {nextPlayerToSpawn && nextPlayerToSpawn !== playerDetails.playerId && (
+      {respawnOrder[0] !== playerDetails.playerId && (
         <p>
-          Waiting for {players.find((p) => p.id === nextPlayerToSpawn)?.name} to
+          Waiting for {players.find((p) => p.id === respawnOrder[0])?.name} to
           place their robot.
         </p>
       )}
-    </StyledGameMessage>
+    </StyledRespawnMessage>
   );
 }
