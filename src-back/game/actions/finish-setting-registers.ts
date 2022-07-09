@@ -26,7 +26,7 @@ const finishSettingRegisters = (
   }
 
   const { playerId } = action;
-  const { canPerform, message } = canSubmitProgram(
+  const { canPerform } = canSubmitProgram(
     playerSecrets[playerId]?.programRegisters
   );
 
