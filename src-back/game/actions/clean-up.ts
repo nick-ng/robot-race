@@ -15,7 +15,8 @@ const cleanUp = (
   automaticAction?: AutomaticAction;
 } => {
   const { gameState } = game;
-  const { robots, seatOrder } = gameState as MainGameState;
+  const { robots, seatOrder, poweringDownNextTurn } =
+    gameState as MainGameState;
   // 10. repair and draw option cards in seat order
 
   // 20. discard program cards from non-locked registers
@@ -26,6 +27,12 @@ const cleanUp = (
     if (isRobotDestroyed(robot) && robot.lives > 0) {
       robot.status = "stand-by";
       setRobotDamage(robot, 2);
+      const powerDownDecision = poweringDownNextTurn.find(
+        (decision) => decision.playerId === robot.playerId
+      );
+      if (powerDownDecision) {
+        powerDownDecision.decision = "no";
+      }
     }
   }
 
