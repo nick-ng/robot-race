@@ -29,6 +29,14 @@ const cleanUp = (
     }
   }
 
+  // 40. Power on robots
+  // TODO: Players decide if they will power on robot
+  robots.forEach((robots) => {
+    if (robots.status === "powered-down") {
+      robots.status = "ok";
+    }
+  });
+
   if (robots.some((robot) => robot.status === "stand-by")) {
     return {
       game,

@@ -1,4 +1,4 @@
-import { ActionIncomingMessageObject } from "./game-action-types";
+import type { ActionIncomingMessageObject } from "./game-action-types";
 
 export interface Scores {
   [index: string]: number;
@@ -25,7 +25,13 @@ export interface Position {
 
 export interface Robot {
   playerId: string;
-  status: "ok" | "falling" | "destroyed" | "stand-by";
+  status:
+    | "ok"
+    | "falling"
+    | "destroyed"
+    | "stand-by"
+    | "powered-down"
+    | "powered-on";
   damagePoints: number;
   lockedRegisters: number[];
   lives: number;
@@ -46,6 +52,7 @@ export interface ProgramCardInstruction {
   type: "program-card-instruction";
   playerId: string;
   payload: ProgramCard;
+  register: number;
 }
 
 export interface ConveyorsMoveInstruction {
@@ -54,6 +61,7 @@ export interface ConveyorsMoveInstruction {
   payload: {
     minSpeed: number;
   };
+  register: number;
 }
 
 export interface LasersFireInstruction {
@@ -62,12 +70,14 @@ export interface LasersFireInstruction {
   payload: {
     shooter: "map" | "robots";
   };
+  register: number;
 }
 
 export interface TouchCheckpointsInstruction {
   type: "touch-checkpoint-instruction";
   playerId?: never;
   payload?: never;
+  register: number;
 }
 
 export type InstructionItem =
@@ -76,10 +86,15 @@ export type InstructionItem =
   | LasersFireInstruction
   | TouchCheckpointsInstruction;
 
+export interface YesNoDecision {
+  playerId: string;
+  decision: "yes" | "no" | "undecided";
+}
+
 export interface LobbyGameState {
   state: "lobby";
   finishedProgrammingPlayers: string[];
-  poweringDownNextTurn: string[];
+  poweringDownNextTurn: YesNoDecision[];
   flagsTouched: { [playerId: string]: number };
   robots: Robot[];
 }

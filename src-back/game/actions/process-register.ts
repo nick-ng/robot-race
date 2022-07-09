@@ -1,4 +1,4 @@
-import {
+import type {
   AutomaticAction,
   ProcessRegisterAction,
 } from "../../../dist-common/game-action-types";

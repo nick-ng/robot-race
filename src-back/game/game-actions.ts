@@ -5,6 +5,7 @@ import startGame from "./actions/start-game";
 import dealProgramCards from "./actions/deal-program-cards";
 import setRegister from "./actions/set-register";
 import finishSettingRegisters from "./actions/finish-setting-registers";
+import powerDownNextTurn from "./actions/power-down-next-turn";
 import processRegister from "./actions/process-register";
 import cleanUp from "./actions/clean-up";
 import spawnRobot from "./actions/spawn-robot";
@@ -29,6 +30,8 @@ export const performAction = (
       return setRegister(game, action);
     case "finish-setting-registers":
       return finishSettingRegisters(game, action);
+    case "power-down-next-turn":
+      return powerDownNextTurn(game, action);
     case "process-registers":
       return processRegister(game, action);
     case "clean-up":

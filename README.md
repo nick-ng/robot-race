@@ -40,6 +40,10 @@ Forked from [this commit](https://github.com/nick-ng/pig-dice-game/tree/3a89a39b
    - `HEROKU_EMAIL`: Email address of your Heroku account
 5. Push a commit to the `main` branch.
 
+## Unit Tests
+
+Create a `/spec` directory next to the files you want to test then create a file `<name-of-file-to-test>.spec.cjs` in that.
+
 ## ToDos
 
 Check this [GitHub Project](https://github.com/users/nick-ng/projects/1) for details.

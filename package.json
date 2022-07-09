@@ -4,6 +4,7 @@
   "description": "Based on a board game.",
   "main": "./dist-back/main.js",
   "scripts": {
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha --require ts-node/register **/*.spec.cjs",
     "once": "NODE_ENV=development rm -rf ./dist-* && tsc --build ./src-back/tsconfig.json",
     "dev-back": "NODE_ENV=development tsc --build ./src-back/tsconfig.json --watch & nodemon --config nodemon.main.json ./dist-back/main.js",
     "dev-front": "NODE_ENV=development nodemon --config nodemon.front.json ./esbuild.dev.config.js",
@@ -57,10 +58,13 @@
     "concurrently": "^7.2.1",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.2",
+    "mocha": "^10.0.0",
     "nodemon": "^2.0.16",
-    "prettier": "2.7.1"
+    "prettier": "2.7.1",
+    "ts-node": "^10.8.2"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
-  }
+  },
+  "mocha": {}
 }

@@ -18,6 +18,19 @@ const GlobalStyle = createGlobalStyle`
     color: lightskyblue;
   }
 
+  button {
+    box-sizing: border-box;
+    border-color: #dcdcdc;
+    border-width: 3px;
+    border-style: outset;
+    background-color: #dcdcdc;
+    padding: 0.5em;
+
+    &:active {
+      border-style: inset;
+    }
+  }
+
   summary,
   button,
   input[type="checkbox"] {
