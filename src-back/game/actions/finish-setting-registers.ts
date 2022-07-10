@@ -45,7 +45,7 @@ const finishSettingRegisters = (
 
   gameSecrets.instructionQueue = [];
 
-  const { cardMap, robots } = gameState;
+  const { cardMap, robots, seatOrder } = gameState;
 
   for (let register = 0; register < PROGRAM_REGISTER_COUNT; register++) {
     const nthRegisters: ProgramCardInstruction[] = [];
@@ -109,7 +109,11 @@ const finishSettingRegisters = (
     }
   });
 
-  if (gameState.robots.every((robot) => robot.damagePoints === 0)) {
+  if (
+    gameState.robots.every(
+      (robot) => robot.damagePoints === 0 || !seatOrder.includes(robot.playerId)
+    )
+  ) {
     return {
       game,
       message: "OK",
