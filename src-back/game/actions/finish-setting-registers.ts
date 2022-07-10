@@ -1,11 +1,11 @@
-import {
+import type {
   AutomaticAction,
   FinishSettingRegistersAction,
 } from "../../../dist-common/game-action-types";
-import { ProgramCardInstruction } from "../../../dist-common/game-types";
+import type { ProgramCardInstruction } from "../../../dist-common/game-types";
 import canSubmitProgram from "../../../dist-common/action-validators/can-submit-program";
 
-import Game from "../game-class";
+import type Game from "../game-class";
 
 const PROGRAM_REGISTER_COUNT = 5;
 

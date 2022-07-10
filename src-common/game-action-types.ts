@@ -1,4 +1,4 @@
-import { Robot } from "./game-types";
+import type { Robot } from "./game-types";
 
 interface BasicAction {
   playerId: string;

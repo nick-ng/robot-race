@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 
-import {
+import type {
   ActionIncomingMessageObject,
   AutomaticAction,
 } from "dist-common/game-action-types";
-import { GameData, PlayerGameData } from "dist-common/game-types";
-
-import { getPlayerData } from "./utils";
+import type { GameData, PlayerGameData } from "dist-common/game-types";
 
 import { getMissionData } from "../missions";
+import { getPlayerData } from "./utils";
 
 declare const API_ORIGIN: string;
 

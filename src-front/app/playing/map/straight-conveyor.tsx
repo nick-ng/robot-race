@@ -1,7 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-import { StraightConveyorMapItem, MapItemNoId } from "dist-common/game-types";
+import type {
+  StraightConveyorMapItem,
+  MapItemNoId,
+} from "dist-common/game-types";
 
 const StyledStraightConveyor = styled.div`
   width: 100%;

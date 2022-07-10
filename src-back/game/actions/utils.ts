@@ -1,4 +1,4 @@
-import { Robot } from "../../../dist-common/game-types";
+import type { Robot } from "../../../dist-common/game-types";
 
 export const isRobotDestroyed = (robot: Robot): boolean => {
   const { status } = robot;

@@ -1,4 +1,4 @@
-import { PlayerGameData, GameData } from "dist-common/game-types";
+import type { PlayerGameData, GameData } from "dist-common/game-types";
 
 export const getPlayerData = (
   gameData: GameData,
@@ -24,5 +24,6 @@ export const getPlayerData = (
     gameSettings,
     yourSecrets: playerSecrets[playerId],
     gameState,
+    resumeAction: null,
   };
 };

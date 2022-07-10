@@ -1,7 +1,6 @@
 import React from "react";
-import { ActionIncomingMessageObject } from "dist-common/game-action-types";
 
-import {
+import type {
   MainGameState,
   PlayerDetails,
   PlayerGameData,
@@ -16,7 +15,7 @@ interface RobotsProps {
 
 export default function Robots({ gameData, playerDetails }: RobotsProps) {
   const { gameState, players } = gameData;
-  const { seatOrder, robots } = gameState as MainGameState;
+  const { robots } = gameState as MainGameState;
 
   return (
     <>

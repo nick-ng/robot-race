@@ -1,4 +1,4 @@
-import { OnePlayerSecrets } from "../game-types";
+import type { OnePlayerSecrets } from "../game-types";
 
 const canSubmitProgram = (
   programRegisters?: OnePlayerSecrets["programRegisters"]

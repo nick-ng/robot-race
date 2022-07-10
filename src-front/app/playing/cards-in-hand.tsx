@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { PlayerGameData, MainGameState } from "dist-common/game-types";
+import type { PlayerGameData, MainGameState } from "dist-common/game-types";
 
 import ProgramCard from "./program-card";
 

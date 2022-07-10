@@ -2,7 +2,7 @@ import http from "http";
 import { randomUUID } from "crypto";
 import { WebSocketServer, ServerOptions, WebSocket as WebSocketType } from "ws";
 
-import {
+import type {
   ActionIncomingMessageObject,
   WebsocketIncomingMessageObject,
 } from "../../dist-common/game-action-types";

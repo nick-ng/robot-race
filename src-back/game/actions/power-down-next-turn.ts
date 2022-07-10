@@ -2,10 +2,10 @@ import type {
   AutomaticAction,
   PowerDownNextTurnAction,
 } from "../../../dist-common/game-action-types";
-import { MainGameState } from "../../../dist-common/game-types";
+import type { MainGameState } from "../../../dist-common/game-types";
 import canPowerDownRobot from "../../../dist-common/action-validators/can-power-down";
 
-import Game from "../game-class";
+import type Game from "../game-class";
 
 const powerDownNextTurn = (
   game: Game,

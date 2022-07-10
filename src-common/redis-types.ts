@@ -1,4 +1,4 @@
-import { ActionIncomingMessageObject } from "./game-action-types";
+import type { ActionIncomingMessageObject } from "./game-action-types";
 
 export interface DefaultStreamMessageType {
   id: string;

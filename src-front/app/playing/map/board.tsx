@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { Map, MapItemNoId } from "dist-common/game-types";
+import type { Map, MapItemNoId } from "dist-common/game-types";
 
 import { getDockText } from "./dock";
 import { getFlagText, getFlagToolTip } from "./flag";

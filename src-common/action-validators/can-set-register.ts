@@ -1,4 +1,4 @@
-import { Robot, OnePlayerSecrets, MainGameState } from "../game-types";
+import type { Robot, OnePlayerSecrets, MainGameState } from "../game-types";
 
 const canSetRegister = (
   cardId: string | null,

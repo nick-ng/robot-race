@@ -1,5 +1,8 @@
-import { GameAction, AutomaticAction } from "dist-common/game-action-types";
-import Game from "./game-class";
+import type {
+  GameAction,
+  AutomaticAction,
+} from "dist-common/game-action-types";
+import type Game from "./game-class";
 
 import startGame from "./actions/start-game";
 import dealProgramCards from "./actions/deal-program-cards";

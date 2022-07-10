@@ -2,7 +2,7 @@ import type {
   AutomaticAction,
   ProcessRegisterAction,
 } from "../../../dist-common/game-action-types";
-import Game from "../game-class";
+import type Game from "../game-class";
 
 import { rotateRobot, moveRobotOne } from "./program-card-functions";
 import { touchCheckpoints, fallInHoles } from "./server-functions";

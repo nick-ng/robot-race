@@ -1,9 +1,9 @@
-import {
+import type {
   AutomaticAction,
   SpawnRobotAction,
 } from "../../../dist-common/game-action-types";
 import canSpawnRobot from "../../../dist-common/action-validators/can-spawn-robot";
-import Game from "../game-class";
+import type Game from "../game-class";
 
 const spawnRobot = (
   game: Game,

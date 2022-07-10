@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-import {
+import type {
   PlayerGameData,
   PlayerDetails,
   MainGameState,
 } from "dist-common/game-types";
-import { ActionIncomingMessageObject } from "dist-common/game-action-types";
+import type { ActionIncomingMessageObject } from "dist-common/game-action-types";
 
 import Map from "./map";
 import PlayerDisplay from "./player-display";

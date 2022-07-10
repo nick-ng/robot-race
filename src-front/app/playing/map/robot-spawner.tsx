@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 
-import {
+import type {
   MainGameState,
   PlayerDetails,
   PlayerGameData,
 } from "dist-common/game-types";
-import { ActionIncomingMessageObject } from "dist-common/game-action-types";
+import type { ActionIncomingMessageObject } from "dist-common/game-action-types";
 import canSpawnRobot from "dist-common/action-validators/can-spawn-robot";
 
 import { positionToOffsets } from "../utils";

@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-import {
+import type {
   PlayerGameData,
   PlayerDetails,
   MainGameState,
 } from "dist-common/game-types";
-import { ActionIncomingMessageObject } from "dist-common/game-action-types";
+import type { ActionIncomingMessageObject } from "dist-common/game-action-types";
 import { getPowerDownDecisionOrder } from "dist-common/utils";
 import canPowerDownRobot from "dist-common/action-validators/can-power-down";
 

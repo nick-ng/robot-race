@@ -1,4 +1,4 @@
-import { GameData } from "dist-common/game-types";
+import type { GameData } from "dist-common/game-types";
 import { getCardMap } from "dist-common/card-map";
 import { getMap } from "dist-common/maps";
 
