@@ -99,8 +99,8 @@ export const getMissionData = (
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 8,
-            y: 4,
+            x: 7,
+            y: 1,
             facing: "up",
           },
           archiveMarkerId: 8,

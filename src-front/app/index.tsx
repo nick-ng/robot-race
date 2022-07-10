@@ -5,7 +5,7 @@ import styled from "styled-components";
 import randomUUID from "src-front/utils/random-uuid";
 import { useOptions } from "../hooks/options-context";
 import PreLobby from "./pre-lobby";
-import type Game from "./game";
+import Game from "./game";
 import Practice from "./practice";
 import Options from "./options";
 import MapEditor from "./map-editor";

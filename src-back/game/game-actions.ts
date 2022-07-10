@@ -24,6 +24,9 @@ export const performAction = (
   message: string;
   automaticAction?: AutomaticAction;
 } => {
+  if (process.env.NODE_ENV !== "production") {
+    console.debug("action", action);
+  }
   switch (action.type) {
     case "start":
       return startGame(game, action);
