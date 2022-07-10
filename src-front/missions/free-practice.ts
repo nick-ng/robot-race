@@ -1,4 +1,4 @@
-import { GameData } from "dist-common/game-types";
+import type { GameData } from "dist-common/game-types";
 import { getCardMap } from "dist-common/card-map";
 import { getMap } from "dist-common/maps";
 
@@ -99,8 +99,8 @@ export const getMissionData = (
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 8,
-            y: 4,
+            x: 7,
+            y: 1,
             facing: "up",
           },
           archiveMarkerId: 8,

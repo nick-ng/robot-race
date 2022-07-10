@@ -1,9 +1,9 @@
-import { MainGameState } from "src-common/game-types";
-import {
+import type { MainGameState } from "src-common/game-types";
+import type {
   AutomaticAction,
   CleanUpAction,
 } from "../../../dist-common/game-action-types";
-import Game from "../game-class";
+import type Game from "../game-class";
 import { isRobotDestroyed, setRobotDamage } from "./utils";
 
 const cleanUp = (

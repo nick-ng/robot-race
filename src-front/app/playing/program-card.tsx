@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { ProgramCard } from "dist-common/game-types";
+import type { ProgramCard } from "dist-common/game-types";
 
 import { useOptions } from "../../hooks/options-context";
 

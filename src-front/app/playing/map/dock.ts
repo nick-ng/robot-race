@@ -1,4 +1,4 @@
-import { DockMapItem, MapItemNoId } from "dist-common/game-types";
+import type { DockMapItem, MapItemNoId } from "dist-common/game-types";
 
 export const getDockText = (cellItems: MapItemNoId[]) => {
   const dock = cellItems.find((a) => a.type === "dock") as DockMapItem;

@@ -1,4 +1,4 @@
-import { Robot } from "./game-types";
+import type { Robot } from "./game-types";
 
 interface BasicAction {
   playerId: string;
@@ -41,6 +41,7 @@ export interface SpawnRobotAction extends BasicAction {
   facing: Robot["position"]["facing"];
   x: number;
   y: number;
+  powerDown: boolean;
 }
 
 export type GameAction =

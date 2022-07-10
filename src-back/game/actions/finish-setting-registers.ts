@@ -1,11 +1,11 @@
-import {
+import type {
   AutomaticAction,
   FinishSettingRegistersAction,
 } from "../../../dist-common/game-action-types";
-import { ProgramCardInstruction } from "../../../dist-common/game-types";
+import type { ProgramCardInstruction } from "../../../dist-common/game-types";
 import canSubmitProgram from "../../../dist-common/action-validators/can-submit-program";
 
-import Game from "../game-class";
+import type Game from "../game-class";
 
 const PROGRAM_REGISTER_COUNT = 5;
 
@@ -27,6 +27,8 @@ const finishSettingRegisters = (
 
   const { playerId } = action;
   const { canPerform } = canSubmitProgram(
+    playerId,
+    gameState,
     playerSecrets[playerId]?.programRegisters
   );
 
@@ -36,7 +38,13 @@ const finishSettingRegisters = (
     ];
   }
 
-  if (gameState.finishedProgrammingPlayers.length < players.length) {
+  const { cardMap, robots, seatOrder } = gameState;
+
+  const nonOperatingRobots = robots.filter((r) => r.status !== "ok");
+  if (
+    gameState.finishedProgrammingPlayers.length + nonOperatingRobots.length <
+    players.length
+  ) {
     return {
       game,
       message: "OK",
@@ -44,8 +52,6 @@ const finishSettingRegisters = (
   }
 
   gameSecrets.instructionQueue = [];
-
-  const { cardMap, robots, seatOrder } = gameState;
 
   for (let register = 0; register < PROGRAM_REGISTER_COUNT; register++) {
     const nthRegisters: ProgramCardInstruction[] = [];
@@ -111,7 +117,10 @@ const finishSettingRegisters = (
 
   if (
     gameState.robots.every(
-      (robot) => robot.damagePoints === 0 || !seatOrder.includes(robot.playerId)
+      (robot) =>
+        (robot.status === "ok" && robot.damagePoints === 0) ||
+        robot.status === "powered-down" ||
+        !seatOrder.includes(robot.playerId)
     )
   ) {
     return {

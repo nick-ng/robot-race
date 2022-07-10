@@ -1,4 +1,4 @@
-import { MapItem, Robot } from "../../../dist-common/game-types";
+import type { MapItem, Robot } from "../../../dist-common/game-types";
 import { isRobotDestroyed } from "./utils";
 
 const rotateMap: Readonly<any> = {

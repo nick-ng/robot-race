@@ -1,4 +1,4 @@
-import { Map } from "../game-types";
+import type { Map } from "../game-types";
 
 import riskyExchange from "./risky-exchange";
 

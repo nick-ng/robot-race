@@ -1,11 +1,10 @@
 import React from "react";
 import styled, { css, keyframes } from "styled-components";
 
-import { Player, Robot } from "dist-common/game-types";
+import type { Robot } from "dist-common/game-types";
 import { positionToOffsets } from "../utils";
 
 import getBorderStyle from "./get-border-style";
-import RobotSvg from "./robot-svg";
 
 interface RobotProps {
   name?: string;
@@ -109,7 +108,7 @@ const facingMap = {
   left: "0.75turn",
 };
 
-export default function Robot({ name, robot, isPlayer }: RobotProps) {
+export default function Robot({ robot, isPlayer }: RobotProps) {
   const { position, design, status, damagePoints } = robot;
 
   const offsets = positionToOffsets(position);

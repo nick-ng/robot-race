@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 
-import { GameData, PlayerDetails } from "dist-common/game-types";
+import type { GameData, PlayerDetails } from "dist-common/game-types";
 
 declare const API_ORIGIN: string;
 

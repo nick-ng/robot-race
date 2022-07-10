@@ -1,10 +1,10 @@
-import {
+import type {
   GameAction,
   AutomaticAction,
 } from "../../../dist-common/game-action-types";
-import { MainGameState } from "../../../dist-common/game-types";
+import type { MainGameState } from "../../../dist-common/game-types";
 import { getCardMap, shuffle } from "../../../dist-common/card-map";
-import Game from "../game-class";
+import type Game from "../game-class";
 
 const startGame = (
   game: Game,

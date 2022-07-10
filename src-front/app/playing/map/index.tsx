@@ -1,13 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-import {
-  PlayerDetails,
-  PlayerGameData,
-  MapItem,
-  MapItemNoId,
-} from "dist-common/game-types";
-import { ActionIncomingMessageObject } from "dist-common/game-action-types";
+import type { PlayerDetails, PlayerGameData } from "dist-common/game-types";
+import type { ActionIncomingMessageObject } from "dist-common/game-action-types";
 
 import Board from "./board";
 import Robots from "../robots";

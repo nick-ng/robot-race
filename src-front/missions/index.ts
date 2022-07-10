@@ -1,4 +1,4 @@
-import { GameData } from "dist-common/game-types";
+import type { GameData } from "dist-common/game-types";
 
 import getFreePracticeData from "./free-practice";
 import get1MovementData from "./1-movement";

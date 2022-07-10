@@ -1,4 +1,8 @@
-import { Robot, MapItem, WallMapItem } from "../../../dist-common/game-types";
+import type {
+  Robot,
+  MapItem,
+  WallMapItem,
+} from "../../../dist-common/game-types";
 import { damageRobot, isRobotDestroyed } from "./utils";
 
 const directionMap = {

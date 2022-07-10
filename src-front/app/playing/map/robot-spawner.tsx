@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 
-import {
+import type {
   MainGameState,
   PlayerDetails,
   PlayerGameData,
 } from "dist-common/game-types";
-import { ActionIncomingMessageObject } from "dist-common/game-action-types";
+import type { ActionIncomingMessageObject } from "dist-common/game-action-types";
 import canSpawnRobot from "dist-common/action-validators/can-spawn-robot";
 
 import { positionToOffsets } from "../utils";
@@ -21,17 +21,30 @@ const BUTTON_OFFSETS = Object.freeze({
   down: {
     bottom: `-${SIZE * 1.5}vw`,
     left: "50%",
-    transform: "translate(-50%, 0) rotate(0.5turn)",
+    transform: "translate(-50%, 0)",
   },
   left: {
     bottom: "50%",
     left: `-${SIZE * 1.5}vw`,
-    transform: "translate(0, 50%) rotate(0.75turn)",
+    transform: "translate(0, 50%)",
   },
   right: {
     bottom: "50%",
     right: `-${SIZE * 1.5}vw`,
-    transform: "translate(0, 50%) rotate(0.25turn)",
+    transform: "translate(0, 50%)",
+  },
+});
+
+const BUTTON_ROTATION = Object.freeze({
+  up: { transform: "rotate(0.0turn)" },
+  down: {
+    transform: "rotate(0.5turn)",
+  },
+  left: {
+    transform: "rotate(0.75turn)",
+  },
+  right: {
+    transform: "rotate(0.25turn)",
   },
 });
 
@@ -64,6 +77,16 @@ const STYLE_Y = {
   [1]: { bottom: `-${SIZE * 1.5}vw` },
 };
 
+const fadeAnimation = keyframes`
+0% {
+  opacity: 0.2;
+}
+
+100% {
+  opacity: 1;
+}
+`;
+
 const Button = styled.button`
   position: absolute;
   display: flex;
@@ -75,8 +98,9 @@ const Button = styled.button`
   width: ${SIZE * 1.2}vw;
   height: ${SIZE * 1.2}vw;
   font-size: ${SIZE * 0.6}vw;
-  background-color: #dcdcdc;
-  opacity: 0.2;
+  background-color: #808080;
+  animation: ${fadeAnimation} 0.6s linear alternate infinite;
+  z-index: 20;
 
   &:active {
     border-style: inset;
@@ -108,11 +132,27 @@ const StyledRobotSpawner = styled.div`
 
   &:hover ${Button} {
     opacity: 1;
+    animation: none;
   }
 
-  span {
+  & > img {
     animation: ${bounceAnimation} 1s linear infinite;
   }
+`;
+
+const PowerButtonContainer = styled.div`
+  position: absolute;
+  button {
+    display: block;
+  }
+
+  top: ${-1 * SIZE}vw;
+  left: ${SIZE * 2.6}vw;
+`;
+
+const PowerButton = styled.button<{ isChosen: boolean }>`
+  background-color: ${({ isChosen }) => (isChosen ? "#777777" : "#dcdcdc")};
+  border-style: ${({ isChosen }) => (isChosen ? "inset" : "outset")};
 `;
 
 interface RobotSpawnerProps {
@@ -141,6 +181,7 @@ export default function RobotSpawner({
     x: 0,
     y: 0,
   });
+  const [powerDown, setPowerDown] = useState(false);
 
   useEffect(() => {
     setTargetSquareOffsets({ x: 0, y: 0 });
@@ -209,10 +250,28 @@ export default function RobotSpawner({
                   setTargetSquareOffsets({ x: pos.x, y: pos.y });
                 }}
               >
-                🤖
+                <img src="/robot-triangle.svg" />
               </Button>
             );
           })}
+          <PowerButtonContainer>
+            <PowerButton
+              isChosen={!powerDown}
+              onClick={() => {
+                setPowerDown(false);
+              }}
+            >
+              Powered On
+            </PowerButton>
+            <PowerButton
+              isChosen={powerDown}
+              onClick={() => {
+                setPowerDown(true);
+              }}
+            >
+              Powered Down
+            </PowerButton>
+          </PowerButtonContainer>
         </StyledRobotSpawner>
       );
     }
@@ -230,7 +289,7 @@ export default function RobotSpawner({
         }}
       >
         {targetSquareOffsets.x === 0 && targetSquareOffsets.y === 0 ? (
-          <span>🤖</span>
+          <img src="/robot-triangle.svg" />
         ) : (
           <Button
             onClick={() => {
@@ -258,13 +317,32 @@ export default function RobotSpawner({
                   facing: facing,
                   x: archiveMarker.x + targetSquareOffsets.x,
                   y: archiveMarker.y + targetSquareOffsets.y,
+                  powerDown,
                 },
               });
             }}
           >
-            🤖
+            <img style={BUTTON_ROTATION[facing]} src="/robot-triangle.svg" />
           </Button>
         ))}
+        <PowerButtonContainer>
+          <PowerButton
+            isChosen={!powerDown}
+            onClick={() => {
+              setPowerDown(false);
+            }}
+          >
+            Powered On
+          </PowerButton>
+          <PowerButton
+            isChosen={powerDown}
+            onClick={() => {
+              setPowerDown(true);
+            }}
+          >
+            Powered Down
+          </PowerButton>
+        </PowerButtonContainer>
       </StyledRobotSpawner>
     );
   }

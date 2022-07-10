@@ -1,5 +1,8 @@
-import { GameAction, AutomaticAction } from "dist-common/game-action-types";
-import Game from "./game-class";
+import type {
+  GameAction,
+  AutomaticAction,
+} from "dist-common/game-action-types";
+import type Game from "./game-class";
 
 import startGame from "./actions/start-game";
 import dealProgramCards from "./actions/deal-program-cards";
@@ -21,6 +24,9 @@ export const performAction = (
   message: string;
   automaticAction?: AutomaticAction;
 } => {
+  if (process.env.NODE_ENV !== "production") {
+    console.debug("action", action);
+  }
   switch (action.type) {
     case "start":
       return startGame(game, action);

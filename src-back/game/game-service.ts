@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
-import { GameData } from "../../dist-common/game-types";
-import {
+import type { GameData } from "../../dist-common/game-types";
+import type {
   GameAction,
   ActionIncomingMessageObject,
   AutomaticAction,

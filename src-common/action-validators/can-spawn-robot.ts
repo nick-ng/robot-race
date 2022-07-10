@@ -1,4 +1,4 @@
-import { Robot, MainGameState } from "../game-types";
+import type { Robot, MainGameState } from "../game-types";
 import { getRespawnOrder } from "../utils";
 
 export const needToSpawnRobot = (playerId: string, robots: Robot[]) => {

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { RepairMapItem, MapItemNoId } from "dist-common/game-types";
+import type { RepairMapItem, MapItemNoId } from "dist-common/game-types";
 
 const StyledRepair = styled.div`
   width: 100%;

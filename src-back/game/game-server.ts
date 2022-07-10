@@ -1,4 +1,4 @@
-import { ActionIncomingMessageObject } from "../../dist-common/game-action-types";
+import type { ActionIncomingMessageObject } from "../../dist-common/game-action-types";
 import { sleep } from "../../dist-common/utils";
 
 import {
@@ -10,7 +10,7 @@ import {
   getRedisKeys,
   addAction,
 } from "./game-redis";
-import Game from "./game-class";
+import type Game from "./game-class";
 import { playGame } from "./game-service";
 
 const STATS_REPORT_DELAY_MS = 1000;

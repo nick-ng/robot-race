@@ -1,4 +1,4 @@
-import { Map, MapItem } from "../game-types";
+import type { Map, MapItem } from "../game-types";
 
 const items: MapItem[] = [
   { id: 0, type: "dock", number: 1, x: 5, y: 15 },

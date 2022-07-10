@@ -69,7 +69,11 @@ export default function CardsAndProgramRegisters({
 
   const robot = robots.find((r) => r.playerId === playerDetails.playerId)!;
   const youFinishedProgramming = finishedProgrammingPlayers.includes(playerId);
-  const fullyProgrammed = canSubmitProgram(programRegisters).canPerform;
+  const fullyProgrammed = canSubmitProgram(
+    playerId,
+    gameState,
+    programRegisters
+  ).canPerform;
 
   useEffect(() => {
     if (selectedCardId !== null && selectedRegisterIndex !== null) {

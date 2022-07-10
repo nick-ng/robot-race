@@ -1,12 +1,20 @@
-import { OnePlayerSecrets } from "../game-types";
+import type { OnePlayerSecrets, GameState } from "../game-types";
 
 const canSubmitProgram = (
+  playerId: string,
+  gameState: GameState,
   programRegisters?: OnePlayerSecrets["programRegisters"]
 ):
   | { canPerform: true; message?: never }
   | { canPerform: false; message: string } => {
-  if (!programRegisters) {
-    return { canPerform: false, message: "Invalid program register." };
+  const { robots } = gameState;
+  const robot = robots?.find((r) => r.playerId === playerId);
+  if (!programRegisters || !robot) {
+    return { canPerform: false, message: "Invalid inputs." };
+  }
+
+  if (robot.status !== "ok") {
+    return { canPerform: false, message: "Robot not in functional state." };
   }
 
   if (programRegisters.some((register) => register === null)) {
