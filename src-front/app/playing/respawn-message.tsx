@@ -32,7 +32,17 @@ export default function RespawnMessage({
   return (
     <StyledRespawnMessage>
       {canSpawnRobot(playerDetails.playerId, robots, seatOrder).canPerform && (
-        <p>Place your robot and choose their facing.</p>
+        <>
+          <p>Choose which direction your robot should face when it respawns.</p>
+          <p>
+            If your archive marker is already occupied, choose where to place
+            your robot first.
+          </p>
+          <p>
+            Robots respawn with 2 damage. You can power down immediately to
+            repair this damage but you will skip your turn.
+          </p>
+        </>
       )}
       {respawnOrder[0] !== playerDetails.playerId && (
         <p>
