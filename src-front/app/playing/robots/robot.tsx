@@ -45,6 +45,22 @@ const fallAnimationMixin = css`
   animation: ${fallAnimation} 1s linear infinite;
 `;
 
+const ToolTip = styled.div`
+  pointer-events: none;
+  display: none;
+  position: absolute;
+  z-index: 15;
+
+  div {
+    position: absolute;
+    left: 2.5vw;
+    padding: 0.25em;
+    background-color: #2f2f2f;
+  }
+`;
+
+const RobotDiv = styled.div``;
+
 export const StyledRobot = styled.div<{
   isPlayer?: boolean;
   isFalling?: boolean;
@@ -67,11 +83,12 @@ export const StyledRobot = styled.div<{
 
   transition: 450ms ease-in-out;
 
-  & > div {
+  & > ${RobotDiv} {
     pointer-events: none;
     ${({ isFalling }) => (isFalling ? fallAnimationMixin : "")}
     transition: 450ms ease-in-out;
     position: absolute;
+    z-index: ${({ isDestroyed }) => (isDestroyed ? "5" : "10")};
     margin: auto;
     left: 0;
     right: 0;
@@ -98,7 +115,12 @@ export const StyledRobot = styled.div<{
   }
 
   &:hover {
-    opacity: 0.1;
+    opacity: 0.2;
+  }
+
+  &:hover + ${ToolTip} {
+    display: block;
+    opacity: 1;
   }
 `;
 
@@ -109,7 +131,7 @@ const facingMap = {
   left: "0.75turn",
 };
 
-export default function Robot({ robot, isPlayer }: RobotProps) {
+export default function Robot({ name, robot, isPlayer }: RobotProps) {
   const { position, design, status, damagePoints } = robot;
 
   const {
@@ -123,19 +145,26 @@ export default function Robot({ robot, isPlayer }: RobotProps) {
   const isDestroyed = damagePoints >= 10;
 
   return (
-    <StyledRobot
-      isPlayer={isPlayer}
-      isFalling={status === "falling"}
-      isDestroyed={isDestroyed}
-      style={{
-        ...style,
-        top: offsets.y,
-        left: offsets.x,
-      }}
-    >
-      <div style={{ transform: `rotate(${facingMap[position.facing]})` }}>
-        <img src="/robot-triangle.svg" />
-      </div>
-    </StyledRobot>
+    <div>
+      <StyledRobot
+        isPlayer={isPlayer}
+        isFalling={status === "falling"}
+        isDestroyed={isDestroyed}
+        style={{
+          ...style,
+          top: offsets.y,
+          left: offsets.x,
+        }}
+      >
+        <RobotDiv
+          style={{ transform: `rotate(${facingMap[position.facing]})` }}
+        >
+          <img src="/robot-triangle.svg" />
+        </RobotDiv>
+      </StyledRobot>
+      <ToolTip style={{ top: offsets.y, left: offsets.x }}>
+        <div style={style}>{name}</div>
+      </ToolTip>
+    </div>
   );
 }
