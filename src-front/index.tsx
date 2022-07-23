@@ -35,12 +35,13 @@ const GlobalStyle = createGlobalStyle`
   }
 
   input[type=color] {
-padding: 0;
+    padding: 0;
   }
 
   summary,
   button,
-  input[type="checkbox"], input[type=color] {
+  input[type="checkbox"],
+  input[type=color] {
     cursor: pointer;
   }
 
