@@ -2,8 +2,10 @@ import type {
   AutomaticAction,
   SpawnRobotAction,
 } from "../../../dist-common/game-action-types";
-import canSpawnRobot from "../../../dist-common/action-validators/can-spawn-robot";
 import type Game from "../game-class";
+
+import canSpawnRobot from "../../../dist-common/action-validators/can-spawn-robot";
+import { setRobotDamage } from "./utils";
 
 const spawnRobot = (
   game: Game,
@@ -75,7 +77,7 @@ const spawnRobot = (
   robot.status = powerDown ? "powered-down" : "ok";
   robot.lives = robot.lives - 1;
   if (powerDown) {
-    robot.damagePoints = 0;
+    setRobotDamage(robot, 0);
   }
 
   if (robots.filter((r) => r.status === "stand-by").length <= 0) {

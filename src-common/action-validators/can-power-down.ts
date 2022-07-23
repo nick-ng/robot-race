@@ -45,11 +45,7 @@ export const canPowerDownRobot = (
     };
   }
 
-  const powerDownOrder = getPowerDownDecisionOrder(
-    robots,
-    seatOrder,
-    poweringDownNextTurn
-  );
+  const powerDownOrder = getPowerDownDecisionOrder(gameState);
 
   if (powerDownOrder[0] !== playerId) {
     return { canPerform: false, message: "You can't power down your robot." };

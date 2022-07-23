@@ -1,4 +1,4 @@
-import type { Robot, MainGameState } from "./game-types";
+import type { Robot, MainGameState, GameState } from "./game-types";
 
 export const sleep = (ms: number) =>
   new Promise((resolve, _reject) => {
@@ -38,11 +38,22 @@ export const getRespawnOrder = (
   );
 };
 
-export const getPowerDownDecisionOrder = (
-  robots: Robot[],
-  seatOrder: MainGameState["seatOrder"],
-  poweringDownNextTurn: MainGameState["poweringDownNextTurn"]
-) => {
+export const getPowerDownDecisionOrder = (gameState: GameState) => {
+  if (gameState.state !== "main") {
+    return [];
+  }
+
+  const {
+    robots,
+    seatOrder,
+    finishedProgrammingPlayers,
+    poweringDownNextTurn,
+  } = gameState;
+
+  if (finishedProgrammingPlayers.length < seatOrder.length) {
+    return [];
+  }
+
   return seatOrder.filter((playerId) =>
     robots.find(
       (r) =>

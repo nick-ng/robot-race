@@ -1,10 +1,10 @@
-import type { MainGameState } from "src-common/game-types";
+import type { MainGameState, MapItem } from "src-common/game-types";
 import type {
   AutomaticAction,
   CleanUpAction,
 } from "../../../dist-common/game-action-types";
 import type Game from "../game-class";
-import { isRobotDestroyed, setRobotDamage } from "./utils";
+import { isRobotDestroyed, setRobotDamage, repairRobot } from "./utils";
 
 const cleanUp = (
   game: Game,
@@ -14,10 +14,29 @@ const cleanUp = (
   message: string;
   automaticAction?: AutomaticAction;
 } => {
-  const { gameState } = game;
+  const { gameState, gameSettings } = game;
   const { robots, seatOrder, poweringDownNextTurn } =
     gameState as MainGameState;
   // 10. repair and draw option cards in seat order
+  for (const robot of robots) {
+    if (isRobotDestroyed(robot)) {
+      continue;
+    }
+    const { position } = robot;
+
+    const cellItems = gameSettings.map.items.filter(
+      (item) =>
+        item.x === position.x &&
+        item.y === position.y &&
+        ["flag", "repair"].includes(item.type)
+    ) as MapItem[];
+
+    if (cellItems.length === 0) {
+      continue;
+    }
+
+    repairRobot(robot);
+  }
 
   // 20. discard program cards from non-locked registers
 

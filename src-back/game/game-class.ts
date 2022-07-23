@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 
-import {
+import type {
   Players,
   InitObject,
   GameSettings,
@@ -11,7 +11,7 @@ import {
   LobbyGameState,
   Robot,
 } from "../../dist-common/game-types";
-import {
+import type {
   GameAction,
   ActionIncomingMessageObject,
 } from "../../dist-common/game-action-types";

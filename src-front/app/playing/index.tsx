@@ -141,6 +141,26 @@ export default function Playing({
                 playerDetails={playerDetails}
               />
             </ControlsArea>
+            {process.env.NODE_ENV === "development" && (
+              <pre>
+                {JSON.stringify(
+                  {
+                    ...gameData,
+                    gameSettings: {
+                      ...gameData.gameSettings,
+                      map: { ...gameData.gameSettings.map, items: null },
+                    },
+                    gameState: {
+                      ...gameData.gameState,
+                      cardMap: null,
+                      discardedCards: null,
+                    },
+                  },
+                  null,
+                  "  "
+                )}
+              </pre>
+            )}
           </>
         )}
         {gameState.state === "over" && (
