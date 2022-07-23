@@ -41,14 +41,8 @@ export default function PowerDownControl({
 }: PowerDownControlProps) {
   const { playerId, playerPassword } = playerDetails;
   const { id, gameState, players } = gameData;
-  const { robots, seatOrder, poweringDownNextTurn } =
-    gameState as MainGameState;
 
-  const powerDownOrder = getPowerDownDecisionOrder(
-    robots,
-    seatOrder,
-    poweringDownNextTurn
-  );
+  const powerDownOrder = getPowerDownDecisionOrder(gameState);
 
   if (powerDownOrder.length === 0) {
     return null;

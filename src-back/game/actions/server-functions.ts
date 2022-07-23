@@ -5,7 +5,6 @@ import type {
   MainGameState,
   FlagMapItem,
 } from "../../../dist-common/game-types";
-import { isRobotDestroyed, repairRobot } from "./utils";
 
 export const touchCheckpoints = (
   robots: Robot[],
@@ -36,10 +35,6 @@ export const touchCheckpoints = (
         });
 
         robot.archiveMarkerId = cellItems[0].id;
-
-        if (!isRobotDestroyed(robot)) {
-          repairRobot(robot);
-        }
 
         const flag = cellItems.find((a) => a.type === "flag") as
           | (FlagMapItem & MapItem)
