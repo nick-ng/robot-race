@@ -4,6 +4,7 @@ import type {
 } from "../../../dist-common/game-action-types";
 import { shuffle } from "../../../dist-common/card-map";
 import type Game from "../game-class";
+import { setRobotDamage } from "./utils";
 
 const dealProgramCards = (
   game: Game,
@@ -40,7 +41,7 @@ const dealProgramCards = (
       return;
     }
 
-    robot.damagePoints = 0;
+    setRobotDamage(robot, 0);
     robot.status = "powered-down";
     finishedProgrammingPlayers.push(decision.playerId);
   });

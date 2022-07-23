@@ -14,7 +14,7 @@ export const destroyRobots = (robots: Robot[]) => {
 };
 
 export const damageRobot = (robot: Robot) => {
-  robot.damagePoints = robot.damagePoints + 1;
+  robot.damagePoints = Math.min(robot.damagePoints + 1, 10);
   if (robot.damagePoints > 4) {
     const regsiterDamage = robot.damagePoints - 4;
     if (regsiterDamage >= 5) {
