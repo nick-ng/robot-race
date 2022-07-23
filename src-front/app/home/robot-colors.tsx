@@ -23,6 +23,7 @@ const Robots = styled.div`
 
   input {
     width: 2vw;
+    height: 2vw;
   }
 `;
 
