@@ -7,6 +7,8 @@ import {
   PlayerGameData,
 } from "dist-common/game-types";
 import { getFlagEmoji } from "../utils";
+import { useOptions } from "../../hooks/options-context";
+
 import getBorderStyle from "./robots/get-border-style";
 
 interface PlayerDisplayProps {
@@ -65,6 +67,9 @@ export default function PlayerDisplay({ gameData }: PlayerDisplayProps) {
   const { map } = gameSettings;
   const { seatOrder, finishedProgrammingPlayers, robots, flagsTouched } =
     gameState as MainGameState;
+  const {
+    options: { colors },
+  } = useOptions();
 
   const totalFlags = map.items.filter((mi) => mi.type === "flag").length;
 
@@ -73,7 +78,11 @@ export default function PlayerDisplay({ gameData }: PlayerDisplayProps) {
       {seatOrder.map((playerId) => {
         const player = players.find((player) => player.id === playerId)!;
         const robot = robots.find((robot) => robot.playerId === playerId);
-        const style = getBorderStyle(robot?.design || "");
+        if (!robot) {
+          return null;
+        }
+
+        const style = getBorderStyle(robot.design, colors);
         return (
           <Player key={playerId} style={style}>
             <Emoji>

@@ -5,9 +5,13 @@ const OPTIONS_STORE = "ROBOT_RACE_OPTIONS";
 export interface Options {
   ping?: number;
   smallerPriorityFirst: boolean;
+  colors: string[];
 }
 
-const defaultOptions: Options = { smallerPriorityFirst: true };
+export const defaultOptions: Options = {
+  smallerPriorityFirst: true,
+  colors: ["#FF71CE", "#05FFA1", "#01CDFE", "#FFFB96"],
+};
 
 const OptionsContext = createContext<{
   options: Options;
@@ -29,7 +33,7 @@ const OptionsContextProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const [options, setOptions] = useState(
-    (savedOptions as Options) || null || defaultOptions
+    { ...(savedOptions as Options), ...defaultOptions } || defaultOptions
   );
 
   return (

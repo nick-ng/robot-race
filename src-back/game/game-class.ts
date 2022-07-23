@@ -9,25 +9,16 @@ import type {
   GameData,
   PlayerSecrets,
   LobbyGameState,
-  Robot,
 } from "../../dist-common/game-types";
 import type {
   GameAction,
   ActionIncomingMessageObject,
 } from "../../dist-common/game-action-types";
+
 import { performAction } from "./game-actions";
 import { getMap } from "../../dist-common/maps";
 
-const ROBOT_DESIGNS: readonly Robot["design"][] = Object.freeze([
-  "double",
-  "ridge",
-  "#808080",
-  "outset",
-  "dotted",
-  "dashed",
-  "#ffffff",
-  "#000000",
-]);
+const ROBOT_DESIGNS = [0, 1, 2, 3, 4, 5, 6, 7] as const;
 
 export default class Game {
   id: string;
