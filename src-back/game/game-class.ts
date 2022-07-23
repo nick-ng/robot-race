@@ -49,6 +49,8 @@ export default class Game {
       poweringDownNextTurn: [],
       flagsTouched: {},
       robots: [],
+      turn: 0,
+      turnPhase: 0,
     };
 
     const defaultGameSecrets: GameSecrets = {
@@ -64,6 +66,8 @@ export default class Game {
       players: [],
       gameSettings: {
         map: getMap(mapName),
+        timerStart: "never",
+        timerSeconds: 30,
       },
       gameSecrets: defaultGameSecrets,
       playerSecrets: {},
