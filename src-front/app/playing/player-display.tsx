@@ -27,6 +27,10 @@ const Player = styled.div`
   display: flex;
   flex-direction: row;
   align-items: stretch;
+
+  & + & {
+    margin-top: 0.25em;
+  }
 `;
 
 const Emoji = styled.div`

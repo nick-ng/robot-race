@@ -1,5 +1,7 @@
 import type { Robot } from "src-common/game-types";
 
+export const ROBOT_DESIGNS = [0, 1, 2, 3, 4, 5, 6, 7] as const;
+
 const getOldBorderStyle = (design: string) => {
   switch (design) {
     case "dotted":
@@ -16,15 +18,13 @@ const getOldBorderStyle = (design: string) => {
       };
     case "#ffffff":
     case "#000000":
+    case "#dcdcdc":
       return {
         borderStyle: "solid",
         borderColor: design,
       };
     default:
-      return {
-        borderStyle: "solid",
-        borderColor: "#dcdcdc",
-      };
+      return {};
   }
 };
 
