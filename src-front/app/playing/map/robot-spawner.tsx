@@ -332,7 +332,7 @@ export default function RobotSpawner({
               setPowerDown(false);
             }}
           >
-            Don't Self Repair
+            Don't Repair
           </PowerButton>
           <PowerButton
             isChosen={powerDown}
