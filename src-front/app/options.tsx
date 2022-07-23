@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import styled from "styled-components";
 
 import { useOptions } from "../hooks/options-context";
+import RobotColors from "./home/robot-colors";
 
 const StyledOptions = styled.div`
   position: relative;
@@ -18,10 +19,7 @@ const OptionsMenu = styled.div`
 
   label {
     display: block;
-  }
-
-  label + label {
-    margin-top: 0.5em;
+    margin-bottom: 0.5em;
   }
 `;
 
@@ -61,6 +59,7 @@ export default function Options() {
             />{" "}
             Smaller Priority Numbers First
           </label>
+          <RobotColors />
         </OptionsMenu>
       </details>
     </StyledOptions>

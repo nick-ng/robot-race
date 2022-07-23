@@ -8,6 +8,9 @@ import type {
 } from "dist-common/game-types";
 import type { ActionIncomingMessageObject } from "dist-common/game-action-types";
 
+import { getFlagEmoji } from "../utils";
+import { useOptions } from "../../hooks/options-context";
+
 import Map from "./map";
 import PlayerDisplay from "./player-display";
 import CardsAndProgramRegisters from "./cards-and-program-registers";
@@ -15,7 +18,7 @@ import RespawnMessage from "./respawn-message";
 import PowerDownControl from "./power-down-controls";
 import Instructions from "./instructions";
 import GameOver from "./game-over";
-import { getFlagEmoji } from "../utils";
+import getBorderStyle from "./robots/get-border-style";
 
 const StyledPlaying = styled.div`
   flex-shrink: 0;
@@ -82,6 +85,10 @@ export default function Playing({
   const { flagsTouched, robots } = gameState as MainGameState;
   const robot = robots.find((r) => r.playerId === playerId)!;
 
+  const {
+    options: { colors },
+  } = useOptions();
+
   return (
     <StyledPlaying>
       <Row>
@@ -108,7 +115,7 @@ export default function Playing({
                   Next: {getFlagEmoji()}
                   {flagsTouched[playerId] + 1}
                 </div>
-                <div>
+                <div style={getBorderStyle(robot.design, colors)}>
                   Robot Health: {10 - robot.damagePoints}/10, Lives:{" "}
                   {robot.lives}
                 </div>

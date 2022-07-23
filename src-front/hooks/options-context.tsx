@@ -5,13 +5,17 @@ const OPTIONS_STORE = "ROBOT_RACE_OPTIONS";
 export interface Options {
   ping?: number;
   smallerPriorityFirst: boolean;
+  colors: string[];
 }
 
-const defaultOptions: Options = { smallerPriorityFirst: true };
+export const defaultOptions: Options = {
+  smallerPriorityFirst: true,
+  colors: ["#FF71CE", "#05FFA1", "#01CDFE", "#FFFB96"],
+};
 
 const OptionsContext = createContext<{
   options: Options;
-  setOptions: (newOptions: Partial<Options>) => void;
+  setOptions: (newPartialOptions: Partial<Options>) => void;
 }>({
   options: defaultOptions,
   setOptions: () => {},
@@ -28,17 +32,18 @@ const OptionsContextProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  const [options, setOptions] = useState(
-    (savedOptions as Options) || null || defaultOptions
-  );
+  const [options, setOptions] = useState({
+    ...defaultOptions,
+    ...(savedOptions as Options),
+  });
 
   return (
     <OptionsContext.Provider
       value={{
         options,
-        setOptions: (newOptions) => {
+        setOptions: (newPartialOptions) => {
           setOptions((prevOptions) => {
-            const fullOptions = { ...prevOptions, ...newOptions };
+            const fullOptions = { ...prevOptions, ...newPartialOptions };
             const { ping, ...saveOptions } = fullOptions;
             localStorage.setItem(OPTIONS_STORE, JSON.stringify(saveOptions));
             return fullOptions;

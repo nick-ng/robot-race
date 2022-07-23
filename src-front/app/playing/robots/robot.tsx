@@ -3,6 +3,7 @@ import styled, { css, keyframes } from "styled-components";
 
 import type { Robot } from "dist-common/game-types";
 import { positionToOffsets } from "../utils";
+import { useOptions } from "../../../hooks/options-context";
 
 import getBorderStyle from "./get-border-style";
 
@@ -111,9 +112,13 @@ const facingMap = {
 export default function Robot({ robot, isPlayer }: RobotProps) {
   const { position, design, status, damagePoints } = robot;
 
+  const {
+    options: { colors },
+  } = useOptions();
+
   const offsets = positionToOffsets(position);
 
-  const style = getBorderStyle(design);
+  const style = getBorderStyle(design, colors);
 
   const isDestroyed = damagePoints >= 10;
 

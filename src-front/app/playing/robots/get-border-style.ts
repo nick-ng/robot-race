@@ -1,4 +1,8 @@
-const getBorderStyle = (design: string) => {
+import type { Robot } from "src-common/game-types";
+
+export const ROBOT_DESIGNS = [0, 1, 2, 3, 4, 5, 6, 7] as const;
+
+const getOldBorderStyle = (design: string) => {
   switch (design) {
     case "dotted":
     case "dashed":
@@ -14,15 +18,60 @@ const getBorderStyle = (design: string) => {
       };
     case "#ffffff":
     case "#000000":
+    case "#dcdcdc":
       return {
         borderStyle: "solid",
         borderColor: design,
       };
     default:
+      return {};
+  }
+};
+
+const getBorderStyle = (design: Robot["design"], colors: string[]) => {
+  switch (design) {
+    case 0:
       return {
         borderStyle: "solid",
-        borderColor: "#dcdcdc",
+        borderColor: colors[0],
       };
+    case 1:
+      return {
+        borderStyle: "solid",
+        borderColor: colors[1],
+      };
+    case 2:
+      return {
+        borderStyle: "double",
+        borderColor: colors[2],
+      };
+    case 3:
+      return {
+        borderStyle: "double",
+        borderColor: colors[3],
+      };
+    case 4:
+      return {
+        borderStyle: "dashed",
+        borderColor: colors[0],
+      };
+    case 5:
+      return {
+        borderStyle: "dashed",
+        borderColor: colors[1],
+      };
+    case 6:
+      return {
+        borderStyle: "dotted",
+        borderColor: colors[2],
+      };
+    case 7:
+      return {
+        borderStyle: "dotted",
+        borderColor: colors[3],
+      };
+    default:
+      return getOldBorderStyle(design);
   }
 };
 
