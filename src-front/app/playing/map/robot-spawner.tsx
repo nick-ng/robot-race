@@ -332,7 +332,7 @@ export default function RobotSpawner({
               setPowerDown(false);
             }}
           >
-            Powered On
+            Don't Repair
           </PowerButton>
           <PowerButton
             isChosen={powerDown}
@@ -340,7 +340,7 @@ export default function RobotSpawner({
               setPowerDown(true);
             }}
           >
-            Powered Down
+            Self-Repair
           </PowerButton>
         </PowerButtonContainer>
       </StyledRobotSpawner>

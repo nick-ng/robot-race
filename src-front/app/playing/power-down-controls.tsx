@@ -53,9 +53,11 @@ export default function PowerDownControl({
       {canPowerDownRobot(playerDetails.playerId, gameState as MainGameState)
         .canPerform && (
         <>
-          <p>Power down your robot?</p>
+          <p>Have your robot repair itself next turn?</p>
           <p>
-            Powering down skips your next turn and fully repairs your robot.
+            After executing its current program, your robot will spend the next
+            turn repairing itself. It cannot be programmed while it is repairing
+            itself.
           </p>
           <ButtonContainer>
             <PowerDownButton
@@ -73,7 +75,7 @@ export default function PowerDownControl({
                 });
               }}
             >
-              Power Down
+              Self-Repair
             </PowerDownButton>
             <SkipButton
               onClick={() => {
@@ -98,7 +100,7 @@ export default function PowerDownControl({
       {powerDownOrder[0] !== playerDetails.playerId && (
         <p>
           {players.find((p) => p.id === powerDownOrder[0])?.name} is deciding
-          whether to power down.
+          whether to self-repair.
         </p>
       )}
     </StyledPowerDownControl>
