@@ -39,8 +39,9 @@ export default function RespawnMessage({
             your robot first.
           </p>
           <p>
-            Robots respawn with 2 damage. You can power down immediately to
-            repair this damage but you will skip your turn.
+            Robots respawn with 2 damage. You can choose to have your robot
+            repair itself this turn. If your robot is repairing itself, it
+            cannot be programmed.
           </p>
         </>
       )}
