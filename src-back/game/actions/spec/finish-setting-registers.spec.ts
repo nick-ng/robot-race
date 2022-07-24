@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import type { MainGameState } from "src-common/game-types";
 
 import { getPowerDownDecisionOrder } from "../../../../src-common/utils";
-
 import Game from "../../game-class";
 import finishSettingRegisters from "../finish-setting-registers";
 
@@ -31,6 +30,7 @@ describe("Finish setting registers action", () => {
     assert.notStrictEqual([], unfinishedPlayers);
 
     assert.equal(3, testGame.gameState.poweringDownNextTurn.length);
+    assert.equal(1, getPowerDownDecisionOrder(testGame.gameState).length);
 
     done();
   });
