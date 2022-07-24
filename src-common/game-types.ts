@@ -105,6 +105,8 @@ export interface LobbyGameState {
   poweringDownNextTurn: YesNoDecision[];
   flagsTouched: { [playerId: string]: number };
   robots: Robot[];
+  turn: number;
+  turnPhase: number;
 }
 
 export type MainGameState = Omit<LobbyGameState, "state"> & {
@@ -199,6 +201,8 @@ export interface Map {
 
 export interface GameSettings {
   map: Map;
+  timerStart: "never" | "first" | "penultimate";
+  timerSeconds: number;
 }
 
 export interface PlayerSecrets {

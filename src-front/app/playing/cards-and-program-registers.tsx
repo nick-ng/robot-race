@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import styled, { css, keyframes } from "styled-components";
+import React, { useState, useEffect, useRef } from "react";
+import styled, { keyframes } from "styled-components";
 
 import type {
   PlayerGameData,
@@ -11,9 +11,11 @@ import canSetRegister from "dist-common/action-validators/can-set-register";
 import canSubmitProgram from "dist-common/action-validators/can-submit-program";
 
 import { wiggleAnimationMixin } from "../../animations/wiggle";
+import { useOptions } from "../../hooks/options-context";
 
 import CardsInHand from "./cards-in-hand";
 import ProgramRegisters from "./program-registers";
+import { isTimerVisible } from "./utils";
 
 const StyledCardsAndProgramRegisters = styled.div`
   display: inline-block;
@@ -26,6 +28,7 @@ const StyledCardsInHand = styled(CardsInHand)``;
 const Heading = styled.div`
   margin: 0.5em 0 0.3em;
   text-align: center;
+  position: relative;
 `;
 
 const SubmitButton = styled.button<{ isLoading?: boolean }>`
@@ -44,6 +47,65 @@ const SubmitButton = styled.button<{ isLoading?: boolean }>`
   }};
 `;
 
+const TimerAnimation = keyframes`
+0% {
+  width: 100%;
+}
+
+100% {
+  width: 0%;
+}
+`;
+
+const WhiteBlackAnimation = keyframes`
+0% {
+  color: #ffffff;
+}
+
+100% {
+  color: #000000;
+}
+`;
+
+const TimerOuterBar = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+`;
+
+const TimerInnerBar = styled.div<{ timerDuration: number }>`
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  animation-name: ${TimerAnimation};
+  animation-duration: ${({ timerDuration }) => timerDuration}s;
+  animation-timing-function: linear;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  background-color: #ffffff;
+`;
+
+const TimerText = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  animation-name: ${WhiteBlackAnimation};
+  animation-duration: 1.5s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  z-index: 1;
+  font-weight: bold;
+`;
+
 interface CardsAndProgramRegistersProps {
   gameData: PlayerGameData;
   playerDetails: PlayerDetails;
@@ -57,15 +119,19 @@ export default function CardsAndProgramRegisters({
 }: CardsAndProgramRegistersProps) {
   const { playerId, playerPassword } = playerDetails;
 
-  const { id, yourSecrets, gameState } = gameData;
+  const { id, yourSecrets, gameState, gameSettings } = gameData;
   const { cardsInHand, programRegisters } = yourSecrets;
-  const { finishedProgrammingPlayers, robots } = gameState as MainGameState;
+  const { finishedProgrammingPlayers, robots, seatOrder } =
+    gameState as MainGameState;
 
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [selectedRegisterIndex, setSelectedRegisterIndex] = useState<
     number | null
   >(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { options } = useOptions();
+  const timerSound = useRef(new Audio("/timer.mp3")).current;
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const robot = robots.find((r) => r.playerId === playerDetails.playerId)!;
   const youFinishedProgramming = finishedProgrammingPlayers.includes(playerId);
@@ -74,6 +140,44 @@ export default function CardsAndProgramRegisters({
     gameState,
     programRegisters
   ).canPerform;
+  const actualTimerSeconds =
+    gameSettings.timerSeconds - (options.ping || 0) / 2000;
+
+  const showTimer = isTimerVisible({
+    finishedProgrammingPlayers,
+    playerId,
+    robots,
+    seatOrder,
+    timerStart: gameSettings.timerStart,
+  });
+
+  useEffect(() => {
+    if (showTimer) {
+      if (!timeoutRef.current) {
+        timerSound.volume = 0.25;
+        timeoutRef.current = setTimeout(() => {
+          timerSound.play();
+        }, (actualTimerSeconds - timerSound.duration) * 1000);
+      }
+    } else {
+      timerSound.pause();
+      timerSound.currentTime = 0;
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      timeoutRef.current = null;
+    }
+
+    return () => {
+      timerSound.pause();
+      timerSound.currentTime = 0;
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = null;
+    };
+  }, [showTimer]);
 
   useEffect(() => {
     if (selectedCardId !== null && selectedRegisterIndex !== null) {
@@ -191,7 +295,17 @@ export default function CardsAndProgramRegisters({
       />
       {!youFinishedProgramming && (
         <>
-          <Heading>Program Cards (Max {9 - robot.damagePoints})</Heading>
+          <Heading>
+            <span>Program Cards (Max {9 - robot.damagePoints})</span>
+            {showTimer && (
+              <TimerOuterBar>
+                <TimerInnerBar
+                  timerDuration={actualTimerSeconds}
+                ></TimerInnerBar>
+                <TimerText>Hurry Up!</TimerText>
+              </TimerOuterBar>
+            )}
+          </Heading>
           <StyledCardsInHand
             cardWidth={5}
             isLoading={isLoading}

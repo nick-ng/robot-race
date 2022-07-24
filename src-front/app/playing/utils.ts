@@ -1,3 +1,5 @@
+import type { GameSettings, Robot } from "dist-common/game-types";
+
 export const positionToOffsets = ({
   x,
   y,
@@ -16,4 +18,42 @@ export const positionToOffsets = ({
     x: `calc(${ratioX * x + constantX}vw + ${ratioPxX * x}px)`,
     y: `calc(${ratioY * y + constantY}vw + ${ratioPxY * y}px)`,
   };
+};
+
+export const isTimerVisible = ({
+  playerId,
+  timerStart,
+  robots,
+  finishedProgrammingPlayers,
+  seatOrder,
+}: {
+  playerId: string;
+  timerStart: GameSettings["timerStart"];
+  robots: Robot[];
+  finishedProgrammingPlayers: string[];
+  seatOrder: string[];
+}): boolean => {
+  if (finishedProgrammingPlayers.includes(playerId)) {
+    return false;
+  }
+
+  const poweredDownRobotsCount = robots.filter(
+    (r) => r.status === "powered-down"
+  ).length;
+
+  if (
+    timerStart === "first" &&
+    finishedProgrammingPlayers.length - poweredDownRobotsCount >= 1
+  ) {
+    return true;
+  }
+
+  if (
+    timerStart === "penultimate" &&
+    finishedProgrammingPlayers.length + 1 >= seatOrder.length
+  ) {
+    return true;
+  }
+
+  return false;
 };

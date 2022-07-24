@@ -20,6 +20,12 @@ import { getMap } from "../../dist-common/maps";
 
 const ROBOT_DESIGNS = [0, 1, 2, 3, 4, 5, 6, 7] as const;
 
+export const TURN_PHASES = {
+  lobby: 0,
+  dealCards: 10,
+  processRegisters: 20,
+} as const;
+
 export default class Game {
   id: string;
   shortId: string;
@@ -49,6 +55,8 @@ export default class Game {
       poweringDownNextTurn: [],
       flagsTouched: {},
       robots: [],
+      turn: 0,
+      turnPhase: TURN_PHASES.lobby,
     };
 
     const defaultGameSecrets: GameSecrets = {
@@ -64,6 +72,8 @@ export default class Game {
       players: [],
       gameSettings: {
         map: getMap(mapName),
+        timerStart: "first",
+        timerSeconds: 30,
       },
       gameSecrets: defaultGameSecrets,
       playerSecrets: {},

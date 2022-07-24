@@ -3,7 +3,7 @@ import type {
   DealProgramCardsAction,
 } from "../../../dist-common/game-action-types";
 import { shuffle } from "../../../dist-common/card-map";
-import type Game from "../game-class";
+import Game, { TURN_PHASES } from "../game-class";
 import { setRobotDamage } from "./utils";
 
 const dealProgramCards = (
@@ -29,6 +29,10 @@ const dealProgramCards = (
     poweringDownNextTurn,
     finishedProgrammingPlayers,
   } = gameState;
+
+  // 00. Increment the turn number and set turn phase to 0
+  gameState.turn = gameState.turn + 1;
+  gameState.turnPhase = TURN_PHASES.dealCards;
 
   // 05. Power down robots.
   poweringDownNextTurn.forEach((decision) => {
