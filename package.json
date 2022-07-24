@@ -4,7 +4,7 @@
   "description": "Based on a board game.",
   "main": "./dist-back/main.js",
   "scripts": {
-    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha --require ts-node/register **/*.spec.cjs",
+    "test": "ts-mocha -p tsconfig.base.json **/*.spec.ts",
     "once": "NODE_ENV=development rm -rf ./dist-* && tsc --build ./src-back/tsconfig.json",
     "dev-back": "NODE_ENV=development tsc --build ./src-back/tsconfig.json --watch & nodemon --config nodemon.main.json ./dist-back/main.js",
     "dev-front": "NODE_ENV=development nodemon --config nodemon.front.json ./esbuild.dev.config.js",
@@ -51,7 +51,8 @@
     "@types/compression": "^1.7.2",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
-    "@types/node": "^17.0.39",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^17.0.45",
     "@types/react": "^18.0.11",
     "@types/styled-components": "^5.1.25",
     "@types/ws": "^8.5.3",
@@ -61,7 +62,7 @@
     "mocha": "^10.0.0",
     "nodemon": "^2.0.16",
     "prettier": "2.7.1",
-    "ts-node": "^10.8.2"
+    "ts-mocha": "^10.0.0"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

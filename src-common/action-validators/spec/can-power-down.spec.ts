@@ -1,5 +1,6 @@
-const assert = require("node:assert/strict");
-const { canPowerDownRobot } = require("../can-power-down");
+import assert from "node:assert/strict";
+import { MainGameState } from "src-common/game-types";
+import { canPowerDownRobot } from "../can-power-down";
 
 describe("Can power down Action validator", () => {
   it("should return true if your robot is damaged and all robots are fully programmed", (done) => {
@@ -24,7 +25,7 @@ describe("Can power down Action validator", () => {
             facing: "up",
           },
           archiveMarkerId: 2,
-          design: "outset",
+          design: 0,
         },
         {
           playerId: playerId2,
@@ -38,10 +39,10 @@ describe("Can power down Action validator", () => {
             facing: "up",
           },
           archiveMarkerId: 3,
-          design: "double",
+          design: 1,
         },
       ],
-    };
+    } as unknown as MainGameState;
 
     const result = canPowerDownRobot(playerId, gameState);
     assert.strictEqual(result.canPerform, true);
@@ -88,7 +89,7 @@ describe("Can power down Action validator", () => {
           design: "double",
         },
       ],
-    };
+    } as unknown as MainGameState;
 
     const result = canPowerDownRobot(playerId1, gameState);
     assert.strictEqual(result.canPerform, false);
@@ -135,7 +136,7 @@ describe("Can power down Action validator", () => {
           design: "double",
         },
       ],
-    };
+    } as unknown as MainGameState;
 
     const result = canPowerDownRobot(playerId1, gameState);
     assert.strictEqual(result.canPerform, false);
@@ -182,7 +183,7 @@ describe("Can power down Action validator", () => {
           design: "double",
         },
       ],
-    };
+    } as unknown as MainGameState;
 
     const result = canPowerDownRobot(playerId, gameState);
     assert.strictEqual(result.canPerform, false);
@@ -228,7 +229,7 @@ describe("Can power down Action validator", () => {
           archiveMarkerId: 3,
         },
       ],
-    };
+    } as unknown as MainGameState;
 
     const result = canPowerDownRobot(playerId, gameState);
     assert.strictEqual(result.canPerform, false);
@@ -275,7 +276,7 @@ describe("Can power down Action validator", () => {
           design: "double",
         },
       ],
-    };
+    } as unknown as MainGameState;
 
     const result = canPowerDownRobot(playerId, gameState);
     assert.strictEqual(result.canPerform, false);

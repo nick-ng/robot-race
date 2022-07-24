@@ -106,6 +106,7 @@ const finishSettingRegisters = (
     ]);
   }
 
+  gameState.poweringDownNextTurn = [];
   gameState.robots.forEach((robot) => {
     if (robot.damagePoints === 0) {
       gameState.poweringDownNextTurn.push({
