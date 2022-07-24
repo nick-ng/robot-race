@@ -23,6 +23,11 @@ export interface FinishSettingRegistersAction extends BasicAction {
   type: "finish-setting-registers";
 }
 
+export interface ForceSetRegistersAction extends BasicAction {
+  type: "force-set-registers";
+  turn: number;
+}
+
 export interface PowerDownNextTurnAction extends BasicAction {
   type: "power-down-next-turn";
   decision: "yes" | "no";
@@ -49,6 +54,7 @@ export type GameAction =
   | DealProgramCardsAction
   | SetRegisterAction
   | FinishSettingRegistersAction
+  | ForceSetRegistersAction
   | PowerDownNextTurnAction
   | ProcessRegisterAction
   | CleanUpAction

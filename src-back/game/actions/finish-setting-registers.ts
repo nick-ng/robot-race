@@ -5,7 +5,7 @@ import type {
 import type { ProgramCardInstruction } from "../../../dist-common/game-types";
 import canSubmitProgram from "../../../dist-common/action-validators/can-submit-program";
 
-import type Game from "../game-class";
+import Game, { TURN_PHASES } from "../game-class";
 
 const PROGRAM_REGISTER_COUNT = 5;
 
@@ -17,7 +17,7 @@ const finishSettingRegisters = (
   message: string;
   automaticAction?: AutomaticAction;
 } => {
-  const { gameState, playerSecrets, players, gameSecrets } = game;
+  const { gameState, playerSecrets, gameSecrets, gameSettings } = game;
   if (gameState.state !== "main") {
     return {
       game,
@@ -40,17 +40,60 @@ const finishSettingRegisters = (
 
   const { cardMap, robots, seatOrder } = gameState;
 
-  const nonOperatingRobots = robots.filter((r) => r.status !== "ok");
-  if (
-    gameState.finishedProgrammingPlayers.length + nonOperatingRobots.length <
-    players.length
-  ) {
+  const nonOperatingRobots = robots.filter(
+    (r) => !["ok", "powered-down"].includes(r.status)
+  );
+  const remainingPlayers = seatOrder.filter(
+    (id) =>
+      !gameState.finishedProgrammingPlayers.includes(id) &&
+      !nonOperatingRobots.map((r) => r.playerId).includes(id)
+  );
+  const okRobots = robots.filter((r) => "ok" === r.status);
+  if (remainingPlayers.length > 0) {
+    switch (gameSettings.timerStart) {
+      case "first":
+        if (remainingPlayers.length + 1 === okRobots.length) {
+          return {
+            game,
+            message: "OK",
+            automaticAction: {
+              action: {
+                playerId: "server",
+                type: "force-set-registers",
+                turn: gameState.turn,
+              },
+              delay: gameSettings.timerSeconds * 1000,
+            },
+          };
+        }
+        break;
+      case "penultimate":
+        if (remainingPlayers.length === 1) {
+          return {
+            game,
+            message: "OK",
+            automaticAction: {
+              action: {
+                playerId: "server",
+                type: "force-set-registers",
+                turn: gameState.turn,
+              },
+              delay: gameSettings.timerSeconds * 1000,
+            },
+          };
+        }
+        break;
+      case "never":
+      default:
+    }
+
     return {
       game,
       message: "OK",
     };
   }
 
+  gameState.turnPhase = TURN_PHASES.processRegisters;
   gameSecrets.instructionQueue = [];
 
   for (let register = 0; register < PROGRAM_REGISTER_COUNT; register++) {
