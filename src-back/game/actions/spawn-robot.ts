@@ -19,7 +19,7 @@ const spawnRobot = (
     };
   }
 
-  const { robots, seatOrder } = gameState;
+  const { robots, seatOrder, finishedProgrammingPlayers } = gameState;
   const { playerId, facing, x, y, powerDown } = action;
 
   const { canPerform, message } = canSpawnRobot(playerId, robots, seatOrder);
@@ -78,6 +78,7 @@ const spawnRobot = (
   robot.lives = robot.lives - 1;
   if (powerDown) {
     setRobotDamage(robot, 0);
+    finishedProgrammingPlayers.push(robot.playerId);
   }
 
   if (robots.filter((r) => r.status === "stand-by").length <= 0) {
