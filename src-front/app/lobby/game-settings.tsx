@@ -17,11 +17,7 @@ const StyledGameSettings = styled.div`
   }
 `;
 
-const TimerStartSelect = styled.select`
-  &:disabled {
-    cursor: wait;
-  }
-`;
+const TimerStartSelect = styled.select``;
 
 const SliderCell = styled.td`
   display: flex;
@@ -46,9 +42,15 @@ export default function GameSettings({
   gameData,
   playerDetails,
 }: GameSettingsProps) {
-  const { gameSettings } = gameData;
+  const { gameSettings, host } = gameData;
   const [timerSeconds, setTimerSeconds] = useState(gameSettings.timerSeconds);
   const [timerStartLoading, setTimerStartLoading] = useState(false);
+
+  const isHost = playerDetails.playerId === host;
+
+  useEffect(() => {
+    setTimerSeconds(gameSettings.timerSeconds);
+  }, [gameSettings.timerSeconds]);
 
   return (
     <StyledGameSettings>
@@ -59,9 +61,12 @@ export default function GameSettings({
             <td>Timer Start</td>
             <td>
               <TimerStartSelect
-                disabled={timerStartLoading}
+                disabled={!isHost || timerStartLoading}
                 value={gameSettings.timerStart}
                 onChange={async (e) => {
+                  if (!isHost) {
+                    return;
+                  }
                   setTimerStartLoading(true);
                   await fetch(`${API_ORIGIN}/api/game/${gameData.id}`, {
                     method: "POST",
@@ -93,6 +98,7 @@ export default function GameSettings({
             <td>Timer Duration</td>
             <SliderCell>
               <DebouncedRange
+                disabled={!isHost}
                 min={10}
                 max={180}
                 value={gameSettings.timerSeconds}

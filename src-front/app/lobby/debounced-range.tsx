@@ -8,6 +8,7 @@ interface DebouncedRangeProps {
   onChange: (_: number) => void | Promise<void>;
   onChangeDebounced: (_: number) => void | Promise<void>;
   debounceMs?: number;
+  disabled: boolean;
 }
 
 export default function DebouncedRange({
@@ -18,6 +19,7 @@ export default function DebouncedRange({
   onChange,
   onChangeDebounced,
   debounceMs,
+  disabled,
 }: DebouncedRangeProps) {
   const [tempValue, setTempValue] = useState(value);
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -40,6 +42,10 @@ export default function DebouncedRange({
       max={max}
       value={tempValue}
       onChange={(e) => {
+        if (disabled) {
+          return;
+        }
+
         const newValue = parseInt(e.target.value, 10);
         setTempValue(newValue);
         onChange(newValue);
