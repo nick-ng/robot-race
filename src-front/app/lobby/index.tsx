@@ -20,7 +20,11 @@ const StyledLobby = styled.div`
   justify-content: flex-start;
 `;
 
-const Column = styled.div``;
+const Column = styled.div`
+  & + & {
+    margin-left: 1em;
+  }
+`;
 
 const Details = styled.details`
   margin: 1em 0;

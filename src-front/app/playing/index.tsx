@@ -123,8 +123,8 @@ export default function Playing({
               <hr />
               {robot.status === "powered-down" && (
                 <BigMessage>
-                  Your robot is powered down. Waiting for other players to
-                  finish their turns.
+                  Your robot is busy repairing itself and cannot do anything
+                  else. Waiting for other players to finish their turns.
                 </BigMessage>
               )}
               {!robots.some((r) => r.status === "stand-by") && (
