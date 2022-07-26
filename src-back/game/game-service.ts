@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import type { GameData } from "../../dist-common/game-types";
+import type { GameData, GameSettings } from "../../dist-common/game-types";
 import type {
   GameAction,
   ActionIncomingMessageObject,
@@ -48,6 +48,31 @@ export const joinGame = async (
       message: result.message,
     };
   }
+
+  saveGame(game.getGameData());
+
+  return {
+    code: 200,
+    gameData: game.getGameDataForPlayer(playerId, playerPassword),
+  };
+};
+
+export const changeGameSettings = async (
+  gameId: string,
+  playerId: string,
+  playerPassword: string,
+  someGameSettings: Partial<GameSettings>
+) => {
+  const game = await findGame(gameId);
+  if (!game) {
+    return { code: 404 };
+  }
+
+  if (!game.isHost(playerId, playerPassword)) {
+    return { code: 400 };
+  }
+
+  game.gameSettings = { ...game.gameSettings, ...someGameSettings };
 
   saveGame(game.getGameData());
 

@@ -4,6 +4,7 @@ import { getFullId } from "./game-redis";
 import {
   newGame,
   joinGame,
+  changeGameSettings,
   getGame,
   startGame,
   stepGame,
@@ -101,10 +102,10 @@ router.post("/", async (req, res, _next) => {
   }
 });
 
-// Game actions - including join
+// Game actions - including join, including settings
 router.post("/:gameId", async (req, res, _next) => {
   const { gameId } = req.params;
-  const { action, playerName } = req.body;
+  const { action, playerName, gameSettings } = req.body;
   const { "x-player-id": playerId, "x-player-password": playerPassword } =
     req.headers;
 
@@ -132,6 +133,29 @@ router.post("/:gameId", async (req, res, _next) => {
             return;
           case 400:
             res.status(400).json({ message });
+            return;
+          default:
+            res.sendStatus(code);
+            return;
+        }
+      } catch (e) {
+        console.error(e);
+        res.sendStatus(500);
+      }
+    case "game-settings":
+      try {
+        const { code, gameData } = await changeGameSettings(
+          gameId,
+          playerId,
+          playerPassword,
+          gameSettings
+        );
+        switch (code) {
+          case 200:
+            res.json({
+              message: "OK",
+              gameData,
+            });
             return;
           default:
             res.sendStatus(code);
