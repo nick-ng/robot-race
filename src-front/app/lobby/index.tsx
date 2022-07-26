@@ -125,7 +125,7 @@ export default function Lobby({ gameData, playerDetails }: LobbyProps) {
         </ul>
       </Column>
       <Column>
-        <GameSettings gameData={gameData} />
+        <GameSettings gameData={gameData} playerDetails={playerDetails} />
       </Column>
     </StyledLobby>
   );

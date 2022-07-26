@@ -17,6 +17,12 @@ const StyledGameSettings = styled.div`
   }
 `;
 
+const TimerStartSelect = styled.select`
+  &:disabled {
+    cursor: wait;
+  }
+`;
+
 const SliderCell = styled.td`
   display: flex;
   flex-direction: row;
@@ -27,13 +33,22 @@ const SliderCell = styled.td`
   }
 `;
 
+const SavingText = styled.span`
+  margin-left: 1em;
+`;
+
 interface GameSettingsProps {
   gameData: PlayerGameData;
+  playerDetails: PlayerDetails;
 }
 
-export default function GameSettings({ gameData }: GameSettingsProps) {
+export default function GameSettings({
+  gameData,
+  playerDetails,
+}: GameSettingsProps) {
   const { gameSettings } = gameData;
   const [timerSeconds, setTimerSeconds] = useState(gameSettings.timerSeconds);
+  const [timerStartLoading, setTimerStartLoading] = useState(false);
 
   return (
     <StyledGameSettings>
@@ -43,7 +58,26 @@ export default function GameSettings({ gameData }: GameSettingsProps) {
           <tr>
             <td>Timer Start</td>
             <td>
-              <select>
+              <TimerStartSelect
+                disabled={timerStartLoading}
+                value={gameSettings.timerStart}
+                onChange={async (e) => {
+                  setTimerStartLoading(true);
+                  await fetch(`${API_ORIGIN}/api/game/${gameData.id}`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json;charset=utf-8",
+                      "x-player-id": playerDetails.playerId,
+                      "x-player-password": playerDetails.playerPassword,
+                    },
+                    body: JSON.stringify({
+                      action: "game-settings",
+                      gameSettings: { timerStart: e.target.value },
+                    }),
+                  });
+                  setTimerStartLoading(false);
+                }}
+              >
                 <option value="first">
                   After the first player submits their program
                 </option>
@@ -51,7 +85,8 @@ export default function GameSettings({ gameData }: GameSettingsProps) {
                   When only one player hasn't submitted their program
                 </option>
                 <option value="never">Don't use a timer</option>
-              </select>
+              </TimerStartSelect>
+              {timerStartLoading && <SavingText>Saving...</SavingText>}
             </td>
           </tr>
           <tr>
@@ -61,8 +96,19 @@ export default function GameSettings({ gameData }: GameSettingsProps) {
                 min={10}
                 max={180}
                 value={gameSettings.timerSeconds}
-                onDebouncedChange={(value) => {
-                  console.log("Timer Duration", value);
+                onChangeDebounced={async (value) => {
+                  fetch(`${API_ORIGIN}/api/game/${gameData.id}`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json;charset=utf-8",
+                      "x-player-id": playerDetails.playerId,
+                      "x-player-password": playerDetails.playerPassword,
+                    },
+                    body: JSON.stringify({
+                      action: "game-settings",
+                      gameSettings: { timerSeconds: value },
+                    }),
+                  });
                 }}
                 onChange={(value) => {
                   setTimerSeconds(value);
@@ -70,7 +116,7 @@ export default function GameSettings({ gameData }: GameSettingsProps) {
               />{" "}
               <span>{timerSeconds} seconds</span>
               {gameSettings.timerSeconds !== timerSeconds && (
-                <span>Loading...</span>
+                <SavingText>Saving...</SavingText>
               )}
             </SliderCell>
           </tr>

@@ -142,6 +142,22 @@ export default class Game {
     };
   };
 
+  isHost = (playerId: string, playerPassword: string): boolean => {
+    if (playerId !== this.host) {
+      return false;
+    }
+
+    if (!playerPassword) {
+      return false;
+    }
+
+    if (this.playerSecrets[playerId]?.password === playerPassword) {
+      return true;
+    }
+
+    return false;
+  };
+
   addPlayer = (
     playerId: string,
     playerName: string,
