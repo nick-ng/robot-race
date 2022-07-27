@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import type { ProgramCard } from "dist-common/game-types";
 
-import { useOptions } from "../../hooks/options-context";
+import { useOptions } from "../../../hooks/options-context";
 
 type ProgramCardProps = BaseProgramCardProps &
   ({ card: ProgramCard; text?: never } | { text: string[]; card?: never });

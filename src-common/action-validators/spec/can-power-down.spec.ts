@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+import assert from "node:assert";
 import { MainGameState } from "src-common/game-types";
 import { canPowerDownRobot } from "../can-power-down";
 

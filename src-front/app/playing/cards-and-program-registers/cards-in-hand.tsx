@@ -1,12 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 
-import type { PlayerGameData, MainGameState } from "dist-common/game-types";
+import type {
+  PlayerGameData,
+  MainGameState,
+  OnePlayerSecrets,
+} from "dist-common/game-types";
 
 import ProgramCard from "./program-card";
 
 interface CardsInHandProps {
   gameData: PlayerGameData;
+  predictedCardsInHand?: OnePlayerSecrets["cardsInHand"];
   handleCardChoice: (cardId: string) => void;
   cardWidth?: number;
   isLoading?: boolean;
@@ -26,6 +31,7 @@ const Cards = styled.div<{ width: number }>`
 
 export default function CardsInHand({
   gameData,
+  predictedCardsInHand,
   handleCardChoice,
   isLoading,
   chosenCard,
@@ -39,7 +45,7 @@ export default function CardsInHand({
   return (
     <StyledCardsInHand className={className}>
       <Cards width={(cardWidth || 9) * 6}>
-        {cardsInHand
+        {(predictedCardsInHand || cardsInHand)
           .sort((a, b) => cardMap[b]?.priority - cardMap[a]?.priority)
           .map((cardId) => (
             <ProgramCard

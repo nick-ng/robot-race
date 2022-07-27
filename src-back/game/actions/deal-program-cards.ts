@@ -57,6 +57,7 @@ const dealProgramCards = (
   // Cards are supposed to be collected in an earlier step. Double check here.
   for (const entry of Object.entries(playerSecrets)) {
     const [playerId, player] = entry;
+    player.setRegisterTimestamp = player.setRegisterTimestamp + 1;
 
     // 11. Players' unused cards
     discardedCards.push(...player.cardsInHand);

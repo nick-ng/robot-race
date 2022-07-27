@@ -7,6 +7,7 @@ import type Game from "./game-class";
 import startGame from "./actions/start-game";
 import dealProgramCards from "./actions/deal-program-cards";
 import setRegister from "./actions/set-register";
+import setManyRegisters from "./actions/set-many-registers";
 import finishSettingRegisters from "./actions/finish-setting-registers";
 import forceSetRegisters from "./actions/force-set-registers";
 import powerDownNextTurn from "./actions/power-down-next-turn";
@@ -35,6 +36,8 @@ export const performAction = (
       return dealProgramCards(game, action);
     case "set-register":
       return setRegister(game, action);
+    case "set-many-registers":
+      return setManyRegisters(game, action);
     case "finish-setting-registers":
       return finishSettingRegisters(game, action);
     case "force-set-registers":

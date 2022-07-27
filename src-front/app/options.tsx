@@ -59,6 +59,16 @@ export default function Options() {
             />{" "}
             Smaller Priority Numbers First
           </label>
+          <label>
+            <input
+              checked={options.predictiveMode}
+              type="checkbox"
+              onChange={(e) => {
+                setOptions({ predictiveMode: e.target.checked });
+              }}
+            />{" "}
+            Predictive Register Setting
+          </label>
           <RobotColors />
         </OptionsMenu>
       </details>

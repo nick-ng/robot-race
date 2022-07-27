@@ -14,6 +14,7 @@ import { useOptions } from "../../hooks/options-context";
 import Map from "./map";
 import PlayerDisplay from "./player-display";
 import CardsAndProgramRegisters from "./cards-and-program-registers";
+import CardsAndProgramRegistersLockStep from "./cards-and-program-registers/lock-step";
 import RespawnMessage from "./respawn-message";
 import PowerDownControl from "./power-down-controls";
 import Instructions from "./instructions";
@@ -86,7 +87,7 @@ export default function Playing({
   const robot = robots.find((r) => r.playerId === playerId)!;
 
   const {
-    options: { colors },
+    options: { colors, predictiveMode },
   } = useOptions();
 
   return (
@@ -127,13 +128,20 @@ export default function Playing({
                   else. Waiting for other players to finish their turns.
                 </BigMessage>
               )}
-              {!robots.some((r) => r.status === "stand-by") && (
-                <CardsAndProgramRegisters
-                  gameData={gameData}
-                  playerDetails={playerDetails}
-                  sendViaWebSocket={sendViaWebSocket}
-                />
-              )}
+              {!robots.some((r) => r.status === "stand-by") &&
+                (predictiveMode ? (
+                  <CardsAndProgramRegisters
+                    gameData={gameData}
+                    playerDetails={playerDetails}
+                    sendViaWebSocket={sendViaWebSocket}
+                  />
+                ) : (
+                  <CardsAndProgramRegistersLockStep
+                    gameData={gameData}
+                    playerDetails={playerDetails}
+                    sendViaWebSocket={sendViaWebSocket}
+                  />
+                ))}
               <RespawnMessage
                 gameData={gameData}
                 playerDetails={playerDetails}

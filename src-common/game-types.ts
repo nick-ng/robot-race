@@ -131,6 +131,7 @@ export interface OnePlayerSecrets {
     string | null,
     string | null
   ];
+  setRegisterTimestamp: number;
   cardsInHand: string[];
 }
 

@@ -5,11 +5,13 @@ const OPTIONS_STORE = "ROBOT_RACE_OPTIONS";
 export interface Options {
   ping?: number;
   smallerPriorityFirst: boolean;
+  predictiveMode: boolean;
   colors: string[];
 }
 
 export const defaultOptions: Options = {
   smallerPriorityFirst: true,
+  predictiveMode: true,
   colors: ["#FF71CE", "#05FFA1", "#01CDFE", "#FFFB96"],
 };
 
