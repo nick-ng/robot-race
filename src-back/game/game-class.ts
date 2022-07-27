@@ -207,6 +207,7 @@ export default class Game {
       password: playerPassword,
       programRegisters: [null, null, null, null, null],
       cardsInHand: [],
+      setRegisterTimestamp: 0,
     };
 
     const existingRobots = this.gameState.robots.length;

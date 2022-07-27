@@ -1,5 +1,5 @@
-const assert = require("node:assert/strict");
-const { getCardMap } = require("../card-map");
+import assert from "node:assert";
+import { getCardMap } from "../card-map";
 
 describe("getCardMap", () => {
   it("should have the correct distribution of cards", (done) => {

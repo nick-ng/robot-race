@@ -1,4 +1,4 @@
-import type { Robot } from "./game-types";
+import type { Robot, OnePlayerSecrets } from "./game-types";
 
 interface BasicAction {
   playerId: string;
@@ -17,6 +17,13 @@ export interface SetRegisterAction extends BasicAction {
   type: "set-register";
   cardId: string | null;
   registerIndex: number;
+}
+
+export interface SetManyRegisterAction extends BasicAction {
+  type: "set-many-register";
+  programRegisters: OnePlayerSecrets["programRegisters"];
+  cardsInHand: OnePlayerSecrets["cardsInHand"];
+  setRegisterTimestamp: number;
 }
 
 export interface FinishSettingRegistersAction extends BasicAction {
@@ -53,6 +60,7 @@ export type GameAction =
   | StartAction
   | DealProgramCardsAction
   | SetRegisterAction
+  | SetManyRegisterAction
   | FinishSettingRegistersAction
   | ForceSetRegistersAction
   | PowerDownNextTurnAction
