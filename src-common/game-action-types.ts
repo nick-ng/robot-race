@@ -20,7 +20,7 @@ export interface SetRegisterAction extends BasicAction {
 }
 
 export interface SetManyRegisterAction extends BasicAction {
-  type: "set-many-register";
+  type: "set-many-registers";
   programRegisters: OnePlayerSecrets["programRegisters"];
   cardsInHand: OnePlayerSecrets["cardsInHand"];
   setRegisterTimestamp: number;

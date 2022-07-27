@@ -65,6 +65,8 @@ const forceSetRegisters = (
     const { programRegisters, cardsInHand } = currentPlayerSecrets;
     const shuffledCardsInHand = shuffle(cardsInHand);
 
+    currentPlayerSecrets.setRegisterTimestamp =
+      currentPlayerSecrets.setRegisterTimestamp + 1;
     programRegisters.forEach((register, i) => {
       if (typeof register === "string") {
         return;

@@ -13,7 +13,7 @@ describe("Set many registers action", () => {
   it("should let you update cards if you have them and you do it after the last set.", (done) => {
     const testGame = new Game(JSON.parse(JSON.stringify(gameData0)));
     const { message: message1 } = setManyRegisters(testGame, {
-      type: "set-many-register",
+      type: "set-many-registers",
       playerId: "c87fc696-4d44-4695-8939-de70de6a9d35",
       programRegisters: [
         "program-card-10",
@@ -57,7 +57,7 @@ describe("Set many registers action", () => {
     assert.strictEqual("OK", message1);
 
     const { message: message2 } = setManyRegisters(testGame, {
-      type: "set-many-register",
+      type: "set-many-registers",
       playerId: "c87fc696-4d44-4695-8939-de70de6a9d35",
       programRegisters: [
         "program-card-10",
@@ -110,7 +110,7 @@ describe("Set many registers action", () => {
   it("shouldn't let you update cards if the new timestamp is earlier.", (done) => {
     const testGame = new Game(JSON.parse(JSON.stringify(gameData0)));
     const { message: message1 } = setManyRegisters(testGame, {
-      type: "set-many-register",
+      type: "set-many-registers",
       playerId: "c87fc696-4d44-4695-8939-de70de6a9d35",
       programRegisters: [
         "program-card-10",
@@ -140,7 +140,7 @@ describe("Set many registers action", () => {
     assert.strictEqual("OK", message1);
 
     const { message: message2 } = setManyRegisters(testGame, {
-      type: "set-many-register",
+      type: "set-many-registers",
       playerId: "c87fc696-4d44-4695-8939-de70de6a9d35",
       programRegisters: [
         "program-card-10",
@@ -169,7 +169,7 @@ describe("Set many registers action", () => {
     assert.strictEqual("Skipping old action.", message2);
 
     const { message: message3 } = setManyRegisters(testGame, {
-      type: "set-many-register",
+      type: "set-many-registers",
       playerId: "c87fc696-4d44-4695-8939-de70de6a9d35",
       programRegisters: [
         "program-card-10",
@@ -203,7 +203,7 @@ describe("Set many registers action", () => {
   it("shouldn't let you update cards if you use cards you don't have.", (done) => {
     const testGame = new Game(JSON.parse(JSON.stringify(gameData0)));
     const { message: message1 } = setManyRegisters(testGame, {
-      type: "set-many-register",
+      type: "set-many-registers",
       playerId: "c87fc696-4d44-4695-8939-de70de6a9d35",
       programRegisters: [
         "program-card-10",
@@ -233,7 +233,7 @@ describe("Set many registers action", () => {
     assert.strictEqual("Incorrect cards in hand & registers.", message1);
 
     const { message: message2 } = setManyRegisters(testGame, {
-      type: "set-many-register",
+      type: "set-many-registers",
       playerId: "c87fc696-4d44-4695-8939-de70de6a9d35",
       programRegisters: [
         "program-card-10",
@@ -268,7 +268,7 @@ describe("Set many registers action", () => {
   it("shouldn't let you update cards if you use duplicate cards.", (done) => {
     const testGame = new Game(JSON.parse(JSON.stringify(gameData0)));
     const { message: message1 } = setManyRegisters(testGame, {
-      type: "set-many-register",
+      type: "set-many-registers",
       playerId: "c87fc696-4d44-4695-8939-de70de6a9d35",
       programRegisters: [
         "program-card-10",
@@ -298,7 +298,7 @@ describe("Set many registers action", () => {
     assert.strictEqual("Incorrect cards in hand & registers.", message1);
 
     const { message: message2 } = setManyRegisters(testGame, {
-      type: "set-many-register",
+      type: "set-many-registers",
       playerId: "c87fc696-4d44-4695-8939-de70de6a9d35",
       programRegisters: [
         "program-card-10",
@@ -328,7 +328,7 @@ describe("Set many registers action", () => {
     assert.strictEqual("Incorrect cards in hand & registers.", message2);
 
     const { message: message3 } = setManyRegisters(testGame, {
-      type: "set-many-register",
+      type: "set-many-registers",
       playerId: "c87fc696-4d44-4695-8939-de70de6a9d35",
       programRegisters: [
         "program-card-10",
@@ -363,7 +363,7 @@ describe("Set many registers action", () => {
   it("shouldn't let you update cards if you use too many cards.", (done) => {
     const testGame = new Game(JSON.parse(JSON.stringify(gameData0)));
     const { message: message1 } = setManyRegisters(testGame, {
-      type: "set-many-register",
+      type: "set-many-registers",
       playerId: "c87fc696-4d44-4695-8939-de70de6a9d35",
       programRegisters: [
         "program-card-10",

@@ -1,8 +1,8 @@
-import type { SetManyRegisterAction } from "../../../dist-common/game-action-types";
+import type { SetManyRegisterAction } from "dist-common/game-action-types";
 import { symmetricDifference } from "../../../dist-common/utils";
 import type Game from "../game-class";
 
-const setRegister = (
+const setManyRegisters = (
   game: Game,
   action: SetManyRegisterAction
 ): { game: Game; message: string } => {
@@ -88,4 +88,4 @@ const setRegister = (
   };
 };
 
-export default setRegister;
+export default setManyRegisters;

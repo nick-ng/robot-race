@@ -7,15 +7,16 @@ import type {
   MainGameState,
 } from "dist-common/game-types";
 import type { ActionIncomingMessageObject } from "dist-common/game-action-types";
-import canSetRegister from "dist-common/action-validators/can-set-register";
 import canSubmitProgram from "dist-common/action-validators/can-submit-program";
 
-import { wiggleAnimationMixin } from "../../animations/wiggle";
-import { useOptions } from "../../hooks/options-context";
+import setOneRegister from "./set-one-register";
+
+import { wiggleAnimationMixin } from "../../../animations/wiggle";
+import { useOptions } from "../../../hooks/options-context";
 
 import CardsInHand from "./cards-in-hand";
 import ProgramRegisters from "./program-registers";
-import { isTimerVisible } from "./utils";
+import { isTimerVisible } from "../utils";
 
 const StyledCardsAndProgramRegisters = styled.div`
   display: inline-block;
@@ -120,14 +121,25 @@ export default function CardsAndProgramRegisters({
   const { playerId, playerPassword } = playerDetails;
 
   const { id, yourSecrets, gameState, gameSettings } = gameData;
-  const { cardsInHand, programRegisters } = yourSecrets;
+  const {
+    cardsInHand: actualCardsInHand,
+    programRegisters: actualProgramRegisters,
+    setRegisterTimestamp: actualTimestamp,
+  } = yourSecrets;
+
   const { finishedProgrammingPlayers, robots, seatOrder } =
     gameState as MainGameState;
+  const [cardsInHand, setCardsInHand] = useState(actualCardsInHand);
+  const [programRegisters, setProgramRegisters] = useState(
+    actualProgramRegisters
+  );
+  const [timestamp, setTimestamp] = useState<number | null>(null);
 
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [selectedRegisterIndex, setSelectedRegisterIndex] = useState<
     number | null
   >(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const { options } = useOptions();
   const timerSound = useRef(new Audio("/timer.mp3")).current;
@@ -150,6 +162,16 @@ export default function CardsAndProgramRegisters({
     seatOrder,
     timerStart: gameSettings.timerStart,
   });
+
+  useEffect(() => {
+    if (timestamp === null || actualTimestamp > timestamp) {
+      setCardsInHand(actualCardsInHand);
+      setProgramRegisters(actualProgramRegisters);
+      if (actualTimestamp) {
+        setTimestamp(actualTimestamp);
+      }
+    }
+  }, [actualCardsInHand.join(","), actualProgramRegisters.join(",")]);
 
   useEffect(() => {
     if (showTimer) {
@@ -181,34 +203,33 @@ export default function CardsAndProgramRegisters({
 
   useEffect(() => {
     if (selectedCardId !== null && selectedRegisterIndex !== null) {
-      const { canPerform } = canSetRegister(
-        selectedCardId,
-        selectedRegisterIndex,
+      const payload = setOneRegister({
+        cardId: selectedCardId,
+        registerIndex: selectedRegisterIndex,
         cardsInHand,
         programRegisters,
-        robots.find((r) => r.playerId === playerId)!,
-        finishedProgrammingPlayers
-      );
-
-      if (!canPerform) {
-        setIsLoading(false);
-        setSelectedCardId(null);
-        return;
-      }
-
-      setIsLoading(true);
-      sendViaWebSocket({
-        playerId,
-        password: playerPassword,
-        gameId: id,
-        type: "action",
-        action: {
-          type: "set-register",
-          playerId,
-          cardId: selectedCardId,
-          registerIndex: selectedRegisterIndex,
-        },
+        robot: robots.find((r) => r.playerId === playerId)!,
+        finishedProgrammingPlayers,
       });
+
+      if (payload) {
+        sendViaWebSocket({
+          playerId,
+          password: playerPassword,
+          gameId: id,
+          type: "action",
+          action: {
+            type: "set-many-registers",
+            playerId,
+            ...payload,
+          },
+        });
+        setCardsInHand(payload.cardsInHand);
+        setProgramRegisters(payload.programRegisters);
+        setTimestamp(payload.setRegisterTimestamp);
+      } else {
+        setSelectedCardId(null);
+      }
     }
   }, [selectedCardId, selectedRegisterIndex]);
 
@@ -234,7 +255,11 @@ export default function CardsAndProgramRegisters({
   return (
     <StyledCardsAndProgramRegisters>
       <SubmitButton
-        disabled={!fullyProgrammed || youFinishedProgramming}
+        disabled={
+          !fullyProgrammed ||
+          youFinishedProgramming ||
+          timestamp !== actualTimestamp
+        }
         isLoading={isLoading}
         onClick={() => {
           if (!fullyProgrammed || youFinishedProgramming) {
@@ -257,7 +282,8 @@ export default function CardsAndProgramRegisters({
       </SubmitButton>
       <Heading>
         Registers ({programRegisters.filter((a) => a).length}/
-        {programRegisters.length} Set)
+        {programRegisters.length} Set){" "}
+        {timestamp !== actualTimestamp && <span> - Saving...</span>}
       </Heading>
       <StyledProgramRegisters
         cardWidth={6}
@@ -266,6 +292,7 @@ export default function CardsAndProgramRegisters({
           youFinishedProgramming ? [0, 1, 2, 3, 4] : robot.lockedRegisters
         }
         gameData={gameData}
+        predictedProgramRegisters={programRegisters}
         handleRegisterSelect={(registerIndex) => {
           if (isLoading) {
             return;
@@ -274,19 +301,31 @@ export default function CardsAndProgramRegisters({
             selectedRegisterIndex === registerIndex &&
             programRegisters[registerIndex] !== null
           ) {
-            setIsLoading(true);
-            sendViaWebSocket({
-              playerId,
-              password: playerPassword,
-              gameId: id,
-              type: "action",
-              action: {
-                type: "set-register",
-                playerId,
-                cardId: null,
-                registerIndex: selectedRegisterIndex,
-              },
+            const payload = setOneRegister({
+              cardId: selectedCardId,
+              registerIndex: selectedRegisterIndex,
+              cardsInHand,
+              programRegisters,
+              robot: robots.find((r) => r.playerId === playerId)!,
+              finishedProgrammingPlayers,
             });
+
+            if (payload) {
+              sendViaWebSocket({
+                playerId,
+                password: playerPassword,
+                gameId: id,
+                type: "action",
+                action: {
+                  type: "set-many-registers",
+                  playerId,
+                  ...payload,
+                },
+              });
+              setCardsInHand(payload.cardsInHand);
+              setProgramRegisters(payload.programRegisters);
+              setTimestamp(payload.setRegisterTimestamp);
+            }
             return;
           }
           setSelectedRegisterIndex(registerIndex);
@@ -310,6 +349,7 @@ export default function CardsAndProgramRegisters({
             cardWidth={5}
             isLoading={isLoading}
             gameData={gameData}
+            predictedCardsInHand={cardsInHand}
             handleCardChoice={(cardId) => {
               if (isLoading) {
                 return;

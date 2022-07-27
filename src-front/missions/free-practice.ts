@@ -22,6 +22,7 @@ export const getMissionData = (
         password: playerId,
         programRegisters: [null, null, null, null, null],
         cardsInHand: [],
+        setRegisterTimestamp: 0,
       },
     },
     gameSecrets: {
