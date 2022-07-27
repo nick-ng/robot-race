@@ -11,7 +11,7 @@ import ProgramCard from "./program-card";
 
 interface CardsInHandProps {
   gameData: PlayerGameData;
-  predictedCardsInHand: OnePlayerSecrets["cardsInHand"];
+  predictedCardsInHand?: OnePlayerSecrets["cardsInHand"];
   handleCardChoice: (cardId: string) => void;
   cardWidth?: number;
   isLoading?: boolean;
@@ -38,13 +38,14 @@ export default function CardsInHand({
   cardWidth,
   className,
 }: CardsInHandProps) {
-  const { gameState } = gameData;
+  const { gameState, yourSecrets } = gameData;
+  const { cardsInHand } = yourSecrets;
   const { cardMap } = gameState as MainGameState;
 
   return (
     <StyledCardsInHand className={className}>
       <Cards width={(cardWidth || 9) * 6}>
-        {predictedCardsInHand
+        {(predictedCardsInHand || cardsInHand)
           .sort((a, b) => cardMap[b]?.priority - cardMap[a]?.priority)
           .map((cardId) => (
             <ProgramCard

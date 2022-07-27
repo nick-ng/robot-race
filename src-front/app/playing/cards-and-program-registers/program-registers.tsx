@@ -11,7 +11,7 @@ import ProgramCard from "./program-card";
 
 interface ProgramRegistersProps {
   gameData: PlayerGameData;
-  predictedProgramRegisters: OnePlayerSecrets["programRegisters"];
+  predictedProgramRegisters?: OnePlayerSecrets["programRegisters"];
   handleRegisterSelect: (registerIndex: number) => void;
   isLoading?: boolean;
   lockedRegisters: number[];
@@ -37,13 +37,14 @@ export default function ProgramRegisters({
   cardWidth,
   className,
 }: ProgramRegistersProps) {
-  const { gameState } = gameData;
+  const { gameState, yourSecrets } = gameData;
+  const { programRegisters } = yourSecrets;
   const { cardMap } = gameState as MainGameState;
 
   return (
     <StyledProgramRegisters className={className}>
       <Cards>
-        {predictedProgramRegisters.map((register, i) => {
+        {(predictedProgramRegisters || programRegisters).map((register, i) => {
           const isLocked = lockedRegisters.includes(i);
           if (register) {
             const card = cardMap[register];
