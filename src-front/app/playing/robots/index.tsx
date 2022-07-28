@@ -17,6 +17,11 @@ export default function Robots({ gameData, playerDetails }: RobotsProps) {
   const { gameState, players } = gameData;
   const { robots } = gameState as MainGameState;
 
+  const shotsFired = robots.some((r) => r.laser);
+  if (shotsFired) {
+    console.log("A robot is shooting");
+  }
+
   return (
     <>
       {robots

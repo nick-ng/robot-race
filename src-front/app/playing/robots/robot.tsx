@@ -132,7 +132,7 @@ const facingMap = {
 };
 
 export default function Robot({ name, robot, isPlayer }: RobotProps) {
-  const { position, design, status, damagePoints } = robot;
+  const { position, design, status, damagePoints, laser } = robot;
 
   const {
     options: { colors },

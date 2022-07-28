@@ -84,6 +84,10 @@ export const shootRobotLasers = (
       if (targetRobot) {
         shotsFired = true;
         damageRobot(targetRobot);
+        robot.laser = {
+          height: robot.position.y - targetRobot.position.y,
+          width: robot.position.x - targetRobot.position.x,
+        };
       }
     }
   }

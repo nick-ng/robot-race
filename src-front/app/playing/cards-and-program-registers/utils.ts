@@ -15,7 +15,7 @@ type SetOneCardParams = {
   finishedProgrammingPlayers: MainGameState["finishedProgrammingPlayers"];
 };
 
-const setOneRegister = ({
+export const setOneRegister = ({
   cardId,
   registerIndex,
   cardsInHand,
@@ -58,4 +58,19 @@ const setOneRegister = ({
   };
 };
 
-export default setOneRegister;
+export const sortAndFilter = (
+  array1: (string | null)[],
+  array2: (string | null)[]
+): string[] => {
+  return (array1.concat(array2).filter((a) => a) as string[]).sort((a, b) =>
+    a.localeCompare(b)
+  );
+};
+
+export const areArraysSame = (array1: string[], array2: string[]): boolean => {
+  const difference = array1
+    .filter((x) => !array2.includes(x))
+    .concat(array2.filter((x) => !array1.includes(x)));
+
+  return difference.length === 0;
+};

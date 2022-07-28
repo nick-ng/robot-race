@@ -192,7 +192,7 @@ export const stepGame = (
 ): { gameData: GameData; automaticAction?: AutomaticAction } => {
   const game = new Game(gameData);
 
-  const { automaticAction } = playGame(
+  const { message, automaticAction } = playGame(
     game,
     {
       playerId: action.playerId,
@@ -203,6 +203,8 @@ export const stepGame = (
     },
     (_nextAction) => {}
   );
+
+  console.log("message", message);
 
   return { gameData: game.getGameData(), automaticAction };
 };
