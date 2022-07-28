@@ -9,7 +9,7 @@ import type {
 import type { ActionIncomingMessageObject } from "dist-common/game-action-types";
 import canSubmitProgram from "dist-common/action-validators/can-submit-program";
 
-import setOneRegister from "./set-one-register";
+import { setOneRegister, sortAndFilter, areArraysSame } from "./utils";
 
 import { wiggleAnimationMixin } from "../../../animations/wiggle";
 import { useOptions } from "../../../hooks/options-context";
@@ -163,15 +163,19 @@ export default function CardsAndProgramRegisters({
     timerStart: gameSettings.timerStart,
   });
 
+  const actualCards = sortAndFilter(actualCardsInHand, actualProgramRegisters);
+  const predictedCards = sortAndFilter(cardsInHand, programRegisters);
+  const cardsAreSame = areArraysSame(actualCards, predictedCards);
+
   useEffect(() => {
-    if (timestamp === null || actualTimestamp > timestamp) {
+    if (!cardsAreSame) {
       setCardsInHand(actualCardsInHand);
       setProgramRegisters(actualProgramRegisters);
       if (actualTimestamp) {
         setTimestamp(actualTimestamp);
       }
     }
-  }, [actualCardsInHand.join(","), actualProgramRegisters.join(",")]);
+  }, [cardsAreSame]);
 
   useEffect(() => {
     if (showTimer) {

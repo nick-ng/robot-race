@@ -41,6 +41,10 @@ const processRegister = (
 
   let delay = 500;
 
+  robots.forEach((robot) => {
+    robot.laser = null;
+  });
+
   if (instructionItem.type === "program-card-instruction") {
     const { playerId, payload } = instructionItem;
     const robot = robots.find((r) => r.playerId === playerId)!;
@@ -83,7 +87,7 @@ const processRegister = (
         const shotsFired = shootRobotLasers(robots, map.items);
         destroyRobots(robots);
         if (shotsFired) {
-          delay = 400;
+          delay = 600;
         }
         break;
       case "touch-checkpoint-instruction":

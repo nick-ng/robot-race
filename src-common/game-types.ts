@@ -54,6 +54,10 @@ export interface Robot {
     | "double"
     | "ridge"
     | "outset";
+  laser?: {
+    height: number;
+    width: number;
+  } | null;
 }
 
 export interface ProgramCardInstruction {

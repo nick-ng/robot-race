@@ -6,6 +6,7 @@ import { positionToOffsets } from "../utils";
 import { useOptions } from "../../../hooks/options-context";
 
 import getBorderStyle from "./get-border-style";
+import getLaserStyle from "./get-laser-style";
 
 interface RobotProps {
   name?: string;
@@ -57,6 +58,15 @@ const ToolTip = styled.div`
     padding: 0.25em;
     background-color: #2f2f2f;
   }
+`;
+
+const LaserDiv = styled.div`
+  position: absolute;
+  content: "";
+  background-color: #ff0000;
+  margin: auto;
+  z-index: 1;
+  border-width: 2px;
 `;
 
 const RobotDiv = styled.div``;
@@ -132,7 +142,7 @@ const facingMap = {
 };
 
 export default function Robot({ name, robot, isPlayer }: RobotProps) {
-  const { position, design, status, damagePoints } = robot;
+  const { position, design, status, damagePoints, laser } = robot;
 
   const {
     options: { colors },
@@ -156,6 +166,7 @@ export default function Robot({ name, robot, isPlayer }: RobotProps) {
           left: offsets.x,
         }}
       >
+        <LaserDiv style={getLaserStyle(laser, 2.8, "vw")} />
         <RobotDiv
           style={{ transform: `rotate(${facingMap[position.facing]})` }}
         >

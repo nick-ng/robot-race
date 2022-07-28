@@ -67,7 +67,7 @@ export default function Options() {
                 setOptions({ predictiveMode: e.target.checked });
               }}
             />{" "}
-            Predictive Register Setting
+            Improve Register Setting Latency
           </label>
           <RobotColors />
         </OptionsMenu>
