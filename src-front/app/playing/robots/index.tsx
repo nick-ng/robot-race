@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import type {
   MainGameState,
   PlayerDetails,
   PlayerGameData,
 } from "dist-common/game-types";
+
+import { useOptions } from "../../../hooks/options-context";
 
 import Robot from "./robot";
 
@@ -16,11 +18,36 @@ interface RobotsProps {
 export default function Robots({ gameData, playerDetails }: RobotsProps) {
   const { gameState, players } = gameData;
   const { robots } = gameState as MainGameState;
+  const [prevShoot, setPrevShoot] = useState(false);
+  const utterance = useRef<SpeechSynthesisUtterance>(
+    new SpeechSynthesisUtterance("pew")
+  ).current;
 
-  const shotsFired = robots.some((r) => r.laser);
-  if (shotsFired) {
-    console.log("A robot is shooting");
-  }
+  const shoot = robots.some((r) => r.laser);
+
+  useEffect(() => {
+    const voices = window.speechSynthesis.getVoices();
+    let voice = voices.find((v) => v.default);
+    if (!voice) {
+      voice = voices[0];
+    }
+    utterance.volume = 0;
+    if (voice) {
+      utterance.voice = voice;
+      window.speechSynthesis.speak(utterance);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (shoot && !prevShoot) {
+      if (utterance.voice) {
+        utterance.volume = 0.5;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    setPrevShoot(shoot);
+  }, [shoot]);
 
   return (
     <>

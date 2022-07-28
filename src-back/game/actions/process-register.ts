@@ -87,7 +87,7 @@ const processRegister = (
         const shotsFired = shootRobotLasers(robots, map.items);
         destroyRobots(robots);
         if (shotsFired) {
-          delay = 400;
+          delay = 600;
         }
         break;
       case "touch-checkpoint-instruction":

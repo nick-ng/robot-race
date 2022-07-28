@@ -7,6 +7,7 @@ export interface Options {
   smallerPriorityFirst: boolean;
   predictiveMode: boolean;
   colors: string[];
+  preferredVoice?: string;
 }
 
 export const defaultOptions: Options = {
