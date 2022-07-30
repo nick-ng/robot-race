@@ -147,8 +147,6 @@ export default function MapEditor() {
   );
   const [importString, setImportString] = useState("");
 
-  console.log("extraOptions", extraOptions);
-
   useEffect(() => {
     if (chosenItem === "erase") {
       return;
