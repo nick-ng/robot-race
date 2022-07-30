@@ -147,6 +147,8 @@ export default function MapEditor() {
   );
   const [importString, setImportString] = useState("");
 
+  console.log("extraOptions", extraOptions);
+
   useEffect(() => {
     if (chosenItem === "erase") {
       return;
@@ -311,7 +313,7 @@ export default function MapEditor() {
                   <input
                     value={
                       (extraOptions as { tempFromDirection: string })
-                        .tempFromDirection
+                        .tempFromDirection || ""
                     }
                     type="string"
                     onChange={(e) => {

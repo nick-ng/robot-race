@@ -1,6 +1,10 @@
 import type { Map } from "../game-types";
 
 import riskyExchange from "./risky-exchange";
+import checkmate from "./checkmate";
+
+const loadMap = (filename: string) =>
+  JSON.parse(JSON.stringify(require(filename)));
 
 const mapStartingPositionsA = Object.freeze([
   { x: 5, y: 14 },
@@ -26,6 +30,8 @@ const mapStartingPositionsB = Object.freeze([
 
 export const getMap = (name: string): Map => {
   switch (name.toLowerCase()) {
+    case "checkmate":
+      return checkmate;
     case "risky exchange":
     default:
       return riskyExchange;
