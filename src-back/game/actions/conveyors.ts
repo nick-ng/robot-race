@@ -2,6 +2,7 @@ import {
   Robot,
   MapItem,
   StraightConveyorMapItem,
+  CurvedConveyorMapItem,
 } from "../../../dist-common/game-types";
 
 const movementDirectionMap = {
@@ -9,6 +10,29 @@ const movementDirectionMap = {
   right: { xd: 1, yd: 0 },
   down: { xd: 0, yd: 1 },
   left: { xd: -1, yd: 0 },
+} as const;
+
+const fromDirectionMap = {
+  up: "down",
+  right: "left",
+  down: "up",
+  left: "right",
+} as const;
+
+const clockwiseMap = {
+  direction: "fromDirection",
+  up: "right",
+  right: "down",
+  down: "left",
+  left: "up",
+} as const;
+
+const counterClockwiseMap = {
+  direction: "fromDirection",
+  up: "left",
+  right: "up",
+  down: "right",
+  left: "down",
 } as const;
 
 export const conveyorsMove = (
@@ -21,6 +45,7 @@ export const conveyorsMove = (
     playerId: r.playerId,
     x: r.position.x,
     y: r.position.y,
+    facing: r.position.facing,
   }));
 
   // 20. Move all temporary robots on conveyors minus walls
@@ -28,8 +53,9 @@ export const conveyorsMove = (
   for (const tempRobot of tempRobots) {
     const conveyorItem = mapItems.find(
       (mi) =>
-        mi.type === "straight-conveyor" &&
-        mi.speed >= minSpeed &&
+        ["straight-conveyor", "curved-conveyor"].includes(mi.type) &&
+        (mi as StraightConveyorMapItem | CurvedConveyorMapItem).speed >=
+          minSpeed &&
         mi.x === tempRobot.x &&
         mi.y === tempRobot.y
     ) as StraightConveyorMapItem | undefined;
@@ -38,6 +64,39 @@ export const conveyorsMove = (
       const { xd, yd } = movementDirectionMap[conveyorItem.direction];
       tempRobot.x = tempRobot.x + xd;
       tempRobot.y = tempRobot.y + yd;
+
+      const destinationConveyor = mapItems.find(
+        (mi) =>
+          ["curved-conveyor"].includes(mi.type) &&
+          mi.x === tempRobot.x &&
+          mi.y === tempRobot.y
+      ) as CurvedConveyorMapItem | undefined;
+
+      if (
+        destinationConveyor &&
+        destinationConveyor.fromDirection.includes(
+          fromDirectionMap[conveyorItem.direction]
+        )
+      ) {
+        const { direction } = destinationConveyor;
+        const isCounterClockwise =
+          counterClockwiseMap[direction] ===
+          fromDirectionMap[conveyorItem.direction];
+
+        const isClockwise =
+          clockwiseMap[direction] === fromDirectionMap[conveyorItem.direction];
+
+        if (isCounterClockwise) {
+          // fromDirection -> direction
+          tempRobot.facing = clockwiseMap[tempRobot.facing];
+        }
+
+        if (isClockwise) {
+          // fromDirection -> direction
+          tempRobot.facing = counterClockwiseMap[tempRobot.facing];
+        }
+      }
+
       maybeMovedRobots.push(tempRobot);
     }
   }
@@ -63,6 +122,7 @@ export const conveyorsMove = (
     if (robot) {
       robot.position.x = mr.x;
       robot.position.y = mr.y;
+      robot.position.facing = mr.facing;
     }
   });
 

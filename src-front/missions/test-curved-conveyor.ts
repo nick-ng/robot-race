@@ -6,17 +6,7 @@ import {
   getBaseGameState,
 } from "./0-base-mission";
 
-const remainingDeck: string[] = [
-  "program-card-79",
-  "program-card-70",
-  "program-card-75",
-  "program-card-63",
-  "program-card-58",
-  "program-card-56",
-  "program-card-53",
-  "program-card-68",
-  "program-card-54",
-];
+const remainingDeck: string[] = ["program-card-80"];
 
 const map: GameSettings["map"] = {
   name: "Unnamed",
@@ -139,7 +129,7 @@ export const getMissionData = (
           lives: 3,
           position: {
             x: 1,
-            y: 8,
+            y: 5,
             facing: "up",
           },
           archiveMarkerId: 0,
