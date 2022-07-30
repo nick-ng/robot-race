@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import {
+  CurvedConveyorMapItem,
   DockMapItem,
   FlagMapItem,
   Map,
@@ -89,7 +90,8 @@ const wallDirectionMap = {
 
 type ExtraOptions =
   | Partial<MapItemNoId>
-  | { direction?: "up" | "down" | "left" | "right" };
+  | { direction?: "up" | "down" | "left" | "right" }
+  | { tempDirection?: string };
 
 const getExtraOptions = (
   mapItems: MapItemNoId[],
@@ -114,6 +116,13 @@ const getExtraOptions = (
     case "straight-conveyor":
       return {
         direction: "up",
+        speed: 1,
+      };
+    case "curved-conveyor":
+      return {
+        direction: "up",
+        fromDirection: ["left"],
+        showStraignt: false,
         speed: 1,
       };
     case "wall":
@@ -244,11 +253,14 @@ export default function MapEditor() {
                   <option value="wall">Wall</option>
                   <option value="pit">Pit</option>
                   <option value="straight-conveyor">Straight Conveyor</option>
+                  <option value="curved-conveyor">Curved Conveyor</option>
                   <option value="repair">Repair</option>
                 </select>
               </td>
             </tr>
-            {["wall", "straight-conveyor"].includes(chosenItem) && (
+            {["wall", "straight-conveyor", "curved-conveyor"].includes(
+              chosenItem
+            ) && (
               <tr>
                 <td>Direction</td>
                 <td>
@@ -275,7 +287,7 @@ export default function MapEditor() {
                 </td>
               </tr>
             )}
-            {["straight-conveyor"].includes(chosenItem) && (
+            {["straight-conveyor", "curved-conveyor"].includes(chosenItem) && (
               <tr>
                 <td>Speed</td>
                 <td>
@@ -286,6 +298,45 @@ export default function MapEditor() {
                       setExtraOptions((prev) => ({
                         ...prev,
                         speed: parseInt(e.target.value, 10),
+                      }));
+                    }}
+                  />
+                </td>
+              </tr>
+            )}
+            {["curved-conveyor"].includes(chosenItem) && (
+              <tr>
+                <td>From (comma separated)</td>
+                <td>
+                  <input
+                    value={
+                      (extraOptions as { tempFromDirection: string })
+                        .tempFromDirection || ""
+                    }
+                    type="string"
+                    onChange={(e) => {
+                      setExtraOptions((prev) => ({
+                        ...prev,
+                        tempFromDirection: e.target.value,
+                      }));
+                    }}
+                  />
+                </td>
+              </tr>
+            )}
+            {["curved-conveyor"].includes(chosenItem) && (
+              <tr>
+                <td>Show Straight</td>
+                <td>
+                  <input
+                    checked={
+                      (extraOptions as { showStraight: boolean }).showStraight
+                    }
+                    type="checkbox"
+                    onChange={(e) => {
+                      setExtraOptions((prev) => ({
+                        ...prev,
+                        showStraignt: e.target.checked,
                       }));
                     }}
                   />
@@ -386,6 +437,37 @@ export default function MapEditor() {
                                 y,
                                 x1: x + xyd.xd,
                                 y1: y + xyd.yd,
+                              },
+                            ]);
+                          }
+
+                          if (chosenItem === "curved-conveyor") {
+                            const {
+                              tempFromDirection,
+                              ...remainingExtraOptions
+                            } = extraOptions as CurvedConveyorMapItem & {
+                              tempFromDirection: string;
+                            };
+
+                            const fromDirection = tempFromDirection
+                              .split(",")
+                              .map((a) => a.trim().toLowerCase()) as (
+                              | "up"
+                              | "down"
+                              | "left"
+                              | "right"
+                            )[];
+                            return prevItems.concat([
+                              {
+                                type: "curved-conveyor",
+                                ...(remainingExtraOptions as {
+                                  direction: "up" | "down" | "left" | "right";
+                                  showStraignt: boolean;
+                                  speed: 1 | 2;
+                                }),
+                                x,
+                                y,
+                                fromDirection,
                               },
                             ]);
                           }

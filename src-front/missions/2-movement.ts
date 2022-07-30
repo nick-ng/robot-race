@@ -37,6 +37,7 @@ export const getMissionData = (
         password: playerId,
         programRegisters: [null, null, null, null, null],
         cardsInHand: [],
+        setRegisterTimestamp: 0,
       },
     },
     gameSecrets: {
@@ -46,6 +47,8 @@ export const getMissionData = (
     },
     gameState: {
       state: "main",
+      turn: 0,
+      turnPhase: 0,
       seatOrder: [playerId],
       finishedProgrammingPlayers: [],
       poweringDownNextTurn: [],
@@ -91,6 +94,8 @@ export const getMissionData = (
         width: 3,
         height: 5,
       },
+      timerSeconds: 30,
+      timerStart: "never",
     },
     lastActionId: "0-0",
     gameServer: null,

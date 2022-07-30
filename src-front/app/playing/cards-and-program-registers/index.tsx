@@ -133,7 +133,7 @@ export default function CardsAndProgramRegisters({
   const [programRegisters, setProgramRegisters] = useState(
     actualProgramRegisters
   );
-  const [timestamp, setTimestamp] = useState<number | null>(null);
+  const [timestamp, setTimestamp] = useState(0);
 
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [selectedRegisterIndex, setSelectedRegisterIndex] = useState<
@@ -166,16 +166,17 @@ export default function CardsAndProgramRegisters({
   const actualCards = sortAndFilter(actualCardsInHand, actualProgramRegisters);
   const predictedCards = sortAndFilter(cardsInHand, programRegisters);
   const cardsAreSame = areArraysSame(actualCards, predictedCards);
+  const timestampIsNewer = actualTimestamp > timestamp;
 
   useEffect(() => {
-    if (!cardsAreSame) {
+    if (!cardsAreSame || timestampIsNewer) {
       setCardsInHand(actualCardsInHand);
       setProgramRegisters(actualProgramRegisters);
       if (actualTimestamp) {
         setTimestamp(actualTimestamp);
       }
     }
-  }, [cardsAreSame]);
+  }, [cardsAreSame, timestampIsNewer]);
 
   useEffect(() => {
     if (showTimer) {

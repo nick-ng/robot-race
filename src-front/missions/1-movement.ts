@@ -1,5 +1,10 @@
-import type { GameData } from "dist-common/game-types";
+import type { GameData, GameSettings } from "dist-common/game-types";
 import { getCardMap } from "dist-common/card-map";
+import {
+  getBaseGameData,
+  getBaseGameSettings,
+  getBaseGameState,
+} from "./0-base-mission";
 
 const remainingDeck: string[] = [
   "program-card-79",
@@ -13,6 +18,172 @@ const remainingDeck: string[] = [
   "program-card-54",
 ];
 
+const map: GameSettings["map"] = {
+  items: [
+    {
+      type: "dock",
+      number: 1,
+      x: 1,
+      y: 8,
+      id: 0,
+    },
+    {
+      type: "flag",
+      number: 1,
+      x: 1,
+      y: 2,
+      id: 1,
+    },
+    {
+      type: "wall",
+      x: 1,
+      y: 9,
+      x1: 1,
+      y1: 8,
+      id: 2,
+    },
+    {
+      type: "wall",
+      x: 1,
+      y: 0,
+      x1: 1,
+      y1: 1,
+      id: 3,
+    },
+    {
+      type: "wall",
+      x: 2,
+      y: 1,
+      x1: 1,
+      y1: 1,
+      id: 4,
+    },
+    {
+      type: "wall",
+      x: 2,
+      y: 2,
+      x1: 1,
+      y1: 2,
+      id: 5,
+    },
+    {
+      type: "wall",
+      x: 2,
+      y: 3,
+      x1: 1,
+      y1: 3,
+      id: 6,
+    },
+    {
+      type: "wall",
+      x: 2,
+      y: 4,
+      x1: 1,
+      y1: 4,
+      id: 7,
+    },
+    {
+      type: "wall",
+      x: 2,
+      y: 5,
+      x1: 1,
+      y1: 5,
+      id: 8,
+    },
+    {
+      type: "wall",
+      x: 2,
+      y: 6,
+      x1: 1,
+      y1: 6,
+      id: 9,
+    },
+    {
+      type: "wall",
+      x: 2,
+      y: 7,
+      x1: 1,
+      y1: 7,
+      id: 10,
+    },
+    {
+      type: "wall",
+      x: 2,
+      y: 8,
+      x1: 1,
+      y1: 8,
+      id: 11,
+    },
+    {
+      type: "wall",
+      x: 0,
+      y: 8,
+      x1: 1,
+      y1: 8,
+      id: 12,
+    },
+    {
+      type: "wall",
+      x: 0,
+      y: 7,
+      x1: 1,
+      y1: 7,
+      id: 13,
+    },
+    {
+      type: "wall",
+      x: 0,
+      y: 6,
+      x1: 1,
+      y1: 6,
+      id: 14,
+    },
+    {
+      type: "wall",
+      x: 0,
+      y: 5,
+      x1: 1,
+      y1: 5,
+      id: 15,
+    },
+    {
+      type: "wall",
+      x: 0,
+      y: 4,
+      x1: 1,
+      y1: 4,
+      id: 16,
+    },
+    {
+      type: "wall",
+      x: 0,
+      y: 3,
+      x1: 1,
+      y1: 3,
+      id: 17,
+    },
+    {
+      type: "wall",
+      x: 0,
+      y: 2,
+      x1: 1,
+      y1: 2,
+      id: 18,
+    },
+    {
+      type: "wall",
+      x: 0,
+      y: 1,
+      x1: 1,
+      y1: 1,
+      id: 19,
+    },
+  ],
+  name: "1: Movement",
+  width: 3,
+  height: 10,
+};
+
 export const getMissionData = (
   playerId: string
 ): {
@@ -21,35 +192,15 @@ export const getMissionData = (
   missionObjectives: string[];
   nextMission: string;
 } => {
-  const cardMap = getCardMap();
-  const discardedCards: string[] = Object.keys(cardMap).filter(
+  const discardedCards: string[] = Object.keys(getCardMap()).filter(
     (cardId) => !remainingDeck.includes(cardId)
   );
 
   const gameData: GameData = {
-    id: "1",
-    shortId: "1",
-    host: playerId,
-    maxPlayers: 8,
-    players: [{ id: playerId, name: "Practice Player" }],
-    playerSecrets: {
-      [playerId]: {
-        password: playerId,
-        programRegisters: [null, null, null, null, null],
-        cardsInHand: [],
-      },
-    },
-    gameSecrets: {
-      password: "server",
-      remainingDeck,
-      instructionQueue: [],
-    },
+    ...getBaseGameData(playerId, remainingDeck),
     gameState: {
-      state: "main",
-      seatOrder: [playerId],
-      finishedProgrammingPlayers: [],
-      poweringDownNextTurn: [],
-      flagsTouched: { [playerId]: 0 },
+      ...getBaseGameState(playerId),
+      discardedCards,
       robots: [
         {
           playerId: playerId,
@@ -66,179 +217,11 @@ export const getMissionData = (
           design: "outset",
         },
       ],
-      discardedCards,
-      cardMap,
     },
     gameSettings: {
-      map: {
-        items: [
-          {
-            type: "dock",
-            number: 1,
-            x: 1,
-            y: 8,
-            id: 0,
-          },
-          {
-            type: "flag",
-            number: 1,
-            x: 1,
-            y: 2,
-            id: 1,
-          },
-          {
-            type: "wall",
-            x: 1,
-            y: 9,
-            x1: 1,
-            y1: 8,
-            id: 2,
-          },
-          {
-            type: "wall",
-            x: 1,
-            y: 0,
-            x1: 1,
-            y1: 1,
-            id: 3,
-          },
-          {
-            type: "wall",
-            x: 2,
-            y: 1,
-            x1: 1,
-            y1: 1,
-            id: 4,
-          },
-          {
-            type: "wall",
-            x: 2,
-            y: 2,
-            x1: 1,
-            y1: 2,
-            id: 5,
-          },
-          {
-            type: "wall",
-            x: 2,
-            y: 3,
-            x1: 1,
-            y1: 3,
-            id: 6,
-          },
-          {
-            type: "wall",
-            x: 2,
-            y: 4,
-            x1: 1,
-            y1: 4,
-            id: 7,
-          },
-          {
-            type: "wall",
-            x: 2,
-            y: 5,
-            x1: 1,
-            y1: 5,
-            id: 8,
-          },
-          {
-            type: "wall",
-            x: 2,
-            y: 6,
-            x1: 1,
-            y1: 6,
-            id: 9,
-          },
-          {
-            type: "wall",
-            x: 2,
-            y: 7,
-            x1: 1,
-            y1: 7,
-            id: 10,
-          },
-          {
-            type: "wall",
-            x: 2,
-            y: 8,
-            x1: 1,
-            y1: 8,
-            id: 11,
-          },
-          {
-            type: "wall",
-            x: 0,
-            y: 8,
-            x1: 1,
-            y1: 8,
-            id: 12,
-          },
-          {
-            type: "wall",
-            x: 0,
-            y: 7,
-            x1: 1,
-            y1: 7,
-            id: 13,
-          },
-          {
-            type: "wall",
-            x: 0,
-            y: 6,
-            x1: 1,
-            y1: 6,
-            id: 14,
-          },
-          {
-            type: "wall",
-            x: 0,
-            y: 5,
-            x1: 1,
-            y1: 5,
-            id: 15,
-          },
-          {
-            type: "wall",
-            x: 0,
-            y: 4,
-            x1: 1,
-            y1: 4,
-            id: 16,
-          },
-          {
-            type: "wall",
-            x: 0,
-            y: 3,
-            x1: 1,
-            y1: 3,
-            id: 17,
-          },
-          {
-            type: "wall",
-            x: 0,
-            y: 2,
-            x1: 1,
-            y1: 2,
-            id: 18,
-          },
-          {
-            type: "wall",
-            x: 0,
-            y: 1,
-            x1: 1,
-            y1: 1,
-            id: 19,
-          },
-        ],
-        name: "1: Movement",
-        width: 3,
-        height: 10,
-      },
+      ...getBaseGameSettings(),
+      map,
     },
-    lastActionId: "0-0",
-    gameServer: null,
-    resumeAction: null,
   };
 
   return {
