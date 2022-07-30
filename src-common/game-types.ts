@@ -166,6 +166,14 @@ export interface StraightConveyorMapItem extends BasicMapItem {
   speed: 1 | 2;
 }
 
+export interface CurvedConveyorMapItem extends BasicMapItem {
+  type: "curved-conveyor";
+  direction: "up" | "down" | "left" | "right";
+  fromDirection: ("up" | "down" | "left" | "right")[];
+  showStraignt: boolean;
+  speed: 1 | 2;
+}
+
 export interface PitMapItem extends BasicMapItem {
   type: "pit";
 }
@@ -190,6 +198,7 @@ export type MapItemNoId =
   | FlagMapItem
   | WallMapItem
   | StraightConveyorMapItem
+  | CurvedConveyorMapItem
   | PitMapItem
   | GearMapItem
   | PusherMapItem
