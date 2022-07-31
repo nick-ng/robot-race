@@ -5,6 +5,7 @@ import {
   newGame,
   joinGame,
   changeGameSettings,
+  changeMap,
   getGame,
   startGame,
   stepGame,
@@ -105,7 +106,7 @@ router.post("/", async (req, res, _next) => {
 // Game actions - including join, including settings
 router.post("/:gameId", async (req, res, _next) => {
   const { gameId } = req.params;
-  const { action, playerName, gameSettings } = req.body;
+  const { action, playerName, gameSettings, mapName } = req.body;
   const { "x-player-id": playerId, "x-player-password": playerPassword } =
     req.headers;
 
@@ -149,6 +150,29 @@ router.post("/:gameId", async (req, res, _next) => {
           playerId,
           playerPassword,
           gameSettings
+        );
+        switch (code) {
+          case 200:
+            res.json({
+              message: "OK",
+              gameData,
+            });
+            return;
+          default:
+            res.sendStatus(code);
+            return;
+        }
+      } catch (e) {
+        console.error(e);
+        res.sendStatus(500);
+      }
+    case "change-map":
+      try {
+        const { code, gameData } = await changeMap(
+          gameId,
+          playerId,
+          playerPassword,
+          mapName
         );
         switch (code) {
           case 200:

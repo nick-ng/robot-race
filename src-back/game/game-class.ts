@@ -65,7 +65,7 @@ export default class Game {
       instructionQueue: [],
     };
 
-    const mapName = "Risky Exchange";
+    const mapName = "risky exchange";
 
     const temp: GameData = {
       maxPlayers: 8,

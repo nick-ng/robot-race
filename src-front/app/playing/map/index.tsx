@@ -66,19 +66,25 @@ interface MapProps {
   gameData: PlayerGameData;
   playerDetails: PlayerDetails;
   sendViaWebSocket: (messageObject: ActionIncomingMessageObject) => void;
+  maxDockBayDisplay?: number;
 }
 
 export default function Map({
   gameData,
   playerDetails,
   sendViaWebSocket,
+  maxDockBayDisplay,
 }: MapProps) {
   const { gameSettings } = gameData;
   const { map } = gameSettings;
 
   return (
     <StyledMap>
-      <Board map={map} cellSize={2.8} />
+      <Board
+        map={map}
+        cellSize={2.8}
+        maxDockBayDisplay={maxDockBayDisplay || 0}
+      />
       <Robots gameData={gameData} playerDetails={playerDetails} />
       <RobotSpawner
         gameData={gameData}

@@ -101,6 +101,7 @@ export default function Playing({
             gameData={gameData}
             playerDetails={playerDetails}
             sendViaWebSocket={sendViaWebSocket}
+            maxDockBayDisplay={0}
           />
           <PlayerDisplay gameData={gameData} playerDetails={playerDetails} />
         </DisplayArea>

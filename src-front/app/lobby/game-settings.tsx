@@ -3,6 +3,8 @@ import styled from "styled-components";
 
 import type { PlayerGameData, PlayerDetails } from "dist-common/game-types";
 
+import { mapList } from "../../../dist-common/maps";
+
 import DebouncedRange from "./debounced-range";
 
 declare const API_ORIGIN: string;
@@ -45,8 +47,13 @@ export default function GameSettings({
   const { gameSettings, host } = gameData;
   const [timerSeconds, setTimerSeconds] = useState(gameSettings.timerSeconds);
   const [timerStartLoading, setTimerStartLoading] = useState(false);
+  const [mapChoiceLoading, setMapChoiceLoading] = useState(false);
 
   const isHost = playerDetails.playerId === host;
+
+  const mapInfo = mapList.find(
+    (m) => m.mapName.toLowerCase() === gameSettings.map.name.toLowerCase()
+  );
 
   useEffect(() => {
     setTimerSeconds(gameSettings.timerSeconds);
@@ -83,13 +90,9 @@ export default function GameSettings({
                   setTimerStartLoading(false);
                 }}
               >
-                <option value="first">
-                  After the first player submits their program
-                </option>
-                <option value="penultimate">
-                  When only one player hasn't submitted their program
-                </option>
-                <option value="never">Don't use a timer</option>
+                <option value="first">After the first player</option>
+                <option value="penultimate">One player left</option>
+                <option value="never">No timer</option>
               </TimerStartSelect>
               {timerStartLoading && <SavingText>Saving...</SavingText>}
             </td>
@@ -130,6 +133,48 @@ export default function GameSettings({
             <td>Animation Speed</td>
             <td>Soon</td>
           </tr>
+          <tr>
+            <td>Map</td>
+            <td>
+              <select
+                disabled={!isHost || mapChoiceLoading}
+                value={mapInfo ? mapInfo.mapName : "risky exchange"}
+                onChange={async (e) => {
+                  console.log("e.target.value", e.target.value);
+                  if (!isHost) {
+                    return;
+                  }
+                  setMapChoiceLoading(true);
+                  await fetch(`${API_ORIGIN}/api/game/${gameData.id}`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json;charset=utf-8",
+                      "x-player-id": playerDetails.playerId,
+                      "x-player-password": playerDetails.playerPassword,
+                    },
+                    body: JSON.stringify({
+                      action: "change-map",
+                      mapName: e.target.value,
+                    }),
+                  });
+                  setMapChoiceLoading(false);
+                }}
+              >
+                {mapList.map((m) => (
+                  <option key={m.mapName} value={m.mapName}>
+                    {m.mapDisplayName}
+                  </option>
+                ))}
+              </select>
+            </td>
+          </tr>
+          {mapInfo &&
+            mapInfo.description.map((d) => (
+              <tr key={d[0]}>
+                <td>{d[0]}</td>
+                <td>{d[1]}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </StyledGameSettings>
