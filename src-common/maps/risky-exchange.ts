@@ -1076,6 +1076,41 @@ const items: MapItem[] = [
     y: 15,
     id: 135,
   },
+  {
+    type: "gear",
+    direction: "clockwise",
+    x: 10,
+    y: 1,
+    id: 136,
+  },
+  {
+    type: "gear",
+    direction: "clockwise",
+    x: 10,
+    y: 10,
+    id: 137,
+  },
+  {
+    type: "gear",
+    direction: "counter-clockwise",
+    x: 3,
+    y: 3,
+    id: 138,
+  },
+  {
+    type: "gear",
+    direction: "counter-clockwise",
+    x: 3,
+    y: 8,
+    id: 139,
+  },
+  {
+    type: "gear",
+    direction: "counter-clockwise",
+    x: 8,
+    y: 8,
+    id: 140,
+  },
 ];
 
 const riskyExchange: Map = {
