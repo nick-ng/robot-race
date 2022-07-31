@@ -68,7 +68,7 @@ export default function CurvedConveyor({ cellItems }: CurvedConveyorProps) {
 
   const imageUrl = [
     "/conveyor-",
-    speed,
+    speed === 2 ? 2 : 1,
     "-",
     showStraignt ? "d" : "",
     isCounterClockwise ? "l" : "",

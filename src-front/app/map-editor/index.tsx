@@ -90,7 +90,15 @@ const wallDirectionMap = {
 
 type ExtraOptions =
   | Partial<MapItemNoId>
-  | { direction?: "up" | "down" | "left" | "right" }
+  | {
+      direction?:
+        | "up"
+        | "down"
+        | "left"
+        | "right"
+        | "clockwise"
+        | "counter-clockwise";
+    }
   | { tempDirection?: string };
 
 const getExtraOptions = (
@@ -124,6 +132,10 @@ const getExtraOptions = (
         fromDirection: ["left"],
         showStraignt: false,
         speed: 1,
+      };
+    case "gear":
+      return {
+        direction: "clockwise",
       };
     case "wall":
       return {
@@ -254,6 +266,7 @@ export default function MapEditor() {
                   <option value="pit">Pit</option>
                   <option value="straight-conveyor">Straight Conveyor</option>
                   <option value="curved-conveyor">Curved Conveyor</option>
+                  <option value="gear">Gear</option>
                   <option value="repair">Repair</option>
                 </select>
               </td>
@@ -283,6 +296,29 @@ export default function MapEditor() {
                     <option value="down">Down</option>
                     <option value="left">Left</option>
                     <option value="right">Right</option>
+                  </select>
+                </td>
+              </tr>
+            )}
+            {["gear"].includes(chosenItem) && (
+              <tr>
+                <td>Direction</td>
+                <td>
+                  <select
+                    name="direction"
+                    onChange={(e) => {
+                      const newDirection = e.target.value as
+                        | "clockwise"
+                        | "counter-clockwise";
+
+                      setExtraOptions((prev) => ({
+                        ...prev,
+                        direction: newDirection,
+                      }));
+                    }}
+                  >
+                    <option value="clockwise">Clockwise</option>
+                    <option value="counter-clockwise">Counter Clockwise</option>
                   </select>
                 </td>
               </tr>

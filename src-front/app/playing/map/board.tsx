@@ -12,6 +12,7 @@ import StraightConveyor, {
   getStraightConveyorToolTip,
 } from "./straight-conveyor";
 import CurvedConveyor, { getCurvedConveyorToolTip } from "./curved-conveyor";
+import Gear, { getGearToolTip } from "./gear";
 
 export const MapCellToolTip = styled.div`
   z-index: 15;
@@ -68,10 +69,11 @@ export const getAllElements = (cellItems: MapItemNoId[]) =>
     .filter((a) => a)
     .map((text) => <MapCellItem key={text}>{text}</MapCellItem>)
     .concat([
-      <Dock key={`dock`} cellItems={cellItems} />,
-      <Repair key={`repair`} cellItems={cellItems} />,
-      <StraightConveyor key={`straight-conveyor`} cellItems={cellItems} />,
-      <CurvedConveyor key={`curved-conveyor`} cellItems={cellItems} />,
+      <Dock key="dock" cellItems={cellItems} />,
+      <Repair key="repair" cellItems={cellItems} />,
+      <StraightConveyor key="straight-conveyor" cellItems={cellItems} />,
+      <CurvedConveyor key="curved-conveyor" cellItems={cellItems} />,
+      <Gear key="gear" cellItems={cellItems} />,
     ]);
 
 export const getAllStyles = (cellItems: MapItemNoId[]) => ({
@@ -135,6 +137,7 @@ export default function Board({
                   getRepairToolTip(cellItems),
                   getStraightConveyorToolTip(cellItems),
                   getCurvedConveyorToolTip(cellItems),
+                  getGearToolTip(cellItems),
                   getWallToolTip(map.items, x, y),
                 ]),
                 `${x},${y}`,
