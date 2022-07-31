@@ -4,6 +4,7 @@ import QRCode from "react-qr-code";
 
 import type { PlayerGameData, PlayerDetails } from "dist-common/game-types";
 
+import Map from "../playing/map";
 import GameSettings from "./game-settings";
 
 declare const API_ORIGIN: string;
@@ -130,6 +131,14 @@ export default function Lobby({ gameData, playerDetails }: LobbyProps) {
       </Column>
       <Column>
         <GameSettings gameData={gameData} playerDetails={playerDetails} />
+      </Column>
+      <Column>
+        <Map
+          gameData={gameData}
+          playerDetails={playerDetails}
+          sendViaWebSocket={() => {}}
+          maxDockBayDisplay={players.length}
+        />
       </Column>
     </StyledLobby>
   );

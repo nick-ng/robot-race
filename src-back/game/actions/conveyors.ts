@@ -87,13 +87,11 @@ export const conveyorsMove = (
           clockwiseMap[direction] === fromDirectionMap[conveyorItem.direction];
 
         if (isCounterClockwise) {
-          // fromDirection -> direction
-          tempRobot.facing = clockwiseMap[tempRobot.facing];
+          tempRobot.facing = counterClockwiseMap[tempRobot.facing];
         }
 
         if (isClockwise) {
-          // fromDirection -> direction
-          tempRobot.facing = counterClockwiseMap[tempRobot.facing];
+          tempRobot.facing = clockwiseMap[tempRobot.facing];
         }
       }
 

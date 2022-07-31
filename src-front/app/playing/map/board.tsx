@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import type { Map, MapItemNoId } from "dist-common/game-types";
 
-import { getDockText } from "./dock";
+import Dock from "./dock";
 import { getFlagText, getFlagToolTip } from "./flag";
 import { getWallStyles, getWallToolTip } from "./wall";
 import { getPitStyles, getPitToolTip } from "./pit";
@@ -64,10 +64,11 @@ export const MapCellItem = styled.span`
 `;
 
 export const getAllElements = (cellItems: MapItemNoId[]) =>
-  [getFlagText(cellItems), getDockText(cellItems)]
+  [getFlagText(cellItems)]
     .filter((a) => a)
     .map((text) => <MapCellItem key={text}>{text}</MapCellItem>)
     .concat([
+      <Dock key={`dock`} cellItems={cellItems} />,
       <Repair key={`repair`} cellItems={cellItems} />,
       <StraightConveyor key={`straight-conveyor`} cellItems={cellItems} />,
       <CurvedConveyor key={`curved-conveyor`} cellItems={cellItems} />,
@@ -81,7 +82,7 @@ export const getAllStyles = (cellItems: MapItemNoId[]) => ({
 interface BoardProps {
   map: Omit<Map, "items"> & { items: MapItemNoId[] };
   cellSize: number;
-  showDocks?: boolean;
+  maxDockBayDisplay: number;
 }
 
 export const StyledBoard = styled.table<{ cellSize: number }>`
@@ -102,7 +103,11 @@ export const StyledBoard = styled.table<{ cellSize: number }>`
   }
 `;
 
-export default function Board({ map, cellSize, showDocks }: BoardProps) {
+export default function Board({
+  map,
+  cellSize,
+  maxDockBayDisplay,
+}: BoardProps) {
   return (
     <StyledBoard cellSize={cellSize}>
       <tbody>
@@ -114,7 +119,12 @@ export default function Board({ map, cellSize, showDocks }: BoardProps) {
               );
 
               const elements = getAllElements(
-                cellItems.filter((ci) => showDocks || ci.type !== "dock")
+                cellItems.filter((ci) => {
+                  if (ci.type === "dock" && ci.number <= maxDockBayDisplay) {
+                    return true;
+                  }
+                  return ci.type !== "dock";
+                })
               );
               const styles = getAllStyles(cellItems);
 

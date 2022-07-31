@@ -6,6 +6,7 @@ import type {
   AutomaticAction,
 } from "../../dist-common/game-action-types";
 
+import { getMap } from "../../dist-common/maps";
 import Game from "./game-class";
 import { saveGame, findGame, makeShortId, addAction } from "./game-redis";
 import { sendStartGameAction } from "./game-server";
@@ -73,6 +74,33 @@ export const changeGameSettings = async (
   }
 
   game.gameSettings = { ...game.gameSettings, ...someGameSettings };
+
+  saveGame(game.getGameData());
+
+  return {
+    code: 200,
+    gameData: game.getGameDataForPlayer(playerId, playerPassword),
+  };
+};
+
+export const changeMap = async (
+  gameId: string,
+  playerId: string,
+  playerPassword: string,
+  mapName: string
+) => {
+  const game = await findGame(gameId);
+  if (!game) {
+    return { code: 404 };
+  }
+
+  if (!game.isHost(playerId, playerPassword)) {
+    return { code: 400 };
+  }
+
+  const map = getMap(mapName);
+
+  game.gameSettings = { ...game.gameSettings, map };
 
   saveGame(game.getGameData());
 
