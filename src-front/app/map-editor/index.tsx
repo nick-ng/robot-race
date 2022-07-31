@@ -378,6 +378,34 @@ export default function MapEditor() {
                   ).direction;
                   const xyd = wallDirectionMap[direction];
 
+                  let extraExtra = {};
+
+                  if (chosenItem === "wall") {
+                    extraExtra = {
+                      x: 0,
+                      y: 0,
+                      x1: xyd.xd,
+                      y1: xyd.yd,
+                    };
+                  }
+
+                  if (chosenItem === "curved-conveyor") {
+                    const { tempFromDirection } =
+                      extraOptions as CurvedConveyorMapItem & {
+                        tempFromDirection: string;
+                      };
+
+                    const fromDirection =
+                      tempFromDirection
+                        ?.split(",")
+                        ?.map((a) => a.trim().toLowerCase()) ||
+                      ([] as ("up" | "down" | "left" | "right")[]);
+
+                    extraExtra = {
+                      fromDirection,
+                    };
+                  }
+
                   if (chosenItem !== "erase") {
                     chosenItemTexts =
                       chosenItem === "dock" ? (
@@ -391,20 +419,13 @@ export default function MapEditor() {
                         </MapCellItem>
                       ) : (
                         getAllElements([
-                          { type: chosenItem, ...extraOptions } as MapItemNoId,
+                          {
+                            type: chosenItem,
+                            ...extraOptions,
+                            ...extraExtra,
+                          } as MapItemNoId,
                         ])
                       );
-
-                    let extraExtra = {};
-
-                    if (chosenItem === "wall") {
-                      extraExtra = {
-                        x: 0,
-                        y: 0,
-                        x1: xyd.xd,
-                        y1: xyd.yd,
-                      };
-                    }
 
                     chosenItemStyles = getAllStyles([
                       {

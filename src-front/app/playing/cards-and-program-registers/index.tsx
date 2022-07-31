@@ -129,8 +129,10 @@ export default function CardsAndProgramRegisters({
 
   const { finishedProgrammingPlayers, robots, seatOrder } =
     gameState as MainGameState;
-  const [cardsInHand, setCardsInHand] = useState(actualCardsInHand);
-  const [programRegisters, setProgramRegisters] = useState(
+
+  const [predictedCardsInHand, setPredictedCardsInHand] =
+    useState(actualCardsInHand);
+  const [predictedProgramRegisters, setPredictedProgramRegisters] = useState(
     actualProgramRegisters
   );
   const [timestamp, setTimestamp] = useState(0);
@@ -147,11 +149,7 @@ export default function CardsAndProgramRegisters({
 
   const robot = robots.find((r) => r.playerId === playerDetails.playerId)!;
   const youFinishedProgramming = finishedProgrammingPlayers.includes(playerId);
-  const fullyProgrammed = canSubmitProgram(
-    playerId,
-    gameState,
-    programRegisters
-  ).canPerform;
+
   const actualTimerSeconds =
     gameSettings.timerSeconds - (options.ping || 0) / 2000;
 
@@ -164,14 +162,28 @@ export default function CardsAndProgramRegisters({
   });
 
   const actualCards = sortAndFilter(actualCardsInHand, actualProgramRegisters);
-  const predictedCards = sortAndFilter(cardsInHand, programRegisters);
+  const predictedCards = sortAndFilter(
+    predictedCardsInHand,
+    predictedProgramRegisters
+  );
   const cardsAreSame = areArraysSame(actualCards, predictedCards);
   const timestampIsNewer = actualTimestamp > timestamp;
 
+  const cardsInHand = cardsAreSame ? predictedCardsInHand : actualCardsInHand;
+  const programRegisters = cardsAreSame
+    ? predictedProgramRegisters
+    : actualProgramRegisters;
+
+  const fullyProgrammed = canSubmitProgram(
+    playerId,
+    gameState,
+    programRegisters
+  ).canPerform;
+
   useEffect(() => {
     if (!cardsAreSame || timestampIsNewer) {
-      setCardsInHand(actualCardsInHand);
-      setProgramRegisters(actualProgramRegisters);
+      setPredictedCardsInHand(actualCardsInHand);
+      setPredictedProgramRegisters(actualProgramRegisters);
       if (actualTimestamp) {
         setTimestamp(actualTimestamp);
       }
@@ -229,8 +241,8 @@ export default function CardsAndProgramRegisters({
             ...payload,
           },
         });
-        setCardsInHand(payload.cardsInHand);
-        setProgramRegisters(payload.programRegisters);
+        setPredictedCardsInHand(payload.cardsInHand);
+        setPredictedProgramRegisters(payload.programRegisters);
         setTimestamp(payload.setRegisterTimestamp);
       } else {
         setSelectedCardId(null);
