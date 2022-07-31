@@ -5,8 +5,10 @@ import get1MovementData from "./1-movement";
 import get2MovementData from "./2-movement";
 import get3TurnsData from "./3-turns";
 import get4WallsData from "./4-walls";
+
 import getTestPowerDownData from "./test-power-down";
 import getTestCurvedConveyor from "./test-curved-conveyor";
+import getTestGear from "./test-gear";
 
 export const getMissionData = (
   playerId: string,
@@ -30,6 +32,8 @@ export const getMissionData = (
       return getTestPowerDownData(playerId);
     case "test-curved-conveyor":
       return getTestCurvedConveyor(playerId);
+    case "test-gear":
+      return getTestGear(playerId);
     case "free-practice":
     default:
       return getFreePracticeData(playerId);

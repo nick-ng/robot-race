@@ -1,14 +1,14 @@
 import type {
   AutomaticAction,
   ProcessRegisterAction,
-} from "../../../dist-common/game-action-types";
-import type Game from "../game-class";
+} from "dist-common/game-action-types";
+import type Game from "../../game-class";
 
 import { rotateRobot, moveRobotOne } from "./program-card-functions";
 import { touchCheckpoints, fallInHoles } from "./server-functions";
 import { conveyorsMove } from "./conveyors";
 import { shootRobotLasers } from "./lasers";
-import { isRobotDestroyed, destroyRobots } from "./utils";
+import { isRobotDestroyed, destroyRobots } from "../utils";
 
 const processRegister = (
   game: Game,

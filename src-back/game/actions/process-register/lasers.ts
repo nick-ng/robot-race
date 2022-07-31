@@ -2,8 +2,8 @@ import type {
   Robot,
   MapItem,
   WallMapItem,
-} from "../../../dist-common/game-types";
-import { damageRobot, isRobotDestroyed } from "./utils";
+} from "../../../../dist-common/game-types";
+import { damageRobot, isRobotDestroyed } from "../utils";
 
 const directionMap = {
   up: { xd: 0, yd: -1 },

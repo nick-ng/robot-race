@@ -1,9 +1,9 @@
-import {
+import type {
   Robot,
   MapItem,
   StraightConveyorMapItem,
   CurvedConveyorMapItem,
-} from "../../../dist-common/game-types";
+} from "dist-common/game-types";
 
 const movementDirectionMap = {
   up: { xd: 0, yd: -1 },
