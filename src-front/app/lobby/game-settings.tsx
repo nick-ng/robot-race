@@ -140,7 +140,6 @@ export default function GameSettings({
                 disabled={!isHost || mapChoiceLoading}
                 value={mapInfo ? mapInfo.mapName : "risky exchange"}
                 onChange={async (e) => {
-                  console.log("e.target.value", e.target.value);
                   if (!isHost) {
                     return;
                   }
