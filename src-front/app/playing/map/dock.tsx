@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import type { DockMapItem, MapItemNoId } from "dist-common/game-types";
 
-const StyledDock = styled.img`
+const StyledDock = styled.div`
   position: absolute;
   margin: auto;
   left: 0;
@@ -14,8 +14,11 @@ const StyledDock = styled.img`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 50%;
-  height: 50%;
+
+  img {
+    width: 50%;
+    height: 50%;
+  }
 `;
 
 interface DockProps {
@@ -29,7 +32,12 @@ export default function Dock({ cellItems }: DockProps) {
     return null;
   }
 
-  return <StyledDock src="/robot-triangle.svg" />;
+  return (
+    <StyledDock>
+      <img src="/robot-triangle.svg" />
+      {dock.number}
+    </StyledDock>
+  );
 }
 
 export const getDockText = (cellItems: MapItemNoId[]) => {

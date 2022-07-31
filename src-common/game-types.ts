@@ -76,6 +76,12 @@ export interface ConveyorsMoveInstruction {
   register: number;
 }
 
+export interface GearsTurnInstruction {
+  type: "gears-turn";
+  playerId?: never;
+  register: number;
+}
+
 export interface LasersFireInstruction {
   type: "lasers-fire-instruction";
   playerId?: never;
@@ -95,6 +101,7 @@ export interface TouchCheckpointsInstruction {
 export type InstructionItem =
   | ProgramCardInstruction
   | ConveyorsMoveInstruction
+  | GearsTurnInstruction
   | LasersFireInstruction
   | TouchCheckpointsInstruction;
 

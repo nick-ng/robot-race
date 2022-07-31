@@ -4,7 +4,7 @@ import type {
   MapItem,
   MainGameState,
   FlagMapItem,
-} from "../../../dist-common/game-types";
+} from "dist-common/game-types";
 
 export const touchCheckpoints = (
   robots: Robot[],

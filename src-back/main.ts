@@ -45,13 +45,6 @@ app.get("/api/server-stats", async (_req, res) => {
   }
 });
 
-if (process.env.NODE_ENV !== "production") {
-  app.use((req, _res, next) => {
-    console.debug(new Date().toLocaleTimeString(), req.method, req.url);
-    next();
-  });
-}
-
 app.use("/api/game", gameRouter);
 
 // serve static files

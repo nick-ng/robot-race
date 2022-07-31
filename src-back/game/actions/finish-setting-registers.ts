@@ -128,14 +128,22 @@ const finishSettingRegisters = (
         (a, b) => (b.payload.priority || 0) - (a.payload.priority || 0)
       ),
       // C. Board Elements Move
+      // C1. Express conveyor belts move 1 space
       {
         type: "conveyors-move-instruction",
         payload: { minSpeed: 2 },
         register,
       },
+      // C2. Express conveyor belts and normal conveyor belts move 1 space
       {
         type: "conveyors-move-instruction",
         payload: { minSpeed: 1 },
+        register,
+      },
+      // C3. Pushers push if active
+      // C4. Gears rotate 90 degrees
+      {
+        type: "gears-turn",
         register,
       },
       // D. Lasers Fire
