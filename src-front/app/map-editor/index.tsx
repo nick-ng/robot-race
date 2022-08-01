@@ -141,6 +141,11 @@ const getExtraOptions = (
       return {
         direction: "up",
       };
+    case "laser":
+      return {
+        direction: "up",
+        count: 1,
+      };
     case "pit":
     case "repair":
       return {};
@@ -268,10 +273,11 @@ export default function MapEditor() {
                   <option value="curved-conveyor">Curved Conveyor</option>
                   <option value="gear">Gear</option>
                   <option value="repair">Repair</option>
+                  <option value="laser">Laser</option>
                 </select>
               </td>
             </tr>
-            {["wall", "straight-conveyor", "curved-conveyor"].includes(
+            {["wall", "straight-conveyor", "curved-conveyor", "laser"].includes(
               chosenItem
             ) && (
               <tr>
@@ -334,6 +340,23 @@ export default function MapEditor() {
                       setExtraOptions((prev) => ({
                         ...prev,
                         speed: parseInt(e.target.value, 10),
+                      }));
+                    }}
+                  />
+                </td>
+              </tr>
+            )}
+            {["laser"].includes(chosenItem) && (
+              <tr>
+                <td>Count</td>
+                <td>
+                  <input
+                    value={(extraOptions as { count: number }).count}
+                    type="number"
+                    onChange={(e) => {
+                      setExtraOptions((prev) => ({
+                        ...prev,
+                        count: parseInt(e.target.value, 10),
                       }));
                     }}
                   />

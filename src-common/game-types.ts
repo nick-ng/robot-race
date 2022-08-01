@@ -190,6 +190,12 @@ export interface GearMapItem extends BasicMapItem {
   direction: "clockwise" | "counter-clockwise"; // CW: Green, CCW: Red
 }
 
+export interface LaserMapItem extends BasicMapItem {
+  type: "laser";
+  direction: "up" | "down" | "left" | "right";
+  count: 1 | 2 | 3;
+}
+
 export interface PusherMapItem extends BasicMapItem {
   type: "pusher";
   direction: "up" | "down" | "left" | "right";
@@ -208,6 +214,7 @@ export type MapItemNoId =
   | CurvedConveyorMapItem
   | PitMapItem
   | GearMapItem
+  | LaserMapItem
   | PusherMapItem
   | RepairMapItem;
 

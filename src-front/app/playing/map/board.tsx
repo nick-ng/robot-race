@@ -13,6 +13,7 @@ import StraightConveyor, {
 } from "./straight-conveyor";
 import CurvedConveyor, { getCurvedConveyorToolTip } from "./curved-conveyor";
 import Gear, { getGearToolTip } from "./gear";
+import Laser, { getLaserToolTip } from "./laser";
 
 export const MapCellToolTip = styled.div`
   z-index: 15;
@@ -64,7 +65,10 @@ export const MapCellItem = styled.span`
   justify-content: center;
 `;
 
-export const getAllElements = (cellItems: MapItemNoId[]) =>
+export const getAllElements = (
+  cellItems: MapItemNoId[],
+  allItems: MapItemNoId[]
+) =>
   [getFlagText(cellItems)]
     .filter((a) => a)
     .map((text) => <MapCellItem key={text}>{text}</MapCellItem>)
@@ -74,6 +78,7 @@ export const getAllElements = (cellItems: MapItemNoId[]) =>
       <StraightConveyor key="straight-conveyor" cellItems={cellItems} />,
       <CurvedConveyor key="curved-conveyor" cellItems={cellItems} />,
       <Gear key="gear" cellItems={cellItems} />,
+      <Laser key="laser" cellItems={cellItems} allItems={allItems} />,
     ]);
 
 export const getAllStyles = (cellItems: MapItemNoId[]) => ({
@@ -126,7 +131,8 @@ export default function Board({
                     return true;
                   }
                   return ci.type !== "dock";
-                })
+                }),
+                map.items
               );
               const styles = getAllStyles(cellItems);
 
@@ -138,6 +144,7 @@ export default function Board({
                   getStraightConveyorToolTip(cellItems),
                   getCurvedConveyorToolTip(cellItems),
                   getGearToolTip(cellItems),
+                  getLaserToolTip(cellItems),
                   getWallToolTip(map.items, x, y),
                 ]),
                 `${x},${y}`,
