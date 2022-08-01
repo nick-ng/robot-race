@@ -3,6 +3,8 @@ import styled from "styled-components";
 
 import type { LaserMapItem, MapItemNoId } from "dist-common/game-types";
 
+import { getLaserTarget } from "../../../../dist-common/get-laser-target";
+
 const StyledLaser = styled.div`
   width: 100%;
   height: 100%;
@@ -23,7 +25,7 @@ interface LaserProps {
   allItems: MapItemNoId[];
 }
 
-export default function Laser({ cellItems }: LaserProps) {
+export default function Laser({ cellItems, allItems }: LaserProps) {
   const laserItem = cellItems.find((ci) => ci.type === "laser") as
     | LaserMapItem
     | undefined;
