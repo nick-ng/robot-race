@@ -67,12 +67,12 @@ export const getMissionData = (
         {
           playerId: playerId,
           status: "ok",
-          damagePoints: 1,
+          damagePoints: 0,
           lockedRegisters: [],
           lives: 3,
           position: {
-            x: 2,
-            y: 6,
+            x: 1,
+            y: 4,
             facing: "up",
           },
           archiveMarkerId: 2,

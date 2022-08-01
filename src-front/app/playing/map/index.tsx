@@ -75,8 +75,9 @@ export default function Map({
   sendViaWebSocket,
   maxDockBayDisplay,
 }: MapProps) {
-  const { gameSettings } = gameData;
+  const { gameSettings, gameState } = gameData;
   const { map } = gameSettings;
+  const { robots } = gameState;
 
   return (
     <StyledMap>
@@ -84,6 +85,7 @@ export default function Map({
         map={map}
         cellSize={2.8}
         maxDockBayDisplay={maxDockBayDisplay || 0}
+        robots={robots}
       />
       <Robots gameData={gameData} playerDetails={playerDetails} />
       <RobotSpawner

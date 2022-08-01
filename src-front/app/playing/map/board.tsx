@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import type { Map, MapItemNoId } from "dist-common/game-types";
+import type { Map, MapItemNoId, Robot } from "dist-common/game-types";
 
 import Dock from "./dock";
 import { getFlagText, getFlagToolTip } from "./flag";
@@ -67,7 +67,8 @@ export const MapCellItem = styled.span`
 
 export const getAllElements = (
   cellItems: MapItemNoId[],
-  allItems: MapItemNoId[]
+  allItems: MapItemNoId[],
+  robots: Robot[]
 ) =>
   [getFlagText(cellItems)]
     .filter((a) => a)
@@ -78,7 +79,12 @@ export const getAllElements = (
       <StraightConveyor key="straight-conveyor" cellItems={cellItems} />,
       <CurvedConveyor key="curved-conveyor" cellItems={cellItems} />,
       <Gear key="gear" cellItems={cellItems} />,
-      <Laser key="laser" cellItems={cellItems} allItems={allItems} />,
+      <Laser
+        key="laser"
+        cellItems={cellItems}
+        allItems={allItems}
+        robots={robots}
+      />,
     ]);
 
 export const getAllStyles = (cellItems: MapItemNoId[]) => ({
@@ -90,6 +96,7 @@ interface BoardProps {
   map: Omit<Map, "items"> & { items: MapItemNoId[] };
   cellSize: number;
   maxDockBayDisplay: number;
+  robots: Robot[];
 }
 
 export const StyledBoard = styled.table<{ cellSize: number }>`
@@ -114,6 +121,7 @@ export default function Board({
   map,
   cellSize,
   maxDockBayDisplay,
+  robots,
 }: BoardProps) {
   return (
     <StyledBoard cellSize={cellSize}>
@@ -132,7 +140,8 @@ export default function Board({
                   }
                   return ci.type !== "dock";
                 }),
-                map.items
+                map.items,
+                robots
               );
               const styles = getAllStyles(cellItems);
 

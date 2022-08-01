@@ -1,6 +1,6 @@
 import type { Position, Robot, MapItemNoId, WallMapItem } from "./game-types";
 
-const directionMap = {
+export const directionMap = {
   up: { xd: 0, yd: -1 },
   right: { xd: 1, yd: 0 },
   down: { xd: 0, yd: 1 },
@@ -64,7 +64,8 @@ export const getLaserTarget = (
     )
     .filter(
       // Only include things in front of laser
-      (a) => (a as Thing)[parallel] * paralleld > position[parallel] * paralleld
+      (a) =>
+        (a as Thing)[parallel] * paralleld >= position[parallel] * paralleld
     )
     .sort(
       // Sort things by distance from laser
