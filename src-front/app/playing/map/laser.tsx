@@ -9,10 +9,18 @@ import type {
   WallMapItem,
 } from "dist-common/game-types";
 
-import {
-  directionMap,
-  getLaserTarget,
-} from "../../../../dist-common/get-laser-target";
+import { getLaserTarget } from "../../../../dist-common/get-laser-target";
+
+const GRID_SIZE = 2.8;
+
+const LASER_INSET = "-2px";
+
+const laserStyle = {
+  up: { bottom: LASER_INSET, left: 0, right: 0 },
+  down: { top: LASER_INSET, left: 0, right: 0 },
+  left: { right: LASER_INSET, top: 0, bottom: 0 },
+  right: { left: LASER_INSET, top: 0, bottom: 0 },
+} as const;
 
 const StyledLaser = styled.div`
   width: 100%;
@@ -25,8 +33,20 @@ const StyledLaser = styled.div`
   bottom: 0;
 `;
 
-const LaserBeam = styled.div<{ isShooting: true }>`
-  border: 2px ${({ isShooting }) => (isShooting ? "solid" : "dashed")} #ff0000;
+const LaserBeam = styled.div<{ isShooting: boolean }>`
+  position: absolute;
+  box-sizing: border-box;
+  border: 2px solid
+    ${({ isShooting }) => (isShooting ? "#ff0000" : "#ff000055")};
+  margin: auto;
+`;
+
+const LaserGun = styled.div`
+  position: absolute;
+  margin: auto;
+  background-color: #dcdcdc;
+  width: 6px;
+  height: 6px;
 `;
 
 interface LaserProps {
@@ -44,8 +64,6 @@ export default function Laser({ cellItems, allItems, robots }: LaserProps) {
     return null;
   }
 
-  const { xd, yd } = directionMap[laserItem.direction];
-
   const position: Position = {
     x: laserItem.x,
     y: laserItem.y,
@@ -53,27 +71,47 @@ export default function Laser({ cellItems, allItems, robots }: LaserProps) {
   };
 
   const laserTarget = getLaserTarget(position, robots, allItems, true);
-  console.log("laserTarget", laserTarget);
 
-  let laserLength = 0;
+  const laserLengthStyle = { width: "2px", height: "2px" };
 
   if ((laserTarget as WallMapItem | null)?.type === "wall") {
-    const x0 =
-      ((laserTarget as WallMapItem).x + (laserTarget as WallMapItem).x1) * 0.5;
-    const y0 =
-      ((laserTarget as WallMapItem).y + (laserTarget as WallMapItem).y1) * 0.5;
-
-    laserLength = Math.abs(laserItem.x - x0) + Math.abs(laserItem.y - y0);
+    const extra = 0.45;
+    const { x, x1, y, y1 } = laserTarget as WallMapItem;
+    if (["up", "down"].includes(laserItem.direction)) {
+      const h = Math.abs(laserItem.y - (y + y1) * 0.5);
+      laserLengthStyle.height = `${(h + extra) * GRID_SIZE}vw`;
+    } else {
+      const w = Math.abs(laserItem.x - (x + x1) * 0.5);
+      laserLengthStyle.width = `${(w + extra) * GRID_SIZE}vw`;
+    }
   } else if (laserTarget) {
-    laserLength =
-      Math.abs(laserItem.x - (laserTarget as Robot).position.x) +
-      Math.abs(laserItem.y - (laserTarget as Robot).position.y);
+    const extra = 0.2;
+    const { x, y } = (laserTarget as Robot).position;
+    if (["up", "down"].includes(laserItem.direction)) {
+      const h = Math.abs(laserItem.y - y);
+      laserLengthStyle.height = `${(h + extra) * GRID_SIZE}vw`;
+    } else {
+      const w = Math.abs(laserItem.x - x);
+      laserLengthStyle.width = `${(w + extra) * GRID_SIZE}vw`;
+    }
   }
+
+  const shooting = false;
 
   return (
     <StyledLaser>
-      Laser {laserItem.direction} {laserItem.count} {laserLength}
-      <LaserBeam isShooting={true} style={{}} />
+      <LaserBeam
+        isShooting={shooting}
+        style={{
+          ...laserStyle[laserItem.direction],
+          ...laserLengthStyle,
+        }}
+      />
+      <LaserGun
+        style={{
+          ...laserStyle[laserItem.direction],
+        }}
+      />
     </StyledLaser>
   );
 }

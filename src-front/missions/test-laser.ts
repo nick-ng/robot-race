@@ -2,22 +2,6 @@ import type { GameData } from "dist-common/game-types";
 import { getCardMap } from "dist-common/card-map";
 
 const remainingDeck: string[] = [
-  "program-card-79",
-  "program-card-66",
-  "program-card-56",
-  "program-card-50",
-  "program-card-52",
-  "program-card-58",
-  "program-card-57",
-  "program-card-65",
-  "program-card-60",
-  "program-card-49",
-  "program-card-53",
-  "program-card-54",
-  "program-card-61",
-  "program-card-64",
-  "program-card-59",
-  "program-card-55",
   "program-card-63",
   "program-card-62",
   "program-card-51",
