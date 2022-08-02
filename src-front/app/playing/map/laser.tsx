@@ -36,8 +36,8 @@ const StyledLaser = styled.div`
 const LaserBeam = styled.div<{ isShooting: boolean }>`
   position: absolute;
   box-sizing: border-box;
-  border: 2px solid
-    ${({ isShooting }) => (isShooting ? "#ff0000" : "#ff000055")};
+  background-color: ${({ isShooting }) =>
+    isShooting ? "#ff0000" : "#ff000055"};
   margin: auto;
 `;
 
@@ -64,16 +64,21 @@ export default function Laser({ cellItems, allItems, robots }: LaserProps) {
     return null;
   }
 
+  const isShooting = true;
+
   const position: Position = {
     x: laserItem.x,
     y: laserItem.y,
     facing: laserItem.direction,
   };
 
+  const nonLengthDimension = isShooting ? "4px" : "2px";
+  const laserLengthStyle = {
+    width: nonLengthDimension,
+    height: nonLengthDimension,
+  };
+
   const laserTarget = getLaserTarget(position, robots, allItems, true);
-
-  const laserLengthStyle = { width: "2px", height: "2px" };
-
   if ((laserTarget as WallMapItem | null)?.type === "wall") {
     const extra = 0.45;
     const { x, x1, y, y1 } = laserTarget as WallMapItem;
@@ -96,12 +101,10 @@ export default function Laser({ cellItems, allItems, robots }: LaserProps) {
     }
   }
 
-  const shooting = false;
-
   return (
     <StyledLaser>
       <LaserBeam
-        isShooting={shooting}
+        isShooting={isShooting}
         style={{
           ...laserStyle[laserItem.direction],
           ...laserLengthStyle,
