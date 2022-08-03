@@ -1,7 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-import type { Map, MapItemNoId } from "dist-common/game-types";
+import type {
+  MainGameState,
+  Map,
+  MapItemNoId,
+  Robot,
+} from "dist-common/game-types";
 
 import Dock from "./dock";
 import { getFlagText, getFlagToolTip } from "./flag";
@@ -13,6 +18,7 @@ import StraightConveyor, {
 } from "./straight-conveyor";
 import CurvedConveyor, { getCurvedConveyorToolTip } from "./curved-conveyor";
 import Gear, { getGearToolTip } from "./gear";
+import Laser, { getLaserToolTip } from "./laser";
 
 export const MapCellToolTip = styled.div`
   z-index: 15;
@@ -64,7 +70,12 @@ export const MapCellItem = styled.span`
   justify-content: center;
 `;
 
-export const getAllElements = (cellItems: MapItemNoId[]) =>
+export const getAllElements = (
+  cellItems: MapItemNoId[],
+  allItems: MapItemNoId[],
+  robots: Robot[],
+  animations: MainGameState["animations"]
+) =>
   [getFlagText(cellItems)]
     .filter((a) => a)
     .map((text) => <MapCellItem key={text}>{text}</MapCellItem>)
@@ -74,6 +85,13 @@ export const getAllElements = (cellItems: MapItemNoId[]) =>
       <StraightConveyor key="straight-conveyor" cellItems={cellItems} />,
       <CurvedConveyor key="curved-conveyor" cellItems={cellItems} />,
       <Gear key="gear" cellItems={cellItems} />,
+      <Laser
+        key="laser"
+        cellItems={cellItems}
+        allItems={allItems}
+        robots={robots}
+        animations={animations}
+      />,
     ]);
 
 export const getAllStyles = (cellItems: MapItemNoId[]) => ({
@@ -85,6 +103,8 @@ interface BoardProps {
   map: Omit<Map, "items"> & { items: MapItemNoId[] };
   cellSize: number;
   maxDockBayDisplay: number;
+  robots: Robot[];
+  animations: MainGameState["animations"];
 }
 
 export const StyledBoard = styled.table<{ cellSize: number }>`
@@ -109,6 +129,8 @@ export default function Board({
   map,
   cellSize,
   maxDockBayDisplay,
+  robots,
+  animations,
 }: BoardProps) {
   return (
     <StyledBoard cellSize={cellSize}>
@@ -126,7 +148,10 @@ export default function Board({
                     return true;
                   }
                   return ci.type !== "dock";
-                })
+                }),
+                map.items,
+                robots,
+                animations
               );
               const styles = getAllStyles(cellItems);
 
@@ -138,6 +163,7 @@ export default function Board({
                   getStraightConveyorToolTip(cellItems),
                   getCurvedConveyorToolTip(cellItems),
                   getGearToolTip(cellItems),
+                  getLaserToolTip(cellItems),
                   getWallToolTip(map.items, x, y),
                 ]),
                 `${x},${y}`,

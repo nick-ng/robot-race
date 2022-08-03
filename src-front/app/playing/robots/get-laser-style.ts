@@ -1,7 +1,7 @@
 import type { Robot } from "src-common/game-types";
 
 const EXTRA = 0.4;
-const LASER_WIDTH = "5px";
+const LASER_WIDTH = "4px";
 
 const getLaserStyle = (
   laser: Robot["laser"],

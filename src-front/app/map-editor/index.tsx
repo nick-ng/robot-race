@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import {
+import type {
   CurvedConveyorMapItem,
   DockMapItem,
   FlagMapItem,
@@ -16,6 +16,8 @@ import {
   getAllStyles,
   getAllElements,
 } from "../playing/map/board";
+
+const MAP_STORE = "ROBOT-RACE-MAP-STORE";
 
 export const EditorToolTip = styled.div`
   z-index: 15;
@@ -141,6 +143,11 @@ const getExtraOptions = (
       return {
         direction: "up",
       };
+    case "laser":
+      return {
+        direction: "up",
+        count: 1,
+      };
     case "pit":
     case "repair":
       return {};
@@ -159,6 +166,12 @@ export default function MapEditor() {
   );
   const [importString, setImportString] = useState("");
 
+  const map: Map = {
+    name,
+    ...dimensions,
+    items: items.map((item, id) => ({ ...item, id })),
+  };
+
   useEffect(() => {
     if (chosenItem === "erase") {
       return;
@@ -176,17 +189,43 @@ export default function MapEditor() {
     }
 
     setExtraOptions((prev) => ({ ...prev, ...extraOptions } as ExtraOptions));
+  }, [items, chosenItem]);
+
+  useEffect(() => {
+    if (items.length > 5) {
+      console.log("saving");
+      localStorage.setItem(MAP_STORE, JSON.stringify(map));
+    }
   }, [items]);
 
-  const map: Map = {
-    name,
-    ...dimensions,
-    items: items.map((item, id) => ({ ...item, id })),
-  };
+  useEffect(() => {
+    try {
+      console.log("loading");
+      const savedMapString = localStorage.getItem(MAP_STORE) as string;
+      const savedMap = JSON.parse(savedMapString) as Map;
+      setItems(savedMap.items);
+      setDimensions({
+        height: savedMap.height,
+        width: savedMap.width,
+      });
+      setName(savedMap.name);
+    } catch (e) {
+      console.error("problem loading map", e);
+    }
+  }, []);
 
   return (
     <StyledMapEditor>
       <Controls>
+        <button
+          onClick={() => {
+            if (confirm("Really clear the map?")) {
+              setItems([]);
+            }
+          }}
+        >
+          Clear
+        </button>
         <button
           onClick={() => {
             navigator.clipboard.writeText(JSON.stringify(map));
@@ -268,10 +307,11 @@ export default function MapEditor() {
                   <option value="curved-conveyor">Curved Conveyor</option>
                   <option value="gear">Gear</option>
                   <option value="repair">Repair</option>
+                  <option value="laser">Laser</option>
                 </select>
               </td>
             </tr>
-            {["wall", "straight-conveyor", "curved-conveyor"].includes(
+            {["wall", "straight-conveyor", "curved-conveyor", "laser"].includes(
               chosenItem
             ) && (
               <tr>
@@ -340,6 +380,23 @@ export default function MapEditor() {
                 </td>
               </tr>
             )}
+            {["laser"].includes(chosenItem) && (
+              <tr>
+                <td>Count</td>
+                <td>
+                  <input
+                    value={(extraOptions as { count: number }).count}
+                    type="number"
+                    onChange={(e) => {
+                      setExtraOptions((prev) => ({
+                        ...prev,
+                        count: parseInt(e.target.value, 10),
+                      }));
+                    }}
+                  />
+                </td>
+              </tr>
+            )}
             {["curved-conveyor"].includes(chosenItem) && (
               <tr>
                 <td>From (comma separated)</td>
@@ -402,7 +459,7 @@ export default function MapEditor() {
                     (mi) => mi.x === x && mi.y === y
                   );
 
-                  const elements = getAllElements(cellItems);
+                  const elements = getAllElements(cellItems, items, [], []);
                   const styles = getAllStyles(cellItems);
 
                   let chosenItemTexts = null;
@@ -454,13 +511,18 @@ export default function MapEditor() {
                           {(extraOptions as Pick<DockMapItem, "number">).number}
                         </MapCellItem>
                       ) : (
-                        getAllElements([
-                          {
-                            type: chosenItem,
-                            ...extraOptions,
-                            ...extraExtra,
-                          } as MapItemNoId,
-                        ])
+                        getAllElements(
+                          [
+                            {
+                              type: chosenItem,
+                              ...extraOptions,
+                              ...extraExtra,
+                            } as MapItemNoId,
+                          ],
+                          items,
+                          [],
+                          []
+                        )
                       );
 
                     chosenItemStyles = getAllStyles([

@@ -2,15 +2,9 @@ import type { GameData } from "dist-common/game-types";
 import { getCardMap } from "dist-common/card-map";
 
 const remainingDeck: string[] = [
-  "program-card-80",
-  "program-card-76",
-  "program-card-79",
-  "program-card-33",
-  "program-card-08",
-  "program-card-17",
-  "program-card-32",
-  "program-card-54",
-  "program-card-52",
+  "program-card-63",
+  "program-card-62",
+  "program-card-51",
 ];
 
 export const getMissionData = (
@@ -63,10 +57,10 @@ export const getMissionData = (
           lives: 3,
           position: {
             x: 1,
-            y: 1,
-            facing: "down",
+            y: 4,
+            facing: "up",
           },
-          archiveMarkerId: 0,
+          archiveMarkerId: 2,
           design: "outset",
         },
       ],
@@ -74,67 +68,101 @@ export const getMissionData = (
       cardMap,
     },
     gameSettings: {
+      timerStart: "never",
+      timerSeconds: 30,
       map: {
-        name: "3: Turn",
-        height: 7,
+        name: "Laser Test",
+        height: 8,
         width: 6,
         items: [
           {
-            type: "dock",
-            number: 1,
+            type: "laser",
+            direction: "right",
+            count: 1,
             x: 1,
-            y: 1,
+            y: 4,
             id: 0,
           },
           {
-            type: "wall",
-            x: 2,
-            y: 1,
-            x1: 1,
-            y1: 1,
+            type: "laser",
+            direction: "right",
+            count: 1,
+            x: 1,
+            y: 2,
             id: 1,
           },
           {
             type: "wall",
-            x: 2,
+            x: 5,
             y: 2,
-            x1: 1,
+            x1: 4,
             y1: 2,
             id: 2,
           },
           {
             type: "wall",
-            x: 2,
-            y: 3,
-            x1: 1,
-            y1: 3,
+            x: 4,
+            y: 4,
+            x1: 3,
+            y1: 4,
             id: 3,
           },
           {
             type: "wall",
-            x: 2,
+            x: 1,
             y: 4,
-            x1: 1,
+            x1: 0,
             y1: 4,
             id: 4,
           },
           {
-            type: "pit",
-            x: 2,
-            y: 5,
+            type: "wall",
+            x: 1,
+            y: 2,
+            x1: 0,
+            y1: 2,
             id: 5,
+          },
+          {
+            type: "wall",
+            x: 4,
+            y: 0,
+            x1: 4,
+            y1: -1,
+            id: 6,
+          },
+          {
+            type: "wall",
+            x: 4,
+            y: 7,
+            x1: 4,
+            y1: 6,
+            id: 7,
+          },
+          {
+            type: "laser",
+            direction: "up",
+            count: 2,
+            x: 4,
+            y: 6,
+            id: 8,
+          },
+          {
+            type: "dock",
+            number: 1,
+            x: 2,
+            y: 6,
+            id: 9,
           },
           {
             type: "flag",
             number: 1,
-            x: 4,
-            y: 6,
-            id: 6,
+            x: 2,
+            y: 0,
+            id: 10,
           },
         ],
       },
-      timerSeconds: 30,
-      timerStart: "never",
     },
     lastActionId: "0-0",
     gameServer: null,
@@ -143,75 +171,10 @@ export const getMissionData = (
 
   return {
     gameData,
-    missionHeading: "3: Turns",
-    missionObjectives: [
-      "All programs are performed from the perspective of the robot.",
-      "Make sure you turn the correct way to get to the flag.",
-    ],
-    nextMission: "4-walls",
+    missionHeading: "4: Walls",
+    missionObjectives: ["Robots can't move through walls."],
+    nextMission: "free-practice",
   };
 };
 
 export default getMissionData;
-
-/**
-{
-  "name": "3: Turn",
-  "height": 7,
-  "width": 6,
-  "items": [
-    {
-      "type": "dock",
-      "number": 1,
-      "x": 1,
-      "y": 1,
-      "id": 0
-    },
-    {
-      "type": "wall",
-      "x": 2,
-      "y": 1,
-      "x1": 1,
-      "y1": 1,
-      "id": 1
-    },
-    {
-      "type": "wall",
-      "x": 2,
-      "y": 2,
-      "x1": 1,
-      "y1": 2,
-      "id": 2
-    },
-    {
-      "type": "wall",
-      "x": 2,
-      "y": 3,
-      "x1": 1,
-      "y1": 3,
-      "id": 3
-    },
-    {
-      "type": "wall",
-      "x": 2,
-      "y": 4,
-      "x1": 1,
-      "y1": 4,
-      "id": 4
-    },
-    {
-      "type": "pit",
-      "x": 2,
-      "y": 5,
-      "id": 5
-    },
-    {
-      "type": "flag",
-      "number": 1,
-      "x": 4,
-      "y": 6,
-      "id": 6
-    }
-  ]
-}
- */
