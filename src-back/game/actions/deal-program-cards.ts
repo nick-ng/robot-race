@@ -67,6 +67,10 @@ const dealProgramCards = (
     // 12. Cards on unlocked robot registers
     player.programRegisters.forEach((cardId, i) => {
       if (robot?.lockedRegisters.includes(i)) {
+        // If a locked register is empty, it will need a card.
+        if (cardId === null) {
+          cardsNeeded += 1;
+        }
         return;
       }
 
@@ -104,11 +108,23 @@ const dealProgramCards = (
       const robot = robots.find((r) => r.playerId === playerId);
       const handSize = 9 - (robot?.damagePoints || 0);
       if (onePlayerSecrets.cardsInHand.length < handSize) {
-        onePlayerSecrets.cardsInHand.push(gameSecrets.remainingDeck.shift()!);
+        const card = gameSecrets.remainingDeck.shift()!;
+        onePlayerSecrets.cardsInHand.push(card);
         continueDealing = true;
       }
     }
   } while (continueDealing);
+
+  for (const playerId of playersThatNeedCards) {
+    const onePlayerSecrets = playerSecrets[playerId];
+    const robot = robots.find((r) => r.playerId === playerId);
+    robot?.lockedRegisters.forEach((registerIndex) => {
+      if (onePlayerSecrets.programRegisters[registerIndex] === null) {
+        const card = gameSecrets.remainingDeck.shift()!;
+        onePlayerSecrets.programRegisters[registerIndex] = card;
+      }
+    });
+  }
 
   return {
     game,
