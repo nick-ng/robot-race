@@ -8,7 +8,7 @@ import { rotateRobot, moveRobotOne } from "./program-card-functions";
 import { touchCheckpoints, fallInHoles } from "./server-functions";
 import { conveyorsMove } from "./conveyors";
 import { gearsTurn } from "./gears";
-import { shootRobotLasers } from "./lasers";
+import { shootRobotLasers, shootMapLasers } from "./lasers";
 import { isRobotDestroyed, destroyRobots } from "../utils";
 
 const processRegister = (
@@ -45,6 +45,9 @@ const processRegister = (
   robots.forEach((robot) => {
     robot.laser = null;
   });
+  gameState.animations = gameState.animations.filter(
+    (a) => !["map-laser"].includes(a)
+  );
 
   if (instructionItem.type === "program-card-instruction") {
     const { playerId, payload } = instructionItem;
@@ -91,11 +94,20 @@ const processRegister = (
         break;
       case "lasers-fire-instruction":
         destroyRobots(robots);
-        const shotsFired = shootRobotLasers(robots, map.items);
-        destroyRobots(robots);
+        let shotsFired = false;
+        if (instructionItem.payload.shooter === "robots") {
+          shotsFired = shootRobotLasers(robots, map.items);
+        } else {
+          shotsFired = shootMapLasers(robots, map.items);
+          if (shotsFired) {
+            // Animate map lasers
+            gameState.animations.push("map-laser");
+          }
+        }
         if (shotsFired) {
           delay = 600;
         }
+        destroyRobots(robots);
         break;
       case "touch-checkpoint-instruction":
         const touched = touchCheckpoints(robots, map.items, flagsTouched);

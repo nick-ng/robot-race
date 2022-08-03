@@ -118,6 +118,7 @@ export interface LobbyGameState {
   robots: Robot[];
   turn: number;
   turnPhase: number;
+  animations: "map-laser"[];
 }
 
 export type MainGameState = Omit<LobbyGameState, "state"> & {

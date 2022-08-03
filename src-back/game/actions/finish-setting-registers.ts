@@ -149,6 +149,11 @@ const finishSettingRegisters = (
       // D. Lasers Fire
       {
         type: "lasers-fire-instruction",
+        payload: { shooter: "map" },
+        register,
+      },
+      {
+        type: "lasers-fire-instruction",
         payload: { shooter: "robots" },
         register,
       },

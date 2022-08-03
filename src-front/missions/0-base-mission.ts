@@ -44,6 +44,7 @@ export const getBaseGameState = (
   poweringDownNextTurn: [],
   flagsTouched: { [playerId]: 0 },
   cardMap: getCardMap(),
+  animations: [],
 });
 
 export const getBaseGameSettings = (): Omit<GameSettings, "map"> => ({

@@ -7,12 +7,12 @@ import type {
   Robot,
   Position,
   WallMapItem,
+  MainGameState,
 } from "dist-common/game-types";
 
 import { getLaserTarget } from "../../../../dist-common/get-laser-target";
 
 const GRID_SIZE = 2.8;
-
 const LASER_INSET = "-2px";
 
 const laserStyle = {
@@ -53,9 +53,15 @@ interface LaserProps {
   cellItems: MapItemNoId[];
   allItems: MapItemNoId[];
   robots: Robot[];
+  animations: MainGameState["animations"];
 }
 
-export default function Laser({ cellItems, allItems, robots }: LaserProps) {
+export default function Laser({
+  cellItems,
+  allItems,
+  robots,
+  animations,
+}: LaserProps) {
   const laserItem = cellItems.find((ci) => ci.type === "laser") as
     | LaserMapItem
     | undefined;
@@ -64,7 +70,7 @@ export default function Laser({ cellItems, allItems, robots }: LaserProps) {
     return null;
   }
 
-  const isShooting = true;
+  const isShooting = animations.includes("map-laser");
 
   const position: Position = {
     x: laserItem.x,

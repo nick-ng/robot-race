@@ -57,6 +57,7 @@ export default class Game {
       robots: [],
       turn: 0,
       turnPhase: TURN_PHASES.lobby,
+      animations: [],
     };
 
     const defaultGameSecrets: GameSecrets = {

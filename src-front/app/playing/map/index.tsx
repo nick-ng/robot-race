@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 
 import type { PlayerDetails, PlayerGameData } from "dist-common/game-types";
@@ -77,7 +77,38 @@ export default function Map({
 }: MapProps) {
   const { gameSettings, gameState } = gameData;
   const { map } = gameSettings;
-  const { robots } = gameState;
+  const { animations, robots } = gameState;
+
+  const [prevShoot, setPrevShoot] = useState(false);
+  const utterance = useRef<SpeechSynthesisUtterance>(
+    new SpeechSynthesisUtterance("pew")
+  ).current;
+
+  const shoot = animations.includes("map-laser");
+
+  useEffect(() => {
+    const voices = window.speechSynthesis.getVoices();
+    let voice = voices.find((v) => v.default);
+    if (!voice) {
+      voice = voices[0];
+    }
+    utterance.volume = 0;
+    if (voice) {
+      utterance.voice = voice;
+      window.speechSynthesis.speak(utterance);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (shoot && !prevShoot) {
+      if (utterance.voice) {
+        utterance.volume = 0.5;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    setPrevShoot(shoot);
+  }, [shoot]);
 
   return (
     <StyledMap>
@@ -86,6 +117,7 @@ export default function Map({
         cellSize={2.8}
         maxDockBayDisplay={maxDockBayDisplay || 0}
         robots={robots}
+        animations={animations}
       />
       <Robots gameData={gameData} playerDetails={playerDetails} />
       <RobotSpawner

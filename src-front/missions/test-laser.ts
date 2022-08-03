@@ -40,6 +40,7 @@ export const getMissionData = (
       instructionQueue: [],
     },
     gameState: {
+      animations: [],
       state: "main",
       turn: 0,
       turnPhase: 0,
