@@ -22,6 +22,13 @@ const laserStyle = {
   right: { left: LASER_INSET, top: 0, bottom: 0 },
 } as const;
 
+const sideMap = {
+  up: ["left", "right"],
+  down: ["left", "right"],
+  left: ["top", "bottom"],
+  right: ["top", "bottom"],
+} as const;
+
 const StyledLaser = styled.div`
   width: 100%;
   height: 100%;
@@ -71,11 +78,12 @@ export default function Laser({
   }
 
   const isShooting = animations.includes("map-laser");
+  const { count, direction } = laserItem;
 
   const position: Position = {
     x: laserItem.x,
     y: laserItem.y,
-    facing: laserItem.direction,
+    facing: direction,
   };
 
   const nonLengthDimension = isShooting ? "4px" : "2px";
@@ -88,7 +96,7 @@ export default function Laser({
   if ((laserTarget as WallMapItem | null)?.type === "wall") {
     const extra = 0.45;
     const { x, x1, y, y1 } = laserTarget as WallMapItem;
-    if (["up", "down"].includes(laserItem.direction)) {
+    if (["up", "down"].includes(direction)) {
       const h = Math.abs(laserItem.y - (y + y1) * 0.5);
       laserLengthStyle.height = `${(h + extra) * GRID_SIZE}vw`;
     } else {
@@ -98,7 +106,7 @@ export default function Laser({
   } else if (laserTarget) {
     const extra = 0.2;
     const { x, y } = (laserTarget as Robot).position;
-    if (["up", "down"].includes(laserItem.direction)) {
+    if (["up", "down"].includes(direction)) {
       const h = Math.abs(laserItem.y - y);
       laserLengthStyle.height = `${(h + extra) * GRID_SIZE}vw`;
     } else {
@@ -107,22 +115,106 @@ export default function Laser({
     }
   }
 
-  return (
-    <StyledLaser>
-      <LaserBeam
-        isShooting={isShooting}
-        style={{
-          ...laserStyle[laserItem.direction],
-          ...laserLengthStyle,
-        }}
-      />
-      <LaserGun
-        style={{
-          ...laserStyle[laserItem.direction],
-        }}
-      />
-    </StyledLaser>
-  );
+  const sides = sideMap[direction];
+  const offsets = { 3: "50%", 2: "35%" } as const;
+
+  switch (count) {
+    case 3:
+      return (
+        <StyledLaser>
+          <LaserBeam
+            isShooting={isShooting}
+            style={{
+              ...laserStyle[direction],
+              ...laserLengthStyle,
+            }}
+          />
+          <LaserGun
+            style={{
+              ...laserStyle[direction],
+            }}
+          />
+          <LaserBeam
+            isShooting={isShooting}
+            style={{
+              ...laserStyle[direction],
+              ...laserLengthStyle,
+              [sides[0]]: offsets[3],
+            }}
+          />
+          <LaserGun
+            style={{
+              ...laserStyle[direction],
+              [sides[0]]: offsets[3],
+            }}
+          />
+          <LaserBeam
+            isShooting={isShooting}
+            style={{
+              ...laserStyle[direction],
+              ...laserLengthStyle,
+              [sides[1]]: offsets[3],
+            }}
+          />
+          <LaserGun
+            style={{
+              ...laserStyle[direction],
+              [sides[1]]: offsets[3],
+            }}
+          />
+        </StyledLaser>
+      );
+    case 2:
+      return (
+        <StyledLaser>
+          <LaserBeam
+            isShooting={isShooting}
+            style={{
+              ...laserStyle[direction],
+              ...laserLengthStyle,
+              [sides[0]]: offsets[2],
+            }}
+          />
+          <LaserGun
+            style={{
+              ...laserStyle[direction],
+              [sides[0]]: offsets[2],
+            }}
+          />
+          <LaserBeam
+            isShooting={isShooting}
+            style={{
+              ...laserStyle[direction],
+              ...laserLengthStyle,
+              [sides[1]]: offsets[2],
+            }}
+          />
+          <LaserGun
+            style={{
+              ...laserStyle[direction],
+              [sides[1]]: offsets[2],
+            }}
+          />
+        </StyledLaser>
+      );
+    case 1:
+      return (
+        <StyledLaser>
+          <LaserBeam
+            isShooting={isShooting}
+            style={{
+              ...laserStyle[direction],
+              ...laserLengthStyle,
+            }}
+          />
+          <LaserGun
+            style={{
+              ...laserStyle[direction],
+            }}
+          />
+        </StyledLaser>
+      );
+  }
 }
 
 export const getLaserToolTip = (cellItems: MapItemNoId[]) => {
