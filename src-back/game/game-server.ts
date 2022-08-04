@@ -143,6 +143,7 @@ export default class GameServer {
       }
       this.actionCount += 1;
 
+      console.debug("updateHandler - messageObject", messageObject);
       const { type } = playGame(game, messageObject, (nextAction) => {
         console.debug("updateHandler - nextAction", nextAction);
         addAction(nextAction);
