@@ -26,6 +26,7 @@ export const performAction = (
   message: string;
   automaticAction?: AutomaticAction;
 } => {
+  console.debug("performAction - game.id, action", game.id, action);
   switch (action.type) {
     case "start":
       return startGame(game, action);

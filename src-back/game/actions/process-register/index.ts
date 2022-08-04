@@ -31,6 +31,10 @@ const processRegister = (
   const { instructionQueue } = gameSecrets;
   const { map } = gameSettings;
 
+  console.debug(
+    "processRegister - instructionQueue.length",
+    instructionQueue.length
+  );
   if (instructionQueue.length === 0) {
     return {
       game,
@@ -39,6 +43,7 @@ const processRegister = (
   }
 
   const instructionItem = instructionQueue.shift()!;
+  console.debug("processRegister - instructionItem", instructionItem);
 
   let delay = 500;
 
