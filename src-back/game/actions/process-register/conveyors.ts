@@ -47,6 +47,10 @@ export const conveyorsMove = (
     y: r.position.y,
     facing: r.position.facing,
   }));
+  console.debug(
+    "conveyorsMove - tempRobots",
+    JSON.stringify(tempRobots, null, "  ")
+  );
 
   // 20. Move all temporary robots on conveyors minus walls
   const maybeMovedRobots = [];
@@ -98,6 +102,10 @@ export const conveyorsMove = (
       maybeMovedRobots.push(tempRobot);
     }
   }
+  console.debug(
+    "conveyorsMove - maybeMovedRobots",
+    JSON.stringify(maybeMovedRobots, null, "  ")
+  );
 
   // 30. Check which temporary robots don't overlap other temporary robots
   const movedRobots = [];
@@ -114,6 +122,11 @@ export const conveyorsMove = (
       movedRobots.push(tempRobot);
     }
   }
+  console.debug(
+    "conveyorsMove - movedRobots",
+    JSON.stringify(movedRobots, null, "  ")
+  );
+
   // 40. Update position of robots that did move
   movedRobots.forEach((mr) => {
     const robot = robots.find((r) => r.playerId === mr.playerId);
@@ -123,6 +136,7 @@ export const conveyorsMove = (
       robot.position.facing = mr.facing;
     }
   });
+  console.debug("conveyorsMove - robots", JSON.stringify(robots, null, "  "));
 
   return movedRobots.length > 0;
 };
