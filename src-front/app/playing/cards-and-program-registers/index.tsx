@@ -339,8 +339,8 @@ export default function CardsAndProgramRegisters({
                   ...payload,
                 },
               });
-              setCardsInHand(payload.cardsInHand);
-              setProgramRegisters(payload.programRegisters);
+              setPredictedCardsInHand(payload.cardsInHand);
+              setPredictedProgramRegisters(payload.programRegisters);
               setTimestamp(payload.setRegisterTimestamp);
             }
             return;
