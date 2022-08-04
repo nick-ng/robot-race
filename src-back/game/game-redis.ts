@@ -39,7 +39,12 @@ const expireGT = async (key: string, ttl: number) => {
 export const getFullId = async (
   shortGameId: string
 ): Promise<string | null> => {
-  return client.get(`short-id:${shortGameId}`);
+  const cleanedShortId = shortGameId
+    .toUpperCase()
+    .replaceAll("O", "0")
+    .replaceAll("I", "1")
+    .replaceAll("Z", "2");
+  return client.get(`short-id:${cleanedShortId.toUpperCase()}`);
 };
 
 export const makeShortId = async (fullId: string): Promise<string> => {

@@ -16,6 +16,7 @@ const OptionsMenu = styled.div`
   background-color: #000000;
   border: 1px solid #808080;
   padding: 0.5em;
+  z-index: 5;
 
   label {
     display: block;

@@ -1,5 +1,7 @@
 import type { Robot, MainGameState, GameState } from "./game-types";
 
+const SOME_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXY0123456789";
+
 export const sleep = (ms: number) =>
   new Promise((resolve, _reject) => {
     setTimeout(() => {
@@ -10,8 +12,8 @@ export const sleep = (ms: number) =>
 export const randomString = (length: number) => {
   let string = "";
   for (let n = 0; n < length; n++) {
-    const randomNumber = Math.floor(36 * Math.random());
-    string = string + randomNumber.toString(36);
+    const randomNumber = Math.floor(SOME_LETTERS.length * Math.random());
+    string = string + SOME_LETTERS[randomNumber];
   }
 
   return string;
