@@ -272,7 +272,7 @@ export const sendStartGameAction = async (gameId: string) => {
         TRIM: {
           strategy: "MAXLEN",
           strategyModifier: "~",
-          threshold: 10000,
+          threshold: 100,
         },
       }
     );

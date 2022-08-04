@@ -10,7 +10,7 @@ export const shootRobotLasers = (
 ): boolean => {
   let shotsFired = false;
   for (const robot of robots) {
-    if (isRobotDestroyed(robot)) {
+    if (robot.status !== "ok") {
       continue;
     }
 
