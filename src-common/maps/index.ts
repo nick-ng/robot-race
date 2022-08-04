@@ -9,6 +9,7 @@ import islandHop from "./island-hop";
 import islandKing from "./island-king";
 import lostBearings from "./lost-bearings";
 import riskyExchange from "./risky-exchange";
+import robotStew from "./robot-stew";
 import twister from "./twister";
 
 export const mapList: {
@@ -103,7 +104,16 @@ export const mapList: {
     description: [
       ["Difficulty", "Hard"],
       ["Recommended Players", "2-4"],
-      ["Length", "Short"],
+      ["Length", "Medium"],
+    ],
+  },
+  {
+    mapName: "robot stew",
+    mapDisplayName: "Robot Stew",
+    description: [
+      ["Difficulty", "Hard"],
+      ["Recommended Players", "2-4"],
+      ["Length", "Medium"],
     ],
   },
 ];
@@ -126,6 +136,8 @@ export const getMap = (name: string): Map => {
       return islandKing;
     case "lost bearings":
       return lostBearings;
+    case "robot stew":
+      return robotStew;
     case "twister":
       return twister;
     case "risky exchange":
