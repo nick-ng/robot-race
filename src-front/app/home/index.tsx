@@ -86,14 +86,14 @@ export default function Home({ playerDetails }: HomeProps) {
           onSubmit={async (e) => {
             e.preventDefault();
 
-            const trimmedId = tempGameId.replaceAll(/[^a-z0-9\-]/g, "");
+            const trimmedId = tempGameId.replaceAll(/[^a-z0-9\-]/gi, "");
             if (trimmedId.length === 36) {
               navigate(`/game/${tempGameId}`);
               return;
             }
 
             if (!trimmedId) {
-              setErrorMessage(`You need to enter a game ID before joining.`);
+              setErrorMessage(`You need to enter a valid game ID.`);
               return;
             }
 
@@ -125,7 +125,7 @@ export default function Home({ playerDetails }: HomeProps) {
             type="text"
             value={tempGameId}
             onChange={(e) => {
-              setTempGameId(e.target.value);
+              setTempGameId(e.target.value.toUpperCase());
             }}
           />
           <JoinGameButton isLoading={loading} disabled={loading}>
