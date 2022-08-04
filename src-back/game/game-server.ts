@@ -67,7 +67,8 @@ export default class GameServer {
     );
     console.debug(
       "resumeAndListenForGames - gameStartRequests",
-      gameStartRequests
+      gameStartRequests,
+      gameStartRequests.length
     );
 
     // Wait for client to connect before blocking with xRead
@@ -76,9 +77,17 @@ export default class GameServer {
     }
 
     console.debug("resumeAndListenForGames - resuming in progress games");
+    let counter = 0;
     gameStartRequests?.forEach((gameStartRequest) => {
+      counter++;
       this.handleGameStart(gameStartRequest.message.data);
+      console.debug(
+        "resumeAndListenForGames - stats after starting game",
+        counter,
+        JSON.stringify(this.getStats(), null, "  ")
+      );
     });
+    console.debug("resumeAndListenForGames - resumed # games", counter);
 
     console.debug("resumeAndListenForGames - adding GAME_STARTER_KEY listener");
     streamHelper.addListener({
