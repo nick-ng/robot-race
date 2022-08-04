@@ -82,9 +82,11 @@ export default function Playing({
   sendViaWebSocket,
 }: PlayingProps) {
   const { playerId } = playerDetails;
-  const { shortId, gameState } = gameData;
+  const { players, shortId, gameState } = gameData;
   const { flagsTouched, robots } = gameState as MainGameState;
   const robot = robots.find((r) => r.playerId === playerId)!;
+
+  const isPlaying = players.some((p) => p.id === playerId);
 
   const {
     options: { colors, predictiveMode },
@@ -105,7 +107,7 @@ export default function Playing({
           />
           <PlayerDisplay gameData={gameData} playerDetails={playerDetails} />
         </DisplayArea>
-        {gameState.state === "main" && (
+        {isPlaying && gameState.state === "main" && (
           <>
             <ControlsArea>
               <Heading>

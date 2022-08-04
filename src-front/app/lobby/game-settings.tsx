@@ -184,7 +184,8 @@ export default function GameSettings({
                 >
                   {mapList.map((m) => (
                     <option key={m.mapName} value={m.mapName}>
-                      {m.mapDisplayName}
+                      {m.mapDisplayName}:{" "}
+                      {m.description.map((a) => a[1]).join(", ")}
                     </option>
                   ))}
                 </select>

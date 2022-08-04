@@ -2,12 +2,14 @@ import type { Map } from "../game-types";
 
 import bloodbathChess from "./bloodbath-chess";
 import checkmate from "./checkmate";
+import chopShopChallenge from "./chop-shop-challenge";
 import deathTrap from "./death-trap";
 import dizzyDash from "./dizzy-dash";
 import islandHop from "./island-hop";
 import islandKing from "./island-king";
 import lostBearings from "./lost-bearings";
 import riskyExchange from "./risky-exchange";
+import robotStew from "./robot-stew";
 import twister from "./twister";
 
 export const mapList: {
@@ -17,83 +19,101 @@ export const mapList: {
 }[] = [
   {
     mapName: "dizzy dash",
-    mapDisplayName: "Dizzy Dash: Easy, 2-8, Short",
+    mapDisplayName: "Dizzy Dash",
     description: [
-      ["Recommended Players", "2 - 8"],
-      ["Length", "Short"],
       ["Difficulty", "Easy"],
+      ["Recommended Players", "2-8"],
+      ["Length", "Short"],
     ],
   },
   {
     mapName: "death trap",
-    mapDisplayName: "Death Trap: Easy, 2-4, Short",
+    mapDisplayName: "Death Trap",
     description: [
-      ["Recommended Players", "2 - 4"],
-      ["Length", "Short"],
       ["Difficulty", "Easy"],
+      ["Recommended Players", "2-4"],
+      ["Length", "Short"],
     ],
   },
   {
     mapName: "checkmate",
-    mapDisplayName: "Checkmate: Easy, 5-8, Short",
+    mapDisplayName: "Checkmate",
     description: [
-      ["Recommended Players", "5 - 8"],
-      ["Length", "Short"],
       ["Difficulty", "Easy"],
+      ["Recommended Players", "5-8"],
+      ["Length", "Short"],
     ],
   },
   {
     mapName: "risky exchange",
-    mapDisplayName: "Risky Exchange: Easy, 2-8, Medium",
+    mapDisplayName: "Risky Exchange",
     description: [
-      ["Recommended Players", "2 - 8"],
-      ["Length", "Medium"],
       ["Difficulty", "Easy"],
+      ["Recommended Players", "2-8"],
+      ["Length", "Medium"],
     ],
   },
   {
     mapName: "island hop",
-    mapDisplayName: "Island Hop: Easy, 2-8, Medium",
+    mapDisplayName: "Island Hop",
     description: [
-      ["Recommended Players", "2 - 8"],
-      ["Length", "Medium"],
       ["Difficulty", "Easy"],
+      ["Recommended Players", "2-8"],
+      ["Length", "Medium"],
     ],
   },
   {
     mapName: "bloodbath chess",
-    mapDisplayName: "Bloodbath Chess: Easy, 2-4, Medium",
+    mapDisplayName: "Bloodbath Chess",
     description: [
-      ["Recommended Players", "2 - 4"],
-      ["Length", "Medium"],
       ["Difficulty", "Easy"],
+      ["Recommended Players", "2-4"],
+      ["Length", "Medium"],
+    ],
+  },
+  {
+    mapName: "chop shop challenge",
+    mapDisplayName: "Chop Shop Challenge",
+    description: [
+      ["Difficulty", "Easy"],
+      ["Recommended Players", "2-4"],
+      ["Length", "Medium"],
     ],
   },
   {
     mapName: "twister",
-    mapDisplayName: "Twister: Easy, 5-8, Medium",
+    mapDisplayName: "Twister",
     description: [
-      ["Recommended Players", "5 - 8"],
-      ["Length", "Medium"],
       ["Difficulty", "Easy"],
+      ["Recommended Players", "5-8"],
+      ["Length", "Medium"],
     ],
   },
   {
     mapName: "island king",
-    mapDisplayName: "Island King: Hard, 5-8, Short",
+    mapDisplayName: "Island King",
     description: [
-      ["Recommended Players", "5 - 8"],
-      ["Length", "Short"],
       ["Difficulty", "Hard"],
+      ["Recommended Players", "5-8"],
+      ["Length", "Short"],
     ],
   },
   {
     mapName: "lost bearings",
-    mapDisplayName: "Lost Bearings: Hard, 2-4, Medium",
+    mapDisplayName: "Lost Bearings",
     description: [
-      ["Recommended Players", "2 - 4"],
-      ["Length", "Short"],
       ["Difficulty", "Hard"],
+      ["Recommended Players", "2-4"],
+      ["Length", "Medium"],
+    ],
+  },
+  {
+    mapName: "robot stew",
+    mapDisplayName: "Robot Stew",
+    description: [
+      ["Difficulty", "Hard"],
+      ["Recommended Players", "2-4"],
+      ["Length", "Medium"],
     ],
   },
 ];
@@ -104,6 +124,8 @@ export const getMap = (name: string): Map => {
       return bloodbathChess;
     case "checkmate":
       return checkmate;
+    case "chop shop challenge":
+      return chopShopChallenge;
     case "death trap":
       return deathTrap;
     case "dizzy dash":
@@ -114,6 +136,8 @@ export const getMap = (name: string): Map => {
       return islandKing;
     case "lost bearings":
       return lostBearings;
+    case "robot stew":
+      return robotStew;
     case "twister":
       return twister;
     case "risky exchange":

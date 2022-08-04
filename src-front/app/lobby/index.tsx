@@ -27,6 +27,10 @@ const Column = styled.div`
   }
 `;
 
+const SpectateText = styled.p`
+  max-width: 12em;
+`;
+
 const Details = styled.details`
   margin: 1em 0;
 `;
@@ -50,12 +54,12 @@ const Button = styled.button`
 
 export default function Lobby({ gameData, playerDetails }: LobbyProps) {
   const [loading, setLoading] = useState(false);
+  const [spectateClicked, setSpectateClicked] = useState(false);
 
   const { shortId, players, maxPlayers, host } = gameData;
 
-  const canJoinGame =
-    !players.map((a) => a.id).includes(playerDetails.playerId) && // Not already in the game
-    players.length < maxPlayers; // Game has room
+  const isInGame = players.map((a) => a.id).includes(playerDetails.playerId);
+  const canJoinGame = !isInGame && players.length < maxPlayers;
   const isHost = host === playerDetails.playerId;
 
   return (
@@ -128,6 +132,18 @@ export default function Lobby({ gameData, playerDetails }: LobbyProps) {
             <li key={player.id}>{player.name}</li>
           ))}
         </ul>
+        {!isInGame && !spectateClicked && (
+          <Button
+            onClick={() => {
+              setSpectateClicked(true);
+            }}
+          >
+            Spectate Game
+          </Button>
+        )}
+        {!isInGame && spectateClicked && (
+          <SpectateText>Spectating the game</SpectateText>
+        )}
       </Column>
       <Column>
         <GameSettings gameData={gameData} playerDetails={playerDetails} />
