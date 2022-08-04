@@ -9,6 +9,9 @@ import StreamHelper from "../redis/stream-helper";
 export const SHORT_TTL = 60 * 60; // 1 hour in seconds
 export const LONG_TTL = 36 * 60 * 60; // 36 hours in seconds
 
+const REDIS_XTRIM_THRESHOLD = 20; // maximum number of items in the stream
+const REDIX_XTRIM_LIMIT = 5;
+
 export const getRedisKeys = (gameId: string) => {
   const baseKey = `game:${gameId.replaceAll(/[^a-z0-9\-]/g, "-")}`.slice(0, 45);
   return {
@@ -55,9 +58,21 @@ export const makeShortId = async (fullId: string): Promise<string> => {
 };
 
 export const saveGame = async (gameData: GameData, useLongTTL?: boolean) => {
-  await client.xAdd(getRedisKeys(gameData.id).state, "*", {
-    data: JSON.stringify(gameData),
-  });
+  await client.xAdd(
+    getRedisKeys(gameData.id).state,
+    "*",
+    {
+      data: JSON.stringify(gameData),
+    },
+    {
+      TRIM: {
+        strategy: "MAXLEN",
+        strategyModifier: "~",
+        threshold: REDIS_XTRIM_THRESHOLD,
+        limit: REDIX_XTRIM_LIMIT,
+      },
+    }
+  );
   if (useLongTTL) {
     expireGT(getRedisKeys(gameData.id).state, LONG_TTL);
   } else {
@@ -80,8 +95,20 @@ export const findGame = async (gameId: string) => {
 export const addAction = async (
   actionMessageObject: ActionIncomingMessageObject
 ) => {
-  await client.xAdd(getRedisKeys(actionMessageObject.gameId).action, "*", {
-    data: JSON.stringify(actionMessageObject),
-  });
+  await client.xAdd(
+    getRedisKeys(actionMessageObject.gameId).action,
+    "*",
+    {
+      data: JSON.stringify(actionMessageObject),
+    },
+    {
+      TRIM: {
+        strategy: "MAXLEN",
+        strategyModifier: "~",
+        threshold: REDIS_XTRIM_THRESHOLD,
+        limit: REDIX_XTRIM_LIMIT,
+      },
+    }
+  );
   expireGT(getRedisKeys(actionMessageObject.gameId).action, LONG_TTL);
 };
