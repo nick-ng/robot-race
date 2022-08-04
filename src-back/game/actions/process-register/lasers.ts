@@ -2,7 +2,7 @@ import type { Robot, MapItem, LaserMapItem } from "dist-common/game-types";
 
 import { getLaserTarget } from "../../../../dist-common/get-laser-target";
 
-import { damageRobot, isRobotDestroyed } from "../utils";
+import { damageRobot } from "../utils";
 
 export const shootRobotLasers = (
   robots: Robot[],
@@ -10,7 +10,7 @@ export const shootRobotLasers = (
 ): boolean => {
   let shotsFired = false;
   for (const robot of robots) {
-    if (isRobotDestroyed(robot)) {
+    if (robot.status !== "ok") {
       continue;
     }
 

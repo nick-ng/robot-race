@@ -52,7 +52,7 @@ const pushRobots = (
     const { position, status } = robot;
     return (
       !isRobotDestroyed(robot) &&
-      status === "ok" &&
+      !["falling", "destroyed", "stand-by"].includes(status) &&
       affectedCell.x === position.x &&
       affectedCell.y === position.y
     );
