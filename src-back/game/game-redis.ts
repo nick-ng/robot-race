@@ -87,6 +87,10 @@ export const findGame = async (gameId: string) => {
   })) as DefaultStreamMessageType[];
 
   if (res.length > 0) {
+    client.xTrim(getRedisKeys(gameId).state, "MAXLEN", REDIS_XTRIM_THRESHOLD, {
+      LIMIT: REDIS_XTRIM_LIMIT,
+      strategyModifier: "~",
+    });
     return new Game(JSON.parse(res[0].message.data));
   }
 
