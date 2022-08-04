@@ -132,6 +132,7 @@ export default class GameServer {
       messageObject: ActionIncomingMessageObject | null,
       lastActionId: string
     ) => {
+      console.debug("updateHandler - game id", game.id);
       if (messageObject === null) {
         console.debug(
           "updateHandler - no message object",
@@ -142,7 +143,6 @@ export default class GameServer {
       }
       this.actionCount += 1;
 
-      console.debug("updateHandler - game before action", game.getGameData());
       const { type } = playGame(game, messageObject, (nextAction) => {
         console.debug("updateHandler - nextAction", nextAction);
         addAction(nextAction);
