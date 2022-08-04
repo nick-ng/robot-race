@@ -1,4 +1,4 @@
-import type { Map } from "dist-common/game-types";
+import type { Map } from "../game-types";
 
 const robotStew: Map = {
   name: "Robot Stew",
