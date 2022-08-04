@@ -10,7 +10,8 @@ export const SHORT_TTL = 60 * 60; // 1 hour in seconds
 export const LONG_TTL = 36 * 60 * 60; // 36 hours in seconds
 
 const REDIS_XTRIM_THRESHOLD = 20; // maximum number of items in the stream
-const REDIX_XTRIM_LIMIT = 5;
+const REDIS_XTRIM_LIMIT = 5;
+const ACTION_MULTIPLIER = 1;
 
 export const getRedisKeys = (gameId: string) => {
   const baseKey = `game:${gameId.replaceAll(/[^a-z0-9\-]/g, "-")}`.slice(0, 45);
@@ -69,7 +70,7 @@ export const saveGame = async (gameData: GameData, useLongTTL?: boolean) => {
         strategy: "MAXLEN",
         strategyModifier: "~",
         threshold: REDIS_XTRIM_THRESHOLD,
-        limit: REDIX_XTRIM_LIMIT,
+        limit: REDIS_XTRIM_LIMIT,
       },
     }
   );
@@ -105,8 +106,8 @@ export const addAction = async (
       TRIM: {
         strategy: "MAXLEN",
         strategyModifier: "~",
-        threshold: REDIS_XTRIM_THRESHOLD,
-        limit: REDIX_XTRIM_LIMIT,
+        threshold: Math.ceil(REDIS_XTRIM_THRESHOLD * ACTION_MULTIPLIER),
+        limit: REDIS_XTRIM_LIMIT,
       },
     }
   );
