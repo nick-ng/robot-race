@@ -65,16 +65,22 @@ export default class GameServer {
       "+",
       "-"
     );
+    console.debug(
+      "resumeAndListenForGames - gameStartRequests",
+      gameStartRequests
+    );
 
     // Wait for client to connect before blocking with xRead
     while (typeof streamHelper.xReadClient.id === "undefined") {
       await sleep(100);
     }
 
+    console.debug("resumeAndListenForGames - resuming in progress games");
     gameStartRequests?.forEach((gameStartRequest) => {
       this.handleGameStart(gameStartRequest.message.data);
     });
 
+    console.debug("resumeAndListenForGames - adding GAME_STARTER_KEY listener");
     streamHelper.addListener({
       streamKey: GAME_STARTER_KEY,
       id: this.id,
@@ -86,7 +92,12 @@ export default class GameServer {
 
   handleGameStart = async (gameStartRequestJSONString: string) => {
     const gameStartRequestData = JSON.parse(gameStartRequestJSONString);
+    console.debug(
+      "handleGameStart - gameStartRequestData",
+      gameStartRequestData
+    );
     const { gameId } = gameStartRequestData;
+    console.debug("handleGameStart - gameId", gameId);
 
     if (this.allGames.map((a) => a.id).includes(gameId)) {
       return;
@@ -95,6 +106,7 @@ export default class GameServer {
     const game = await findGame(gameId);
 
     if (game !== null && game.gameState.state !== "over") {
+      console.debug("handleGameStart - found game", gameId);
       this.allGames.push(game);
 
       const updateHandler = this.makeActionListener(game);
@@ -121,14 +133,22 @@ export default class GameServer {
       lastActionId: string
     ) => {
       if (messageObject === null) {
+        console.debug(
+          "updateHandler - no message object",
+          _message,
+          lastActionId
+        );
         return;
       }
       this.actionCount += 1;
 
+      console.debug("updateHandler - game before action", game.getGameData());
       const { type } = playGame(game, messageObject, (nextAction) => {
+        console.debug("updateHandler - nextAction", nextAction);
         addAction(nextAction);
       });
 
+      console.debug("updateHandler - nextAction result", type);
       if (type !== "success") {
         return;
       }
