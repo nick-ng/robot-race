@@ -7,9 +7,9 @@ export const directionMap = {
   left: { xd: -1, yd: 0 },
 } as const;
 
-const isRobotDestroyed = (robot: Robot): boolean => {
+const isRobotCorporeal = (robot: Robot): boolean => {
   const { status } = robot;
-  return ["falling", "destroyed"].includes(status);
+  return ["ok", "powered-down", "powered-on"].includes(status);
 };
 
 export const getLaserTarget = (
@@ -44,7 +44,7 @@ export const getLaserTarget = (
   const blockingRobots = robots.filter((r) => {
     return (
       r.position[perpendicular] === position[perpendicular] &&
-      !isRobotDestroyed(r)
+      isRobotCorporeal(r)
     );
   });
 
