@@ -1,15 +1,15 @@
 import { randomUUID } from "crypto";
-import type { GameData, GameSettings } from "../../dist-common/game-types";
+import type { GameData, GameSettings } from "../../../dist-common/game-types";
 import type {
   GameAction,
   ActionIncomingMessageObject,
   AutomaticAction,
-} from "../../dist-common/game-action-types";
+} from "../../../dist-common/game-action-types";
 
-import { getMap } from "../../dist-common/maps";
-import Game from "./game-class";
-import { saveGame, findGame, makeShortId, addAction } from "./game-redis";
-import { sendStartGameAction } from "./game-server";
+import { getMap } from "../../../dist-common/maps";
+import Game from "../game-class";
+import { saveGame, findGame, makeShortId, addAction } from "../game-redis";
+import { sendStartGameAction } from "../game-server";
 
 export const newGame = async (
   playerId: string,
@@ -70,7 +70,7 @@ export const changeGameSettings = async (
   }
 
   if (!game.isHost(playerId, playerPassword)) {
-    return { code: 400 };
+    return { code: 401 };
   }
 
   game.gameSettings = { ...game.gameSettings, ...someGameSettings };

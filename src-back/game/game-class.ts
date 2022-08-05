@@ -18,7 +18,7 @@ import type {
 import { performAction } from "./game-actions";
 import { getMap } from "../../dist-common/maps";
 
-const ROBOT_DESIGNS = [0, 1, 2, 3, 4, 5, 6, 7] as const;
+export const ROBOT_DESIGNS = [0, 1, 2, 3, 4, 5, 6, 7] as const;
 
 export const TURN_PHASES = {
   lobby: 0,
@@ -143,11 +143,7 @@ export default class Game {
     };
   };
 
-  isHost = (playerId: string, playerPassword: string): boolean => {
-    if (playerId !== this.host) {
-      return false;
-    }
-
+  isPlayer = (playerId: string, playerPassword: string): boolean => {
     if (!playerPassword) {
       return false;
     }
@@ -157,6 +153,14 @@ export default class Game {
     }
 
     return false;
+  };
+
+  isHost = (playerId: string, playerPassword: string): boolean => {
+    if (playerId !== this.host) {
+      return false;
+    }
+
+    return this.isPlayer(playerId, playerPassword);
   };
 
   addPlayer = (
@@ -211,8 +215,6 @@ export default class Game {
       setRegisterTimestamp: 0,
     };
 
-    const existingRobots = this.gameState.robots.length;
-
     this.gameState.robots.push({
       playerId,
       status: "stand-by",
@@ -225,7 +227,7 @@ export default class Game {
         facing: "up",
       },
       archiveMarkerId: -1,
-      design: ROBOT_DESIGNS[existingRobots],
+      design: "random",
     });
 
     this.gameState.flagsTouched[playerId] = 0;

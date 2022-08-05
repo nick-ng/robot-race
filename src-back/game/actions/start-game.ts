@@ -4,7 +4,7 @@ import type {
 } from "../../../dist-common/game-action-types";
 import type { MainGameState } from "../../../dist-common/game-types";
 import { getCardMap, shuffle } from "../../../dist-common/card-map";
-import type Game from "../game-class";
+import Game, { ROBOT_DESIGNS } from "../game-class";
 
 const startGame = (
   game: Game,
@@ -41,17 +41,27 @@ const startGame = (
   } as MainGameState;
 
   const { map } = gameSettings;
+  const chosenDesigns = game.gameState.robots.map((r) => r.design);
+  const remainingDesigns = shuffle(
+    ROBOT_DESIGNS.filter((d) => !chosenDesigns.includes(d))
+  );
 
   seatOrder.forEach((playerId, i) => {
     const robot = game.gameState.robots.find((r) => r.playerId === playerId);
     const startingDock = map.items.find(
       (mi) => mi.type === "dock" && mi.number === i + 1
     );
-    if (robot && startingDock) {
-      robot.position.x = startingDock.x;
-      robot.position.y = startingDock.y;
-      robot.archiveMarkerId = startingDock.id;
-      robot.status = "ok";
+
+    if (!robot || !startingDock) {
+      return;
+    }
+
+    robot.position.x = startingDock.x;
+    robot.position.y = startingDock.y;
+    robot.archiveMarkerId = startingDock.id;
+    robot.status = "ok";
+    if (robot.design === "random") {
+      robot.design = remainingDesigns.pop()!;
     }
   });
   game.gameState.robots;

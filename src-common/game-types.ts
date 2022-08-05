@@ -38,6 +38,7 @@ export interface Robot {
   position: Position;
   archiveMarkerId: number;
   design:
+    | "random"
     | 0
     | 1
     | 2

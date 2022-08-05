@@ -5,7 +5,9 @@ import QRCode from "react-qr-code";
 import type { PlayerGameData, PlayerDetails } from "dist-common/game-types";
 
 import Map from "../playing/map";
+import { RobotWithDesign } from "../home/robot-colors";
 import GameSettings from "./game-settings";
+import RobotDesignSelect from "./robot-design-select";
 
 declare const API_ORIGIN: string;
 
@@ -52,11 +54,25 @@ const Button = styled.button`
   }
 `;
 
+const PlayerItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
+
+  span {
+    margin-left: 0.5em;
+  }
+`;
+
 export default function Lobby({ gameData, playerDetails }: LobbyProps) {
   const [loading, setLoading] = useState(false);
   const [spectateClicked, setSpectateClicked] = useState(false);
 
-  const { shortId, players, maxPlayers, host } = gameData;
+  const { shortId, players, maxPlayers, host, gameState } = gameData;
+  const { robots } = gameState;
 
   const isInGame = players.map((a) => a.id).includes(playerDetails.playerId);
   const canJoinGame = !isInGame && players.length < maxPlayers;
@@ -127,11 +143,23 @@ export default function Lobby({ gameData, playerDetails }: LobbyProps) {
           </Button>
         )}
         <h2>Players In Game</h2>
-        <ul>
+        <div>
           {players.map((player) => (
-            <li key={player.id}>{player.name}</li>
+            <PlayerItem key={player.id}>
+              <RobotWithDesign
+                bounce={player.id === playerDetails.playerId}
+                design={robots.find((r) => r.playerId === player.id)?.design!}
+              />
+              <span>{player.name}</span>
+            </PlayerItem>
           ))}
-        </ul>
+        </div>
+        {isInGame && (
+          <RobotDesignSelect
+            gameData={gameData}
+            playerDetails={playerDetails}
+          />
+        )}
         {!isInGame && !spectateClicked && (
           <Button
             onClick={() => {

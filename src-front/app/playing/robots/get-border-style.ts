@@ -1,6 +1,6 @@
 import type { Robot } from "src-common/game-types";
 
-export const ROBOT_DESIGNS = [0, 1, 2, 3, 4, 5, 6, 7] as const;
+export const ROBOT_DESIGNS: Robot["design"][] = [0, 1, 2, 3, 4, 5, 6, 7];
 
 const getOldBorderStyle = (design: string) => {
   switch (design) {
@@ -69,6 +69,11 @@ const getBorderStyle = (design: Robot["design"], colors: string[]) => {
       return {
         borderStyle: "dotted",
         borderColor: colors[3],
+      };
+    case "random":
+      return {
+        borderStyle: "solid",
+        borderColor: "#000000",
       };
     default:
       return getOldBorderStyle(design);
