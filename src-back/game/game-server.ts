@@ -215,10 +215,12 @@ export default class GameServer {
   };
 }
 
-const gameStats = {
+const redisStats = {
   lastFetch: 0,
   gameStreamEntries: 0,
   games: 0,
+  totalAllocated: 0,
+  peakAllocated: 0,
 };
 
 export const checkStats = async () => {
@@ -247,23 +249,27 @@ export const checkStats = async () => {
     }
   }
 
-  if (Date.now() - gameStats.lastFetch > 10 * STATS_REPORT_DELAY_MS) {
+  if (Date.now() - redisStats.lastFetch > 10 * STATS_REPORT_DELAY_MS) {
     const gameStartRequests = await redisClient.xRevRange(
       GAME_STARTER_KEY,
       "+",
       "-"
     );
-    gameStats.games = 0;
-    gameStats.gameStreamEntries = 0;
+    redisStats.games = 0;
+    redisStats.gameStreamEntries = 0;
+
+    const stats = await redisClient.memoryStats();
+    redisStats.peakAllocated = stats.peakAllocated;
+    redisStats.totalAllocated = stats.totalAllocated;
 
     for (const gameStartRequest of gameStartRequests) {
       try {
         const gameStartRequestData = JSON.parse(gameStartRequest.message.data);
         const { gameId } = gameStartRequestData;
         const gameLength = await gameStreamEntries(gameId);
-        gameStats.gameStreamEntries += gameLength;
+        redisStats.gameStreamEntries += gameLength;
         if (gameLength > 0) {
-          gameStats.games++;
+          redisStats.games++;
         }
       } catch (e) {
         console.error("error when fetching game entries stats", e);
@@ -271,7 +277,7 @@ export const checkStats = async () => {
     }
   }
 
-  return { serverStats, gameStats };
+  return { serverStats, redisStats };
 };
 
 export const sendStartGameAction = async (gameId: string) => {
