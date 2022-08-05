@@ -30,6 +30,37 @@
 
   <body>
     <div id="app">
+      <h2>Redis Stats</h2>
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th class="left">Metric</th>
+            <th class="right">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left">Total Games</td>
+            <td class="right">{{ redisStats.games }}</td>
+          </tr>
+          <tr>
+            <td class="left">Total Game Entries</td>
+            <td class="right">{{ redisStats.gameStreamEntries }}</td>
+          </tr>
+          <tr>
+            <td class="left">Peak Allocated</td>
+            <td class="right">
+              {{ redisStats.peakAllocated?.toLocaleString() }}
+            </td>
+          </tr>
+          <tr>
+            <td class="left">Total Allocated</td>
+            <td class="right">
+              {{ redisStats.totalAllocated?.toLocaleString() }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <h2>Server Stats</h2>
       <table class="stats-table">
         <thead>
@@ -43,7 +74,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="server in servers">
+          <tr v-for="server in serverStats">
             <td class="left">{{ server.id }}</td>
             <td class="right">{{ server.games }}</td>
             <td class="right">{{ server.actionsPerMinute.toFixed(1) }}</td>
@@ -53,25 +84,6 @@
               100).toFixed(1) }}%
             </td>
             <td class="right">{{ Date.now() - server.timestamp }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <h2>Game Stats</h2>
-      <table class="stats-table">
-        <thead>
-          <tr>
-            <th class="left">Metric</th>
-            <th class="right">Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="left">Total Games</td>
-            <td class="right">{{ games.games }}</td>
-          </tr>
-          <tr>
-            <td class="left">Total Game Entries</td>
-            <td class="right">{{ games.gameStreamEntries }}</td>
           </tr>
         </tbody>
       </table>
@@ -85,16 +97,16 @@
       createApp({
         data() {
           return {
-            servers: [],
-            games: {},
+            serverStats: [],
+            redisStats: {},
           };
         },
         methods: {
           async getStats() {
             const res = await fetch("/api/server-stats");
             const resJson = await res.json();
-            this.servers = resJson.serverStats;
-            this.games = resJson.gameStats;
+            this.serverStats = resJson.serverStats;
+            this.redisStats = resJson.redisStats;
 
             setTimeout(this.getStats, 1500);
           },
