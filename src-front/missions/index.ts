@@ -8,6 +8,7 @@ import get4WallsData from "./4-walls";
 import get5Conveyors1 from "./5-conveyors-1";
 import get6Conveyors2 from "./6-conveyors-2";
 import get7Conveyors3 from "./7-conveyors-3";
+import get8Gears from "./8-gears";
 
 import getTestPowerDownData from "./test-power-down";
 import getTestCurvedConveyor from "./test-curved-conveyor";
@@ -38,6 +39,8 @@ export const getMissionData = (
       return get6Conveyors2(playerId);
     case "7-conveyors-3":
       return get7Conveyors3(playerId);
+    case "8-gears":
+      return get8Gears(playerId);
     case "test-power-down":
       return getTestPowerDownData(playerId);
     case "test-curved-conveyor":

@@ -204,7 +204,7 @@ export const getMissionData = (
     missionObjectives: [
       "Express move your robot twice as often compared to normal conveyors.",
     ],
-    nextMission: "free-practice",
+    nextMission: "8-gears",
   };
 };
 
