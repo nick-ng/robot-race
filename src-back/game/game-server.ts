@@ -8,6 +8,7 @@ import {
   getRedisKeys as getGameKeys,
   saveGame,
   getRedisKeys,
+  gameStreamEntries,
   addAction,
 } from "./game-redis";
 import type Game from "./game-class";
@@ -214,8 +215,14 @@ export default class GameServer {
   };
 }
 
+const gameStats = {
+  lastFetch: 0,
+  gameStreamEntries: 0,
+  games: 0,
+};
+
 export const checkStats = async () => {
-  let allStats = [];
+  let serverStats = [];
 
   for await (const key of redisClient.scanIterator({
     TYPE: "string",
@@ -225,7 +232,7 @@ export const checkStats = async () => {
       const statsJSONString = await redisClient.get(key);
       if (typeof statsJSONString === "string") {
         const stats = JSON.parse(statsJSONString);
-        allStats.push(stats);
+        serverStats.push(stats);
 
         if (
           !stats.timestamp ||
@@ -240,12 +247,36 @@ export const checkStats = async () => {
     }
   }
 
-  return allStats;
+  if (Date.now() - gameStats.lastFetch > 10 * STATS_REPORT_DELAY_MS) {
+    const gameStartRequests = await redisClient.xRevRange(
+      GAME_STARTER_KEY,
+      "+",
+      "-"
+    );
+    gameStats.games = 0;
+    gameStats.gameStreamEntries = 0;
+
+    for (const gameStartRequest of gameStartRequests) {
+      try {
+        const gameStartRequestData = JSON.parse(gameStartRequest.message.data);
+        const { gameId } = gameStartRequestData;
+        const gameLength = await gameStreamEntries(gameId);
+        gameStats.gameStreamEntries += gameLength;
+        if (gameLength > 0) {
+          gameStats.games++;
+        }
+      } catch (e) {
+        console.error("error when fetching game entries stats", e);
+      }
+    }
+  }
+
+  return { serverStats, gameStats };
 };
 
 export const sendStartGameAction = async (gameId: string) => {
   try {
-    const serverStats = await checkStats();
+    const { serverStats } = await checkStats();
 
     let serverId = Math.random() > 0.5 ? "first" : "last";
     if (serverStats.length > 0) {

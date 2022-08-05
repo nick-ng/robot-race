@@ -102,6 +102,10 @@ export const findGame = async (gameId: string) => {
   return null;
 };
 
+export const gameStreamEntries = (gameId: string) => {
+  return client.xLen(getRedisKeys(gameId).state);
+};
+
 export const addAction = async (
   actionMessageObject: ActionIncomingMessageObject
 ) => {

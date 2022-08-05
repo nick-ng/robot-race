@@ -17,13 +17,14 @@ interface RobotsProps {
 
 export default function Robots({ gameData, playerDetails }: RobotsProps) {
   const { gameState, players } = gameData;
-  const { robots } = gameState as MainGameState;
+  const { robots, animations } = gameState as MainGameState;
   const [prevShoot, setPrevShoot] = useState(false);
   const utterance = useRef<SpeechSynthesisUtterance>(
     new SpeechSynthesisUtterance("pew")
   ).current;
 
-  const shoot = robots.some((r) => r.laser);
+  const shoot =
+    animations.includes("robot-laser") && robots.some((r) => r.laser);
 
   useEffect(() => {
     const voices = window.speechSynthesis.getVoices();
