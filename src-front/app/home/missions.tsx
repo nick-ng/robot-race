@@ -38,6 +38,9 @@ export default function Missions() {
         <li>
           <Link to="/mission/7-conveyors-3">7: Conveyors 3</Link>
         </li>
+        <li>
+          <Link to="/mission/8-gears">8: Gears</Link>
+        </li>
       </ul>
       <h3>Other Stuff</h3>
       <ul>

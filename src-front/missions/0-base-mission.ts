@@ -3,6 +3,8 @@ import type {
   GameSecrets,
   MainGameState,
   GameSettings,
+  Map,
+  Robot,
 } from "dist-common/game-types";
 import { getCardMap } from "dist-common/card-map";
 
@@ -51,3 +53,30 @@ export const getBaseGameSettings = (): Omit<GameSettings, "map"> => ({
   timerSeconds: 30,
   timerStart: "never",
 });
+
+export const getBaseRobot = (
+  playerId: string,
+  facing: Robot["position"]["facing"],
+  map: Map
+): Robot => {
+  const dockBay = map.items.find((mi) => mi.type === "dock");
+
+  if (!dockBay) {
+    throw new Error("Map has no dock bay");
+  }
+
+  return {
+    playerId,
+    status: "ok",
+    damagePoints: 0,
+    lockedRegisters: [],
+    lives: 3,
+    position: {
+      x: dockBay.x,
+      y: dockBay.y,
+      facing,
+    },
+    archiveMarkerId: dockBay.id,
+    design: "outset",
+  };
+};
