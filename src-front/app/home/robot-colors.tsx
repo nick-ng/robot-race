@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
+import { Robot } from "dist-common/game-types";
+
 import { useOptions, defaultOptions } from "../../hooks/options-context";
 import getBorderStyle, {
   ROBOT_DESIGNS,
@@ -14,7 +16,7 @@ const StyledRobotColors = styled.div`
   }
 `;
 
-const Robots = styled.div`
+export const Robots = styled.div`
   display: grid;
   grid-template-columns: repeat(4, auto);
   grid-gap: 0.5em;
@@ -43,6 +45,17 @@ const Robot = styled.div`
   }
 `;
 
+export const RobotWithDesign = ({ design }: { design: Robot["design"] }) => {
+  const {
+    options: { colors },
+  } = useOptions();
+  return (
+    <Robot style={getBorderStyle(design, colors)}>
+      <img src="/robot-triangle.svg" />
+    </Robot>
+  );
+};
+
 export default function RobotColors() {
   const {
     options: { colors },
@@ -53,12 +66,7 @@ export default function RobotColors() {
     <StyledRobotColors>
       <Robots>
         {ROBOT_DESIGNS.map((design) => (
-          <Robot
-            key={`design-${design}`}
-            style={getBorderStyle(design, colors)}
-          >
-            <img src="/robot-triangle.svg" />
-          </Robot>
+          <RobotWithDesign key={`design-${design}`} design={design} />
         ))}
         {colors.map((color, i) => (
           <input
