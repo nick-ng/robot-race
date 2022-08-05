@@ -27,10 +27,10 @@ const RobotContainer = styled.div`
 `;
 
 const chosenCss = css`
+  border-style: solid;
+  border-color: #000000;
   background-color: #000000;
   color: #ffffff;
-  border-style: solid;
-  border-color: black;
 
   &:active {
     border-style: solid;
@@ -43,6 +43,11 @@ const disabledCss = css`
   &:active {
     border-style: outset;
   }
+
+  ${RobotContainer} {
+    transform: rotate(0.5turn);
+    opacity: 0.5;
+  }
 `;
 
 const Button = styled.button<{ isChosen?: boolean }>`
@@ -50,6 +55,11 @@ const Button = styled.button<{ isChosen?: boolean }>`
   ${({ disabled }) => (disabled ? disabledCss : "")}
   padding: 3px;
   font-size: 18pt;
+  font-weight: bold;
+
+  ${RobotContainer} {
+    transition: transform 450ms ease-in-out;
+  }
 `;
 
 type ChooseRobotDesignParams = {
@@ -96,26 +106,17 @@ export default function RobotDesignSelect({
     return null;
   }
 
+  const allRobotDesigns = [...ROBOT_DESIGNS];
+  allRobotDesigns.splice(ROBOT_DESIGNS.length / 2, 0, "random");
+
   return (
     <StyledRobotDesignSelect>
       <Robots>
-        <Button
-          isChosen={"random" === robot.design}
-          onClick={() => {
-            chooseRobotDesign({
-              newRobotDesign: "random",
-              gameId: gameData.id,
-              playerDetails,
-            });
-          }}
-        >
-          ?
-        </Button>
-        {ROBOT_DESIGNS.map((design) => (
+        {allRobotDesigns.map((design) => (
           <Button
             key={`design-button-${design}`}
             isChosen={design === robot.design}
-            disabled={otherRobotDesigns.includes(design)}
+            disabled={design !== "random" && otherRobotDesigns.includes(design)}
             onClick={() => {
               chooseRobotDesign({
                 newRobotDesign: design,
@@ -124,9 +125,13 @@ export default function RobotDesignSelect({
               });
             }}
           >
-            <RobotContainer>
-              <RobotWithDesign design={design} />
-            </RobotContainer>
+            {design === "random" ? (
+              "?"
+            ) : (
+              <RobotContainer>
+                <RobotWithDesign design={design} />
+              </RobotContainer>
+            )}
           </Button>
         ))}
       </Robots>

@@ -147,6 +147,7 @@ export default function Lobby({ gameData, playerDetails }: LobbyProps) {
           {players.map((player) => (
             <PlayerItem key={player.id}>
               <RobotWithDesign
+                bounce={player.id === playerDetails.playerId}
                 design={robots.find((r) => r.playerId === player.id)?.design!}
               />
               <span>{player.name}</span>
