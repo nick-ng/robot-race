@@ -123,7 +123,7 @@ export const getMissionData = (
     gameData,
     missionHeading: "4: Walls",
     missionObjectives: ["Robots can't move through walls."],
-    nextMission: "free-practice",
+    nextMission: "5-conveyors-1",
   };
 };
 
