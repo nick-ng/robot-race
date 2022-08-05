@@ -30,7 +30,7 @@
 
   <body>
     <div id="app">
-      <h1>Server Stats</h1>
+      <h2>Server Stats</h2>
       <table class="stats-table">
         <thead>
           <tr>
@@ -56,6 +56,25 @@
           </tr>
         </tbody>
       </table>
+      <h2>Game Stats</h2>
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th class="left">Metric</th>
+            <th class="right">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left">Total Games</td>
+            <td class="right">{{ games.games }}</td>
+          </tr>
+          <tr>
+            <td class="left">Total Game Entries</td>
+            <td class="right">{{ games.gameStreamEntries }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </body>
 
@@ -67,12 +86,15 @@
         data() {
           return {
             servers: [],
+            games: {},
           };
         },
         methods: {
           async getStats() {
             const res = await fetch("/api/server-stats");
-            this.servers = await res.json();
+            const resJson = await res.json();
+            this.servers = resJson.serverStats;
+            this.games = resJson.gameStats;
 
             setTimeout(this.getStats, 1500);
           },
