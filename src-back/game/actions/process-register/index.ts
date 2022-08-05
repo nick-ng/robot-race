@@ -51,7 +51,7 @@ const processRegister = (
     robot.laser = null;
   });
   gameState.animations = gameState.animations.filter(
-    (a) => !["map-laser"].includes(a)
+    (a) => !["map-laser", "robot-laser"].includes(a)
   );
 
   if (instructionItem.type === "program-card-instruction") {
@@ -102,6 +102,9 @@ const processRegister = (
         let shotsFired = false;
         if (instructionItem.payload.shooter === "robots") {
           shotsFired = shootRobotLasers(robots, map.items);
+          if (shotsFired) {
+            gameState.animations.push("robot-laser");
+          }
         } else {
           shotsFired = shootMapLasers(robots, map.items);
           if (shotsFired) {

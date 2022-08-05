@@ -193,14 +193,12 @@ export default function MapEditor() {
 
   useEffect(() => {
     if (items.length > 5) {
-      console.log("saving");
       localStorage.setItem(MAP_STORE, JSON.stringify(map));
     }
   }, [items]);
 
   useEffect(() => {
     try {
-      console.log("loading");
       const savedMapString = localStorage.getItem(MAP_STORE) as string;
       const savedMap = JSON.parse(savedMapString) as Map;
       setItems(savedMap.items);
