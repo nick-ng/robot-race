@@ -29,6 +29,15 @@ export default function Missions() {
         <li>
           <Link to="/mission/4-walls">4: Walls</Link>
         </li>
+        <li>
+          <Link to="/mission/5-conveyors-1">5: Conveyors 1</Link>
+        </li>
+        <li>
+          <Link to="/mission/6-conveyors-2">6: Conveyors 2</Link>
+        </li>
+        <li>
+          <Link to="/mission/7-conveyors-3">7: Conveyors 3</Link>
+        </li>
       </ul>
       <h3>Other Stuff</h3>
       <ul>
