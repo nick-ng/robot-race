@@ -42,13 +42,10 @@ export default function Missions() {
           <Link to="/mission/8-gears">8: Gears</Link>
         </li>
       </ul>
-      <h3>Other Stuff</h3>
+      <h3>Other Missions</h3>
       <ul>
         <li>
           <Link to="/mission/free-practice">Free Practice</Link>
-        </li>
-        <li>
-          <Link to="/editor">Map Editor</Link>
         </li>
       </ul>
     </StyledMissions>

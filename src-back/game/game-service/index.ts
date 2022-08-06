@@ -7,6 +7,8 @@ import type {
 } from "../../../dist-common/game-action-types";
 
 import { getMap } from "../../../dist-common/maps";
+import { parseMap } from "../../../dist-common/maps/parse-map";
+
 import Game from "../game-class";
 import { saveGame, findGame, makeShortId, addAction } from "../game-redis";
 import { sendStartGameAction } from "../game-server";
@@ -87,7 +89,8 @@ export const changeMap = async (
   gameId: string,
   playerId: string,
   playerPassword: string,
-  mapName: string
+  mapName: string,
+  mapJSON?: string
 ) => {
   const game = await findGame(gameId);
   if (!game) {
@@ -98,7 +101,19 @@ export const changeMap = async (
     return { code: 400 };
   }
 
-  const map = getMap(mapName);
+  let tempMap = null;
+
+  if (mapName === "custom") {
+    const { map, errors } = parseMap(mapJSON || "");
+
+    if (!map) {
+      return { code: 400, message: errors.join("; ") };
+    }
+
+    tempMap = map;
+  }
+
+  const map = tempMap || getMap(mapName);
 
   game.gameSettings = { ...game.gameSettings, map };
 

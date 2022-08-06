@@ -76,6 +76,11 @@ export default function App() {
         <TopBarItem>
           <Link to="/">Home</Link>
         </TopBarItem>
+        <TopBarItem>
+          <a target="_blank" href="https://github.com/nick-ng/robot-race">
+            GitHub
+          </a>
+        </TopBarItem>
       </TopBar>
       {!playerDetails.playerName && (
         <Form

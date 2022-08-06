@@ -9,6 +9,7 @@ import type {
   MapItemNoId,
 } from "dist-common/game-types";
 
+import { mapValidator } from "dist-common/maps/map-validator";
 import {
   MapCell,
   MapCellItem,
@@ -17,7 +18,31 @@ import {
   getAllElements,
 } from "../playing/map/board";
 
-const MAP_STORE = "ROBOT-RACE-MAP-STORE";
+import MapItemSelect from "./map-item-select";
+import CurvedConveyorFromOptions from "./curved-conveyor-from-options";
+
+export const MAP_STORE = "ROBOT-RACE-MAP-STORE";
+const OPPOSITE = {
+  up: "down",
+  down: "up",
+  left: "right",
+  right: "left",
+} as const;
+const ITEM_NAMES: {
+  [Property in MapItemNoId["type"] | "erase"]?: string;
+} = {
+  "curved-conveyor": "Curved Conveyor",
+  "straight-conveyor": "Straight Conveyor",
+  dock: "Dock Bay",
+};
+
+export const MapItemChooser = styled.table`
+  margin: 1em 0;
+`;
+
+export const ValidationHeadings = styled.div`
+  margin-top: 1em;
+`;
 
 export const EditorToolTip = styled.div`
   z-index: 15;
@@ -33,10 +58,10 @@ export const EditorToolTip = styled.div`
   left: 3vw;
 `;
 
-export const MapItemPreview = styled.div`
+export const MapItemPreview = styled.div<{ alwaysShow?: boolean }>`
   position: absolute;
   z-index: 5;
-  display: none;
+  display: ${({ alwaysShow }) => (alwaysShow ? "block" : "none")};
   width: 2.8vw;
   height: 2.8vw;
   top: 0;
@@ -63,12 +88,9 @@ const StyledMapEditor = styled.div`
 
 const Controls = styled.div`
   margin-right: 1em;
+  width: 15em;
   display: flex;
   flex-direction: column;
-
-  button {
-    margin-bottom: 0.5em;
-  }
 `;
 
 const MapOutput = styled.textarea`
@@ -81,6 +103,24 @@ const ImportControls = styled.div`
   justify-content: flex-start;
   align-items: stretch;
   margin-left: 1em;
+`;
+
+const ChosenItemDisplay = styled.div`
+  background-color: #2f2f2f;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  & > div {
+    position: relative;
+    box-sizing: border-box;
+    border: 1px dashed #808080;
+    text-align: center;
+    width: 2.8vw;
+    height: 2.8vw;
+  }
 `;
 
 const wallDirectionMap = {
@@ -110,7 +150,6 @@ const getExtraOptions = (
   let numberRange = new Array(99).fill(null).map((_, i) => i + 1);
   switch (itemType) {
     case "dock":
-      numberRange = [1, 2, 3, 4, 5, 6, 7, 8];
     case "flag":
       const existingNumbers = mapItems
         .filter((mi) => mi.type === itemType)
@@ -132,7 +171,7 @@ const getExtraOptions = (
       return {
         direction: "up",
         fromDirection: ["left"],
-        showStraignt: false,
+        showStraight: false,
         speed: 1,
       };
     case "gear":
@@ -166,11 +205,97 @@ export default function MapEditor() {
   );
   const [importString, setImportString] = useState("");
 
+  let flagCounter = 1;
+  let dockCounter = 1;
   const map: Map = {
     name,
     ...dimensions,
-    items: items.map((item, id) => ({ ...item, id })),
+    items: items.map((item, id) => {
+      const fullItem = { ...item, id };
+
+      if (item.type === "flag") {
+        return {
+          ...fullItem,
+          number: flagCounter++,
+        };
+      }
+
+      if (item.type === "dock") {
+        return {
+          ...fullItem,
+          number: dockCounter++,
+        };
+      }
+
+      return fullItem;
+    }),
   };
+
+  let chosenItemTexts: null | JSX.Element | JSX.Element[] = null;
+  let chosenItemStyles = {};
+  const direction = (
+    extraOptions as {
+      direction: "up" | "down" | "left" | "right";
+    }
+  ).direction;
+  const xyd = wallDirectionMap[direction];
+
+  let extraExtra = {};
+
+  if (chosenItem === "wall") {
+    extraExtra = {
+      x: 0,
+      y: 0,
+      x1: xyd.xd,
+      y1: xyd.yd,
+    };
+  }
+
+  if (["dock", "flag"].includes(chosenItem)) {
+    const existingItems = items.filter((i) => i.type === chosenItem);
+    extraExtra = {
+      number: existingItems.length + 1,
+    };
+  }
+
+  if (chosenItem !== "erase") {
+    chosenItemTexts =
+      chosenItem === "dock" ? (
+        <MapCellItem
+          key={`dock-${(extraOptions as Pick<DockMapItem, "number">).number}`}
+        >
+          🤖
+        </MapCellItem>
+      ) : (
+        getAllElements(
+          [
+            {
+              type: chosenItem,
+              ...extraOptions,
+              ...extraExtra,
+            } as MapItemNoId,
+          ],
+          items,
+          [],
+          []
+        )
+      );
+
+    chosenItemStyles = getAllStyles([
+      {
+        type: chosenItem,
+        ...extraOptions,
+        ...extraExtra,
+      } as MapItemNoId,
+    ]);
+  }
+
+  const chosenItemDisplayName =
+    ITEM_NAMES[chosenItem] ||
+    `${chosenItem.charAt(0).toUpperCase()}${chosenItem.slice(1)}`;
+  const chosenItemCount = items.filter((i) => i.type === chosenItem).length;
+
+  const { warnings, errors } = mapValidator(map);
 
   useEffect(() => {
     if (chosenItem === "erase") {
@@ -195,7 +320,7 @@ export default function MapEditor() {
     if (items.length > 5) {
       localStorage.setItem(MAP_STORE, JSON.stringify(map));
     }
-  }, [items]);
+  }, [items, dimensions.height, dimensions.width]);
 
   useEffect(() => {
     try {
@@ -217,21 +342,44 @@ export default function MapEditor() {
       <Controls>
         <button
           onClick={() => {
-            if (confirm("Really clear the map?")) {
+            if (chosenItem === "erase") {
+              if (
+                !confirm(
+                  "Really clear the map? The width and height will also be reset."
+                )
+              ) {
+                return;
+              }
+
               setItems([]);
+              setDimensions({
+                height: 16,
+                width: 12,
+              });
+              return;
             }
+
+            if (chosenItemCount > 5) {
+              if (
+                !confirm(
+                  `Really clear ${chosenItemCount} ${chosenItemDisplayName}s`
+                )
+              ) {
+                return;
+              }
+            }
+
+            setItems(items.filter((i) => i.type !== chosenItem));
           }}
         >
-          Clear
+          {chosenItem !== "erase"
+            ? `Clear ${chosenItemCount} ${chosenItemDisplayName}${
+                chosenItemCount !== 1 ? "s" : ""
+              }`
+            : "Clear All Map Items"}
         </button>
-        <button
-          onClick={() => {
-            navigator.clipboard.writeText(JSON.stringify(map));
-          }}
-        >
-          Copy
-        </button>
-        <table>
+
+        <MapItemChooser>
           <tbody>
             <tr>
               <td>Name</td>
@@ -277,13 +425,9 @@ export default function MapEditor() {
             <tr>
               <td>Item</td>
               <td>
-                <select
-                  name="map-item"
-                  onChange={(e) => {
-                    const newItemType = e.target.value as
-                      | MapItemNoId["type"]
-                      | "erase";
-
+                <MapItemSelect
+                  value={chosenItem}
+                  onChange={(newItemType) => {
                     if (newItemType === "erase") {
                       setChosenItem("erase");
                       return;
@@ -295,18 +439,7 @@ export default function MapEditor() {
                       setExtraOptions(extraOptions);
                     }
                   }}
-                >
-                  <option value="erase">Erase</option>
-                  <option value="dock">Dock Bay</option>
-                  <option value="flag">Flag</option>
-                  <option value="wall">Wall</option>
-                  <option value="pit">Pit</option>
-                  <option value="straight-conveyor">Straight Conveyor</option>
-                  <option value="curved-conveyor">Curved Conveyor</option>
-                  <option value="gear">Gear</option>
-                  <option value="repair">Repair</option>
-                  <option value="laser">Laser</option>
-                </select>
+                />
               </td>
             </tr>
             {["wall", "straight-conveyor", "curved-conveyor", "laser"].includes(
@@ -366,6 +499,7 @@ export default function MapEditor() {
                 <td>Speed</td>
                 <td>
                   <input
+                    style={{ width: "5em" }}
                     value={(extraOptions as { speed: number }).speed}
                     type="number"
                     onChange={(e) => {
@@ -383,6 +517,7 @@ export default function MapEditor() {
                 <td>Count</td>
                 <td>
                   <input
+                    style={{ width: "5em" }}
                     value={(extraOptions as { count: number }).count}
                     type="number"
                     onChange={(e) => {
@@ -397,37 +532,21 @@ export default function MapEditor() {
             )}
             {["curved-conveyor"].includes(chosenItem) && (
               <tr>
-                <td>From (comma separated)</td>
+                <td>From</td>
                 <td>
-                  <input
-                    value={
-                      (extraOptions as { tempFromDirection: string })
-                        .tempFromDirection || ""
+                  <CurvedConveyorFromOptions
+                    direction={
+                      (extraOptions as Partial<CurvedConveyorMapItem>)
+                        .direction!
                     }
-                    type="string"
-                    onChange={(e) => {
+                    fromDirection={
+                      (extraOptions as Partial<CurvedConveyorMapItem>)
+                        .fromDirection || []
+                    }
+                    onChange={(newFromDirection) => {
                       setExtraOptions((prev) => ({
                         ...prev,
-                        tempFromDirection: e.target.value,
-                      }));
-                    }}
-                  />
-                </td>
-              </tr>
-            )}
-            {["curved-conveyor"].includes(chosenItem) && (
-              <tr>
-                <td>Show Straight</td>
-                <td>
-                  <input
-                    checked={
-                      (extraOptions as { showStraight: boolean }).showStraight
-                    }
-                    type="checkbox"
-                    onChange={(e) => {
-                      setExtraOptions((prev) => ({
-                        ...prev,
-                        showStraignt: e.target.checked,
+                        fromDirection: newFromDirection,
                       }));
                     }}
                   />
@@ -435,7 +554,7 @@ export default function MapEditor() {
               </tr>
             )}
           </tbody>
-        </table>
+        </MapItemChooser>
         <button
           disabled={items.length === 0}
           onClick={() => {
@@ -446,6 +565,41 @@ export default function MapEditor() {
         >
           Undo
         </button>
+        <ChosenItemDisplay>
+          <span>Map Item Preview</span>
+          <div>
+            <MapItemPreview alwaysShow style={chosenItemStyles}>
+              {chosenItemTexts}
+            </MapItemPreview>
+          </div>
+        </ChosenItemDisplay>
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(JSON.stringify(map));
+          }}
+        >
+          Copy Map To Clipboard
+        </button>
+        {errors.length > 0 && (
+          <>
+            <ValidationHeadings>Errors</ValidationHeadings>
+            <ul>
+              {errors.map((p) => (
+                <li key={p}>{p}</li>
+              ))}
+            </ul>
+          </>
+        )}
+        {warnings.length > 0 && (
+          <>
+            <ValidationHeadings>Warnings</ValidationHeadings>
+            <ul>
+              {warnings.map((p) => (
+                <li key={p}>{p}</li>
+              ))}
+            </ul>
+          </>
+        )}
       </Controls>
       <RelativeDiv>
         <StyledBoard cellSize={2.8}>
@@ -453,84 +607,12 @@ export default function MapEditor() {
             {new Array(dimensions.height).fill(null).map((_, y) => (
               <tr key={`map-row-${y}`}>
                 {new Array(dimensions.width).fill(null).map((_, x) => {
-                  const cellItems = items.filter(
+                  const cellItems = map.items.filter(
                     (mi) => mi.x === x && mi.y === y
                   );
 
-                  const elements = getAllElements(cellItems, items, [], []);
+                  const elements = getAllElements(cellItems, map.items, [], []);
                   const styles = getAllStyles(cellItems);
-
-                  let chosenItemTexts = null;
-                  let chosenItemStyles = {};
-                  const direction = (
-                    extraOptions as {
-                      direction: "up" | "down" | "left" | "right";
-                    }
-                  ).direction;
-                  const xyd = wallDirectionMap[direction];
-
-                  let extraExtra = {};
-
-                  if (chosenItem === "wall") {
-                    extraExtra = {
-                      x: 0,
-                      y: 0,
-                      x1: xyd.xd,
-                      y1: xyd.yd,
-                    };
-                  }
-
-                  if (chosenItem === "curved-conveyor") {
-                    const { tempFromDirection } =
-                      extraOptions as CurvedConveyorMapItem & {
-                        tempFromDirection: string;
-                      };
-
-                    const fromDirection =
-                      tempFromDirection
-                        ?.split(",")
-                        ?.map((a) => a.trim().toLowerCase()) ||
-                      ([] as ("up" | "down" | "left" | "right")[]);
-
-                    extraExtra = {
-                      fromDirection,
-                    };
-                  }
-
-                  if (chosenItem !== "erase") {
-                    chosenItemTexts =
-                      chosenItem === "dock" ? (
-                        <MapCellItem
-                          key={`dock-${
-                            (extraOptions as Pick<DockMapItem, "number">).number
-                          }`}
-                        >
-                          🤖
-                          {(extraOptions as Pick<DockMapItem, "number">).number}
-                        </MapCellItem>
-                      ) : (
-                        getAllElements(
-                          [
-                            {
-                              type: chosenItem,
-                              ...extraOptions,
-                              ...extraExtra,
-                            } as MapItemNoId,
-                          ],
-                          items,
-                          [],
-                          []
-                        )
-                      );
-
-                    chosenItemStyles = getAllStyles([
-                      {
-                        type: chosenItem,
-                        ...extraOptions,
-                        ...extraExtra,
-                      } as MapItemNoId,
-                    ]);
-                  }
 
                   return (
                     <MapCell
@@ -546,6 +628,10 @@ export default function MapEditor() {
                             );
                           }
 
+                          if (chosenItem === "dock" && chosenItemCount >= 8) {
+                            return prevItems;
+                          }
+
                           if (chosenItem === "wall") {
                             return prevItems.concat([
                               {
@@ -559,32 +645,29 @@ export default function MapEditor() {
                           }
 
                           if (chosenItem === "curved-conveyor") {
-                            const {
-                              tempFromDirection,
-                              ...remainingExtraOptions
-                            } = extraOptions as CurvedConveyorMapItem & {
-                              tempFromDirection: string;
-                            };
+                            const { fromDirection } =
+                              extraOptions as CurvedConveyorMapItem;
 
-                            const fromDirection = tempFromDirection
-                              .split(",")
-                              .map((a) => a.trim().toLowerCase()) as (
-                              | "up"
-                              | "down"
-                              | "left"
-                              | "right"
-                            )[];
+                            const oppositeDirection =
+                              OPPOSITE[
+                                (extraOptions as Partial<CurvedConveyorMapItem>)
+                                  .direction!
+                              ];
+
                             return prevItems.concat([
                               {
                                 type: "curved-conveyor",
-                                ...(remainingExtraOptions as {
-                                  direction: "up" | "down" | "left" | "right";
-                                  showStraignt: boolean;
-                                  speed: 1 | 2;
-                                }),
+                                ...(extraOptions as Omit<
+                                  CurvedConveyorMapItem,
+                                  "type" | "x" | "y"
+                                >),
                                 x,
                                 y,
-                                fromDirection,
+                                fromDirection: fromDirection.filter(
+                                  (nd) => nd !== oppositeDirection
+                                ),
+                                showStraight:
+                                  fromDirection.includes(oppositeDirection),
                               },
                             ]);
                           }

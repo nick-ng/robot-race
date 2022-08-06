@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 
 import type { GameData, PlayerDetails } from "dist-common/game-types";
@@ -136,6 +136,12 @@ export default function Home({ playerDetails }: HomeProps) {
       </Column>
       <Column>
         <Missions />
+        <h3>Other Stuff</h3>
+        <ul>
+          <li>
+            <Link to="/editor">Map Editor</Link>
+          </li>
+        </ul>
       </Column>
       <Column>
         <RobotColors />

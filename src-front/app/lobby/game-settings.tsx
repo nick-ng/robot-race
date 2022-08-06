@@ -5,10 +5,10 @@ import type {
   PlayerGameData,
   PlayerDetails,
   GameSettings,
+  Map,
 } from "dist-common/game-types";
 
-import { mapList } from "../../../dist-common/maps";
-
+import MapChooser from "./map-chooser";
 import DebouncedRange from "./debounced-range";
 
 declare const API_ORIGIN: string;
@@ -62,15 +62,11 @@ export default function GameSettings({
   playerDetails,
 }: GameSettingsProps) {
   const { gameSettings, host } = gameData;
+  const { map } = gameSettings;
   const [timerSeconds, setTimerSeconds] = useState(gameSettings.timerSeconds);
   const [timerStartLoading, setTimerStartLoading] = useState(false);
-  const [mapChoiceLoading, setMapChoiceLoading] = useState(false);
 
   const isHost = playerDetails.playerId === host;
-
-  const mapInfo = mapList.find(
-    (m) => m.mapName.toLowerCase() === gameSettings.map.name.toLowerCase()
-  );
 
   useEffect(() => {
     setTimerSeconds(gameSettings.timerSeconds);
@@ -155,52 +151,14 @@ export default function GameSettings({
               <td>{timerSeconds} seconds</td>
             )}
           </tr>
-          <tr>
-            <td>Map</td>
-            <td>
-              {isHost ? (
-                <select
-                  disabled={!isHost || mapChoiceLoading}
-                  value={mapInfo ? mapInfo.mapName : "risky exchange"}
-                  onChange={async (e) => {
-                    if (!isHost) {
-                      return;
-                    }
-                    setMapChoiceLoading(true);
-                    await fetch(`${API_ORIGIN}/api/game/${gameData.id}`, {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json;charset=utf-8",
-                        "x-player-id": playerDetails.playerId,
-                        "x-player-password": playerDetails.playerPassword,
-                      },
-                      body: JSON.stringify({
-                        action: "change-map",
-                        mapName: e.target.value,
-                      }),
-                    });
-                    setMapChoiceLoading(false);
-                  }}
-                >
-                  {mapList.map((m) => (
-                    <option key={m.mapName} value={m.mapName}>
-                      {m.mapDisplayName}:{" "}
-                      {m.description.map((a) => a[1]).join(", ")}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                mapInfo?.mapDisplayName
-              )}
-            </td>
-          </tr>
-          {mapInfo &&
-            mapInfo.description.map((d) => (
-              <tr key={d[0]}>
-                <td>{d[0]}</td>
-                <td>{d[1]}</td>
-              </tr>
-            ))}
+          {map && (
+            <MapChooser
+              map={map}
+              isHost={isHost}
+              gameId={gameData.id}
+              playerDetails={playerDetails}
+            />
+          )}
         </tbody>
       </table>
     </StyledGameSettings>

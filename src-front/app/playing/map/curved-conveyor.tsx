@@ -46,6 +46,13 @@ const counterClockwiseMap = {
   left: "down",
 } as const;
 
+const oppositeMap = {
+  up: "down",
+  down: "up",
+  left: "right",
+  right: "left",
+} as const;
+
 interface CurvedConveyorProps {
   cellItems: MapItemNoId[];
 }
@@ -59,18 +66,21 @@ export default function CurvedConveyor({ cellItems }: CurvedConveyorProps) {
     return null;
   }
 
-  const { fromDirection, direction, speed, showStraignt } = curvedConveyorItem;
+  const { fromDirection, direction, speed, showStraight } = curvedConveyorItem;
 
   const isCounterClockwise = fromDirection.includes(
     counterClockwiseMap[direction]
   );
   const isClockwise = fromDirection.includes(clockwiseMap[direction]);
 
+  const isStraight =
+    showStraight || fromDirection.includes(oppositeMap[direction]);
+
   const imageUrl = [
     "/conveyor-",
     speed === 2 ? 2 : 1,
     "-",
-    showStraignt ? "d" : "",
+    isStraight ? "d" : "",
     isCounterClockwise ? "l" : "",
     isClockwise ? "r" : "",
     ".png",
