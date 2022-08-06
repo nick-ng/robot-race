@@ -9,7 +9,7 @@ import type {
   MapItemNoId,
 } from "dist-common/game-types";
 
-import { mapValidator } from "dist-common/map-validator";
+import { mapValidator } from "dist-common/maps/map-validator";
 import {
   MapCell,
   MapCellItem,
@@ -21,7 +21,7 @@ import {
 import MapItemSelect from "./map-item-select";
 import CurvedConveyorFromOptions from "./curved-conveyor-from-options";
 
-const MAP_STORE = "ROBOT-RACE-MAP-STORE";
+export const MAP_STORE = "ROBOT-RACE-MAP-STORE";
 const OPPOSITE = {
   up: "down",
   down: "up",

@@ -10,6 +10,7 @@ import {
   gearMapItemDecoder,
   laserMapItemDecoder,
   pitMapItemDecoder,
+  powerUpMapItemDecoder,
   pusherMapItemDecoder,
   repairMapItemDecoder,
   straightConveyorMapItemDecoder,
@@ -177,6 +178,8 @@ export interface GearMapItem extends D.TypeOf<typeof gearMapItemDecoder> {}
 export interface LaserMapItem extends D.TypeOf<typeof laserMapItemDecoder> {}
 export interface PusherMapItem extends D.TypeOf<typeof pusherMapItemDecoder> {}
 export interface RepairMapItem extends D.TypeOf<typeof repairMapItemDecoder> {}
+export interface PowerUpMapItem
+  extends D.TypeOf<typeof powerUpMapItemDecoder> {}
 
 export type MapItemNoId =
   | DockMapItem
@@ -188,9 +191,17 @@ export type MapItemNoId =
   | GearMapItem
   | LaserMapItem
   | PusherMapItem
-  | RepairMapItem;
+  | RepairMapItem
+  | PowerUpMapItem;
 
 export type MapItem = MapItemNoId & { id: number };
+
+export interface MapNoId {
+  name: string;
+  items: MapItemNoId[];
+  width: number;
+  height: number;
+}
 
 export interface Map {
   name: string;

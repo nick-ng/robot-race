@@ -107,7 +107,7 @@ router.post("/", async (req, res, _next) => {
 // Game actions - including join, including settings
 router.post("/:gameId", async (req, res, _next) => {
   const { gameId } = req.params;
-  const { action, playerName, gameSettings, mapName, newRobotDesign } =
+  const { action, playerName, gameSettings, mapName, mapJSON, newRobotDesign } =
     req.body;
   const { "x-player-id": playerId, "x-player-password": playerPassword } =
     req.headers;
@@ -172,7 +172,8 @@ router.post("/:gameId", async (req, res, _next) => {
           gameId,
           playerId,
           playerPassword,
-          mapName
+          mapName,
+          mapJSON
         );
         if (code === 200) {
           res.json({

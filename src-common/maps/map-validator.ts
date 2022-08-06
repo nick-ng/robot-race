@@ -1,15 +1,29 @@
-import { Map, MapItem } from "./game-types";
+import {
+  Map,
+  MapNoId,
+  MapItemNoId,
+  MapItem,
+  FlagMapItem,
+  DockMapItem,
+} from "../game-types";
 
 interface MapWithValidation {
-  map: Map;
+  map: MapNoId;
+  fixedMap: MapNoId;
+  warnings: string[];
+  errors: string[];
+}
+
+interface MapWithValidationAndIds {
+  map: MapNoId;
   fixedMap: Map;
   warnings: string[];
   errors: string[];
 }
 
-const IMPASSABLE_ITEMS: MapItem["type"][] = ["pit"];
+const IMPASSABLE_ITEMS: MapItemNoId["type"][] = ["pit"];
 
-const toMapWithValidation = (map: Map): MapWithValidation => ({
+const toMapWithValidation = (map: MapNoId): MapWithValidation => ({
   map,
   fixedMap: map,
   warnings: [],
@@ -17,23 +31,23 @@ const toMapWithValidation = (map: Map): MapWithValidation => ({
 });
 
 const getInboundsItems = (
-  items: MapItem[],
+  items: MapItemNoId[],
   width: number,
   height: number
-): MapItem[] =>
+): MapItemNoId[] =>
   items.filter((mi) => mi.x >= 0 && mi.x < width && mi.y >= 0 && mi.y < height);
 
 const getInboundsItemsOfType = (
-  itemType: MapItem["type"],
-  items: MapItem[],
+  itemType: MapItemNoId["type"],
+  items: MapItemNoId[],
   width: number,
   height: number
-): MapItem[] =>
+): MapItemNoId[] =>
   getInboundsItems(items, width, height).filter((mi) => mi.type === itemType);
 
 const itemsOnImpassable = (
-  itemsToCheck: MapItem[],
-  items: MapItem[]
+  itemsToCheck: MapItemNoId[],
+  items: MapItemNoId[]
 ): boolean => {
   return itemsToCheck.some((i) => {
     const itemsOnSameGrid = items.filter(
@@ -138,24 +152,24 @@ const reindexMapItems = ({
   fixedMap,
   warnings,
   errors,
-}: MapWithValidation): MapWithValidation => {
+}: MapWithValidation): MapWithValidationAndIds => {
   let flagCounter = 1;
   let dockCounter = 1;
-  const itemsWithIds = fixedMap.items.map((item, id) => {
+  const itemsWithIds = fixedMap.items.map((item, id): MapItem => {
     const fullItem = { ...item, id };
 
     if (item.type === "flag") {
       return {
         ...fullItem,
         number: flagCounter++,
-      };
+      } as FlagMapItem & { id: number };
     }
 
     if (item.type === "dock") {
       return {
         ...fullItem,
         number: dockCounter++,
-      };
+      } as DockMapItem & { id: number };
     }
 
     return fullItem;
@@ -169,13 +183,13 @@ const reindexMapItems = ({
   };
 };
 
-export const mapValidator = (map: Map) => {
-  return [
-    checkDockBays,
-    checkFlags,
-    checkOutOfBoundsItems,
-    reindexMapItems,
-  ].reduce((prev, curr) => {
-    return curr(prev);
-  }, toMapWithValidation(map));
+export const mapValidator = (map: MapNoId) => {
+  const result = [checkDockBays, checkFlags, checkOutOfBoundsItems].reduce(
+    (prev, curr) => {
+      return curr(prev);
+    },
+    toMapWithValidation(map)
+  );
+
+  return reindexMapItems(result);
 };

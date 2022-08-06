@@ -134,9 +134,16 @@ export const mapItemDecoder = pipe(
   intersect(mapItemNoIdDecoder)
 );
 
-export const mapDecoder = struct({
+export const mapNoIdDecoder = struct({
   name: string,
   items: array(mapItemNoIdDecoder),
+  width: number,
+  height: number,
+});
+
+export const mapDecoder = struct({
+  name: string,
+  items: array(mapItemDecoder),
   width: number,
   height: number,
 });

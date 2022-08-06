@@ -116,6 +116,11 @@ export const mapList: {
       ["Length", "Medium"],
     ],
   },
+  {
+    mapName: "custom",
+    mapDisplayName: "Custom",
+    description: [],
+  },
 ];
 
 export const getMap = (name: string): Map => {
