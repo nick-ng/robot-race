@@ -79,3 +79,6 @@ export const symmetricDifference = <T>(setA: Set<T>, setB: Set<T>): Set<T> => {
   }
   return _difference;
 };
+
+export const toAmbidextrousQuote = (inputString: string): string =>
+  inputString.replaceAll("“", '"').replaceAll("”", '"');

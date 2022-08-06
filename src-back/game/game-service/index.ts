@@ -6,6 +6,7 @@ import type {
   AutomaticAction,
 } from "../../../dist-common/game-action-types";
 
+import { toAmbidextrousQuote } from "../../../dist-common/utils";
 import { getMap } from "../../../dist-common/maps";
 import { parseMap } from "../../../dist-common/maps/parse-map";
 
@@ -104,7 +105,7 @@ export const changeMap = async (
   let tempMap = null;
 
   if (mapName === "custom") {
-    const { map, errors } = parseMap(mapJSON || "");
+    const { map, errors } = parseMap(toAmbidextrousQuote(mapJSON || ""));
 
     if (!map) {
       return { code: 400, message: errors.join("; ") };
