@@ -1,4 +1,20 @@
+import D from "io-ts/Decoder";
+
 import type { ActionIncomingMessageObject } from "./game-action-types";
+
+import {
+  basicMapItemDecoder,
+  curvedConveyorMapItemDecoder,
+  dockMapItemDecoder,
+  flagMapItemDecoder,
+  gearMapItemDecoder,
+  laserMapItemDecoder,
+  pitMapItemDecoder,
+  pusherMapItemDecoder,
+  repairMapItemDecoder,
+  straightConveyorMapItemDecoder,
+  wallMapItemDecoder,
+} from "./decoders/map";
 
 export interface Scores {
   [index: string]: number;
@@ -148,65 +164,19 @@ export interface OnePlayerSecrets {
   cardsInHand: string[];
 }
 
-export interface BasicMapItem {
-  x: number;
-  y: number;
-}
-
-export interface DockMapItem extends BasicMapItem {
-  type: "dock";
-  number: number;
-}
-
-export interface FlagMapItem extends BasicMapItem {
-  type: "flag";
-  number: number;
-}
-
-export interface WallMapItem extends BasicMapItem {
-  type: "wall";
-  x1: number;
-  y1: number;
-}
-
-export interface StraightConveyorMapItem extends BasicMapItem {
-  type: "straight-conveyor";
-  direction: "up" | "down" | "left" | "right";
-  speed: 1 | 2;
-}
-
-export interface CurvedConveyorMapItem extends BasicMapItem {
-  type: "curved-conveyor";
-  direction: "up" | "down" | "left" | "right";
-  fromDirection: ("up" | "down" | "left" | "right")[];
-  showStraignt: boolean;
-  speed: 1 | 2;
-}
-
-export interface PitMapItem extends BasicMapItem {
-  type: "pit";
-}
-
-export interface GearMapItem extends BasicMapItem {
-  type: "gear";
-  direction: "clockwise" | "counter-clockwise"; // CW: Green, CCW: Red
-}
-
-export interface LaserMapItem extends BasicMapItem {
-  type: "laser";
-  direction: "up" | "down" | "left" | "right";
-  count: 1 | 2 | 3;
-}
-
-export interface PusherMapItem extends BasicMapItem {
-  type: "pusher";
-  direction: "up" | "down" | "left" | "right";
-  activeRegisters: number[];
-}
-
-export interface RepairMapItem extends BasicMapItem {
-  type: "repair";
-}
+export interface BasicMapItem extends D.TypeOf<typeof basicMapItemDecoder> {}
+export interface DockMapItem extends D.TypeOf<typeof dockMapItemDecoder> {}
+export interface FlagMapItem extends D.TypeOf<typeof flagMapItemDecoder> {}
+export interface WallMapItem extends D.TypeOf<typeof wallMapItemDecoder> {}
+export interface StraightConveyorMapItem
+  extends D.TypeOf<typeof straightConveyorMapItemDecoder> {}
+export interface CurvedConveyorMapItem
+  extends D.TypeOf<typeof curvedConveyorMapItemDecoder> {}
+export interface PitMapItem extends D.TypeOf<typeof pitMapItemDecoder> {}
+export interface GearMapItem extends D.TypeOf<typeof gearMapItemDecoder> {}
+export interface LaserMapItem extends D.TypeOf<typeof laserMapItemDecoder> {}
+export interface PusherMapItem extends D.TypeOf<typeof pusherMapItemDecoder> {}
+export interface RepairMapItem extends D.TypeOf<typeof repairMapItemDecoder> {}
 
 export type MapItemNoId =
   | DockMapItem

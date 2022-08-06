@@ -37,7 +37,7 @@ const map: GameSettings["map"] = {
       type: "curved-conveyor",
       direction: "up",
       fromDirection: ["right"],
-      showStraignt: false,
+      showStraight: false,
       speed: 1,
       x: 1,
       y: 3,
@@ -47,7 +47,7 @@ const map: GameSettings["map"] = {
       type: "curved-conveyor",
       direction: "right",
       fromDirection: ["down"],
-      showStraignt: false,
+      showStraight: false,
       speed: 1,
       x: 1,
       y: 1,
@@ -57,7 +57,7 @@ const map: GameSettings["map"] = {
       type: "curved-conveyor",
       direction: "down",
       fromDirection: ["left"],
-      showStraignt: false,
+      showStraight: false,
       speed: 1,
 
       x: 3,
@@ -68,7 +68,7 @@ const map: GameSettings["map"] = {
       type: "curved-conveyor",
       direction: "left",
       fromDirection: ["up"],
-      showStraignt: false,
+      showStraight: false,
       speed: 1,
       x: 3,
       y: 3,
@@ -188,7 +188,7 @@ export default getMissionData;
       "fromDirection": [
         "right"
       ],
-      "showStraignt": false,
+      "showStraight": false,
       "speed": 1,
       "tempFromDirection": "right",
       "x": 1,
@@ -201,7 +201,7 @@ export default getMissionData;
       "fromDirection": [
         "down"
       ],
-      "showStraignt": false,
+      "showStraight": false,
       "speed": 1,
       "tempFromDirection": "down",
       "x": 1,
@@ -214,7 +214,7 @@ export default getMissionData;
       "fromDirection": [
         "left"
       ],
-      "showStraignt": false,
+      "showStraight": false,
       "speed": 1,
       "tempFromDirection": "left",
       "x": 3,
@@ -227,7 +227,7 @@ export default getMissionData;
       "fromDirection": [
         "up"
       ],
-      "showStraignt": false,
+      "showStraight": false,
       "speed": 1,
       "tempFromDirection": "up",
       "x": 3,

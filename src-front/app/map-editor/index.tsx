@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import type {
@@ -9,6 +9,7 @@ import type {
   MapItemNoId,
 } from "dist-common/game-types";
 
+import { mapValidator } from "dist-common/map-validator";
 import {
   MapCell,
   MapCellItem,
@@ -37,6 +38,10 @@ const ITEM_NAMES: {
 
 export const MapItemChooser = styled.table`
   margin: 1em 0;
+`;
+
+export const ValidationHeadings = styled.div`
+  margin-top: 1em;
 `;
 
 export const EditorToolTip = styled.div`
@@ -83,12 +88,9 @@ const StyledMapEditor = styled.div`
 
 const Controls = styled.div`
   margin-right: 1em;
+  width: 15em;
   display: flex;
   flex-direction: column;
-
-  button {
-    margin-bottom: 0.5em;
-  }
 `;
 
 const MapOutput = styled.textarea`
@@ -169,7 +171,7 @@ const getExtraOptions = (
       return {
         direction: "up",
         fromDirection: ["left"],
-        showStraignt: false,
+        showStraight: false,
         speed: 1,
       };
     case "gear":
@@ -212,7 +214,6 @@ export default function MapEditor() {
       const fullItem = { ...item, id };
 
       if (item.type === "flag") {
-        console.log("flag", fullItem, flagCounter);
         return {
           ...fullItem,
           number: flagCounter++,
@@ -294,6 +295,8 @@ export default function MapEditor() {
     `${chosenItem.charAt(0).toUpperCase()}${chosenItem.slice(1)}`;
   const chosenItemCount = items.filter((i) => i.type === chosenItem).length;
 
+  const { warnings, errors } = mapValidator(map);
+
   useEffect(() => {
     if (chosenItem === "erase") {
       return;
@@ -317,7 +320,7 @@ export default function MapEditor() {
     if (items.length > 5) {
       localStorage.setItem(MAP_STORE, JSON.stringify(map));
     }
-  }, [items]);
+  }, [items, dimensions.height, dimensions.width]);
 
   useEffect(() => {
     try {
@@ -340,11 +343,19 @@ export default function MapEditor() {
         <button
           onClick={() => {
             if (chosenItem === "erase") {
-              if (!confirm("Really clear the map?")) {
+              if (
+                !confirm(
+                  "Really clear the map? The width and height will also be reset."
+                )
+              ) {
                 return;
               }
 
               setItems([]);
+              setDimensions({
+                height: 16,
+                width: 12,
+              });
               return;
             }
 
@@ -488,6 +499,7 @@ export default function MapEditor() {
                 <td>Speed</td>
                 <td>
                   <input
+                    style={{ width: "5em" }}
                     value={(extraOptions as { speed: number }).speed}
                     type="number"
                     onChange={(e) => {
@@ -505,6 +517,7 @@ export default function MapEditor() {
                 <td>Count</td>
                 <td>
                   <input
+                    style={{ width: "5em" }}
                     value={(extraOptions as { count: number }).count}
                     type="number"
                     onChange={(e) => {
@@ -567,6 +580,26 @@ export default function MapEditor() {
         >
           Copy Map To Clipboard
         </button>
+        {errors.length > 0 && (
+          <>
+            <ValidationHeadings>Errors</ValidationHeadings>
+            <ul>
+              {errors.map((p) => (
+                <li key={p}>{p}</li>
+              ))}
+            </ul>
+          </>
+        )}
+        {warnings.length > 0 && (
+          <>
+            <ValidationHeadings>Warnings</ValidationHeadings>
+            <ul>
+              {warnings.map((p) => (
+                <li key={p}>{p}</li>
+              ))}
+            </ul>
+          </>
+        )}
       </Controls>
       <RelativeDiv>
         <StyledBoard cellSize={2.8}>
@@ -593,6 +626,10 @@ export default function MapEditor() {
                             return prevItems.filter(
                               (mi) => !(mi.x === x && mi.y === y)
                             );
+                          }
+
+                          if (chosenItem === "dock" && chosenItemCount >= 8) {
+                            return prevItems;
                           }
 
                           if (chosenItem === "wall") {
@@ -629,7 +666,7 @@ export default function MapEditor() {
                                 fromDirection: fromDirection.filter(
                                   (nd) => nd !== oppositeDirection
                                 ),
-                                showStraignt:
+                                showStraight:
                                   fromDirection.includes(oppositeDirection),
                               },
                             ]);
