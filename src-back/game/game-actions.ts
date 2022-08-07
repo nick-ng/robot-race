@@ -10,6 +10,7 @@ import setRegister from "./actions/set-register";
 import setManyRegisters from "./actions/set-many-registers";
 import finishSettingRegisters from "./actions/finish-setting-registers";
 import forceSetRegisters from "./actions/force-set-registers";
+import forceSkipPowerDown from "./actions/force-skip-power-down-robot";
 import powerDownNextTurn from "./actions/power-down-next-turn";
 import processRegister from "./actions/process-register";
 import cleanUp from "./actions/clean-up";
@@ -27,6 +28,7 @@ export const performAction = (
   automaticAction?: AutomaticAction;
 } => {
   console.debug("performAction - game.id, action", game.id, action);
+  const { type } = action;
   switch (action.type) {
     case "start":
       return startGame(game, action);
@@ -40,6 +42,8 @@ export const performAction = (
       return finishSettingRegisters(game, action);
     case "force-set-registers":
       return forceSetRegisters(game, action);
+    case "force-skip-power-down":
+      return forceSkipPowerDown(game, action);
     case "power-down-next-turn":
       return powerDownNextTurn(game, action);
     case "process-registers":
@@ -49,6 +53,7 @@ export const performAction = (
     case "spawn-robot":
       return spawnRobot(game, action);
     default:
+      console.error("No handler for action", type, action);
       return { game, message: "OK" };
   }
 };

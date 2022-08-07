@@ -260,7 +260,7 @@ export default class Game {
       };
     }
 
-    if (action.playerId !== playerId) {
+    if (playerId !== "server" && action.playerId !== playerId) {
       return {
         type: "error",
         message: "You can't perform an action for someone else.",

@@ -1,4 +1,4 @@
-import type { Robot, MainGameState, GameState } from "./game-types";
+import type { Robot, MainGameState, GameState, Player } from "./game-types";
 
 const SOME_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXY0123456789";
 
@@ -40,7 +40,9 @@ export const getRespawnOrder = (
   );
 };
 
-export const getPowerDownDecisionOrder = (gameState: GameState) => {
+export const getPowerDownDecisionOrder = (
+  gameState: GameState
+): Player["id"][] => {
   if (gameState.state !== "main") {
     return [];
   }

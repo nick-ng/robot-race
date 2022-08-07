@@ -3,15 +3,16 @@ import type {
   PowerDownNextTurnAction,
 } from "../../../dist-common/game-action-types";
 import type { MainGameState } from "../../../dist-common/game-types";
+import { getPowerDownDecisionOrder } from "../../../dist-common/utils";
 import canPowerDownRobot from "../../../dist-common/action-validators/can-power-down";
 
-import type Game from "../game-class";
+import Game, { TURN_PHASES } from "../game-class";
 
 const powerDownNextTurn = (
   game: Game,
   action: PowerDownNextTurnAction
 ): { game: Game; message: string; automaticAction?: AutomaticAction } => {
-  const { gameState } = game;
+  const { gameState, gameSettings } = game;
   const { canPerform, message } = canPowerDownRobot(action.playerId, gameState);
 
   if (!canPerform) {
@@ -26,12 +27,30 @@ const powerDownNextTurn = (
   poweringDownNextTurn.push(decision);
 
   if (poweringDownNextTurn.length === seatOrder.length) {
+    gameState.turnPhase = TURN_PHASES.processRegisters;
     return {
       game,
       message: "OK",
       automaticAction: {
         action: { playerId: "server", type: "process-registers" },
         delay: 500,
+      },
+    };
+  }
+
+  getPowerDownDecisionOrder(gameState);
+  const powerDownOrder = getPowerDownDecisionOrder(gameState);
+  if (gameSettings.timerStart !== "never" && powerDownOrder.length > 0) {
+    return {
+      game,
+      message: "OK",
+      automaticAction: {
+        action: {
+          playerId: powerDownOrder[0],
+          type: "force-skip-power-down",
+          turn: gameState.turn,
+        },
+        delay: gameSettings.timerSeconds * 1000,
       },
     };
   }

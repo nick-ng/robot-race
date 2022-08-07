@@ -33,7 +33,7 @@ export const isTimerVisible = ({
   finishedProgrammingPlayers: string[];
   seatOrder: string[];
 }): boolean => {
-  if (finishedProgrammingPlayers.includes(playerId)) {
+  if (finishedProgrammingPlayers.length === seatOrder.length) {
     return false;
   }
 

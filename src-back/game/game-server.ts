@@ -154,12 +154,17 @@ export default class GameServer {
       this.actionCount += 1;
 
       console.debug("updateHandler - messageObject", game.id, messageObject);
-      const { type } = playGame(game, messageObject, (nextAction) => {
+      const { type, message } = playGame(game, messageObject, (nextAction) => {
         console.debug("updateHandler - nextAction", game.id, nextAction);
         addAction(nextAction);
       });
 
-      console.debug("updateHandler - nextAction result", game.id, type);
+      console.debug(
+        "updateHandler - nextAction result",
+        game.id,
+        type,
+        message
+      );
       if (type !== "success") {
         return;
       }

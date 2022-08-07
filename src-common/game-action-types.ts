@@ -1,4 +1,4 @@
-import type { Robot, OnePlayerSecrets } from "./game-types";
+import type { Robot, OnePlayerSecrets, Player, GameState } from "./game-types";
 
 interface BasicAction {
   playerId: string;
@@ -32,7 +32,13 @@ export interface FinishSettingRegistersAction extends BasicAction {
 
 export interface ForceSetRegistersAction extends BasicAction {
   type: "force-set-registers";
-  turn: number;
+  turn: GameState["turn"];
+}
+
+export interface ForceSkipPowerDownAction extends BasicAction {
+  type: "force-skip-power-down";
+  turn: GameState["turn"];
+  playerId: Player["id"];
 }
 
 export interface PowerDownNextTurnAction extends BasicAction {
@@ -63,6 +69,7 @@ export type GameAction =
   | SetManyRegisterAction
   | FinishSettingRegistersAction
   | ForceSetRegistersAction
+  | ForceSkipPowerDownAction
   | PowerDownNextTurnAction
   | ProcessRegisterAction
   | CleanUpAction
