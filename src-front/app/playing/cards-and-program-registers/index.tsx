@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 
 import type {
   PlayerGameData,
@@ -13,10 +13,11 @@ import { setOneRegister, sortAndFilter, areArraysSame } from "./utils";
 
 import { wiggleAnimationMixin } from "../../../animations/wiggle";
 import { useOptions } from "../../../hooks/options-context";
+import { isTimerVisible } from "../utils";
+import TimerBar from "../timer-bar";
 
 import CardsInHand from "./cards-in-hand";
 import ProgramRegisters from "./program-registers";
-import { isTimerVisible } from "../utils";
 
 const StyledCardsAndProgramRegisters = styled.div`
   display: inline-block;
@@ -27,9 +28,10 @@ const StyledProgramRegisters = styled(ProgramRegisters)``;
 const StyledCardsInHand = styled(CardsInHand)``;
 
 const Heading = styled.div`
-  margin: 0.5em 0 0.3em;
+  margin: 0.5em 0 0.5em;
   text-align: center;
   position: relative;
+  min-height: 0.5em;
 `;
 
 const SubmitButton = styled.button<{ isLoading?: boolean }>`
@@ -46,65 +48,6 @@ const SubmitButton = styled.button<{ isLoading?: boolean }>`
     }
     return "pointer";
   }};
-`;
-
-const TimerAnimation = keyframes`
-0% {
-  width: 100%;
-}
-
-100% {
-  width: 0%;
-}
-`;
-
-const WhiteBlackAnimation = keyframes`
-0% {
-  color: #ffffff;
-}
-
-100% {
-  color: #000000;
-}
-`;
-
-const TimerOuterBar = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #000000;
-`;
-
-const TimerInnerBar = styled.div<{ timerDuration: number }>`
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  animation-name: ${TimerAnimation};
-  animation-duration: ${({ timerDuration }) => timerDuration}s;
-  animation-timing-function: linear;
-  animation-delay: 0s;
-  animation-iteration-count: 1;
-  background-color: #ffffff;
-`;
-
-const TimerText = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-
-  animation-name: ${WhiteBlackAnimation};
-  animation-duration: 1.5s;
-  animation-timing-function: ease-in-out;
-  animation-delay: 0s;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-  z-index: 1;
-  font-weight: bold;
 `;
 
 interface CardsAndProgramRegistersProps {
@@ -349,33 +292,31 @@ export default function CardsAndProgramRegisters({
         }}
         chosenRegister={selectedRegisterIndex}
       />
-      {!youFinishedProgramming && (
-        <>
-          <Heading>
-            <span>Program Cards (Max {9 - robot.damagePoints})</span>
-            {showTimer && (
-              <TimerOuterBar>
-                <TimerInnerBar
-                  timerDuration={actualTimerSeconds}
-                ></TimerInnerBar>
-                <TimerText>Hurry Up!</TimerText>
-              </TimerOuterBar>
-            )}
-          </Heading>
-          <StyledCardsInHand
-            cardWidth={5}
-            isLoading={isLoading}
-            gameData={gameData}
-            predictedCardsInHand={cardsInHand}
-            handleCardChoice={(cardId) => {
-              if (isLoading) {
-                return;
-              }
-              setSelectedCardId(cardId);
-            }}
-            chosenCard={selectedCardId}
+      <Heading>
+        {!youFinishedProgramming && (
+          <span>Program Cards (Max {9 - robot.damagePoints})</span>
+        )}
+        {showTimer && (
+          <TimerBar
+            timerDuration={actualTimerSeconds}
+            showText={!youFinishedProgramming}
           />
-        </>
+        )}
+      </Heading>
+      {!youFinishedProgramming && (
+        <StyledCardsInHand
+          cardWidth={5}
+          isLoading={isLoading}
+          gameData={gameData}
+          predictedCardsInHand={cardsInHand}
+          handleCardChoice={(cardId) => {
+            if (isLoading) {
+              return;
+            }
+            setSelectedCardId(cardId);
+          }}
+          chosenCard={selectedCardId}
+        />
       )}
     </StyledCardsAndProgramRegisters>
   );
