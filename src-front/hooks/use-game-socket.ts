@@ -10,18 +10,20 @@ const isNewWebSocketNeeded = (webSocket: WebSocket | null): boolean =>
   !webSocket ||
   [WebSocket.CLOSING, WebSocket.CLOSED].includes(webSocket.readyState);
 
+type GameData = PlayerGameData | "not-found" | "loading";
+
 export const useGameSocket = (
   gameId: string,
   playerDetails: PlayerDetails
 ): {
-  gameData: PlayerGameData | undefined;
+  gameData: GameData;
   roundTripTime: number;
   sendViaWebSocket(messageObject: WebsocketIncomingMessageObject): void;
 } => {
   const reOpenWebSocketRef = useRef(false);
   const webSocketRef = useRef<WebSocket | null>(null);
   const getNewWebSocketRef = useRef((_jsonString?: string) => {});
-  const [gameData, setGameData] = useState<PlayerGameData>();
+  const [gameData, setGameData] = useState<GameData>("loading");
   const [roundTripTime, setRoundTripTime] = useState(0);
 
   const sendViaWebSocketRef = useRef(
@@ -84,6 +86,11 @@ export const useGameSocket = (
 
           if (data === "ping") {
             webSocketRef.current?.send("pong");
+            return;
+          }
+
+          if (data === "not-found") {
+            setGameData("not-found");
             return;
           }
 

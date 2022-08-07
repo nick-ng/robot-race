@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import type { PlayerDetails } from "dist-common/game-types";
 
@@ -25,8 +25,20 @@ export default function Game({ playerDetails }: GameProps) {
     setOptions({ ping: roundTripTime });
   }, [roundTripTime]);
 
-  if (typeof gameData === "undefined") {
+  if (gameData === "loading") {
     return <Loading />;
+  }
+
+  if (gameData === "not-found") {
+    return (
+      <div>
+        <h3>Game not found</h3>
+        <p>
+          The game may have expired or you were given the wrong game ID. Try
+          re-entering the game ID on the <Link to="/">Home page</Link>
+        </p>
+      </div>
+    );
   }
 
   const { gameState } = gameData;

@@ -67,6 +67,16 @@ export default class StreamHelper {
 
       if (res.length > 0) {
         StreamHelper.sendMessage(res[0], [newListener], res[0].id);
+      } else {
+        const valueType = await this.regularClient.type(streamKey);
+
+        if (valueType !== "stream") {
+          StreamHelper.sendMessage(
+            { id: "0", message: { data: "not-found" } },
+            [newListener],
+            "0"
+          );
+        }
       }
     }
   };
