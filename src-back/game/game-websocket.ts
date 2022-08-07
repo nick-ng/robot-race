@@ -30,12 +30,22 @@ interface Connection {
 const makeUpdateHandler =
   (connection: Connection) =>
   (
-    _message: string | null,
+    message: string | null,
     messageObject: ActionIncomingMessageObject | null
   ) => {
-    const gameData = decodeGameData(messageObject);
+    if (message === "not-found") {
+      connection.webSocketConnection.send("not-found");
+    }
 
-    if (!gameData) {
+    let gameData;
+    try {
+      gameData = decodeGameData(messageObject);
+
+      if (!gameData) {
+        return;
+      }
+    } catch (e) {
+      console.error("Caught error when decoding game", e);
       return;
     }
 
