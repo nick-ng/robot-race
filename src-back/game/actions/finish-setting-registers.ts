@@ -4,6 +4,7 @@ import type {
 } from "../../../dist-common/game-action-types";
 import type { ProgramCardInstruction } from "../../../dist-common/game-types";
 import canSubmitProgram from "../../../dist-common/action-validators/can-submit-program";
+import { getPowerDownDecisionOrder } from "../../../dist-common/utils";
 
 import Game, { TURN_PHASES } from "../game-class";
 
@@ -93,7 +94,6 @@ const finishSettingRegisters = (
     };
   }
 
-  gameState.turnPhase = TURN_PHASES.processRegisters;
   gameSecrets.instructionQueue = [];
 
   for (let register = 0; register < PROGRAM_REGISTER_COUNT; register++) {
@@ -180,12 +180,29 @@ const finishSettingRegisters = (
         !seatOrder.includes(robot.playerId)
     )
   ) {
+    gameState.turnPhase = TURN_PHASES.processRegisters;
     return {
       game,
       message: "OK",
       automaticAction: {
         action: { playerId: "server", type: "process-registers" },
         delay: 500,
+      },
+    };
+  }
+
+  const powerDownOrder = getPowerDownDecisionOrder(gameState);
+  if (gameSettings.timerStart !== "never" && powerDownOrder.length > 0) {
+    return {
+      game,
+      message: "OK",
+      automaticAction: {
+        action: {
+          playerId: powerDownOrder[0],
+          type: "force-skip-power-down",
+          turn: gameState.turn,
+        },
+        delay: gameSettings.timerSeconds * 1000,
       },
     };
   }
