@@ -10,6 +10,7 @@ import type {
 } from "dist-common/game-types";
 
 import { mapValidator } from "dist-common/maps/map-validator";
+import { toAmbidextrousQuote } from "dist-common/utils";
 import {
   MapCell,
   MapCellItem,
@@ -20,6 +21,7 @@ import {
 
 import MapItemSelect from "./map-item-select";
 import CurvedConveyorFromOptions from "./curved-conveyor-from-options";
+import Instructions from "./instructions";
 
 export const MAP_STORE = "ROBOT-RACE-MAP-STORE";
 const OPPOSITE = {
@@ -120,6 +122,10 @@ const ChosenItemDisplay = styled.div`
     text-align: center;
     width: 2.8vw;
     height: 2.8vw;
+  }
+
+  & > span {
+    margin-bottom: 0.5em;
   }
 `;
 
@@ -423,7 +429,7 @@ export default function MapEditor() {
               </td>
             </tr>
             <tr>
-              <td>Item</td>
+              <td>Type</td>
               <td>
                 <MapItemSelect
                   value={chosenItem}
@@ -566,7 +572,7 @@ export default function MapEditor() {
           Undo
         </button>
         <ChosenItemDisplay>
-          <span>Map Item Preview</span>
+          <span>Map Piece Preview</span>
           <div>
             <MapItemPreview alwaysShow style={chosenItemStyles}>
               {chosenItemTexts}
@@ -578,7 +584,7 @@ export default function MapEditor() {
             navigator.clipboard.writeText(JSON.stringify(map));
           }}
         >
-          Copy Map To Clipboard
+          Copy Map to Clipboard
         </button>
         {errors.length > 0 && (
           <>
@@ -703,7 +709,7 @@ export default function MapEditor() {
         <div>Import</div>
         <input
           onChange={(e) => {
-            setImportString(e.target.value);
+            setImportString(toAmbidextrousQuote(e.target.value));
           }}
         />
         <button
@@ -723,6 +729,7 @@ export default function MapEditor() {
         >
           Import
         </button>
+        <Instructions />
       </ImportControls>
     </StyledMapEditor>
   );

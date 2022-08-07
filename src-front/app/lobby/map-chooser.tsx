@@ -3,8 +3,9 @@ import styled from "styled-components";
 
 import type { Map, PlayerDetails } from "dist-common/game-types";
 
-import { mapList } from "../../../dist-common/maps";
-import { parseMap } from "../../../dist-common/maps/parse-map";
+import { toAmbidextrousQuote } from "dist-common/utils";
+import { mapList } from "dist-common/maps";
+import { parseMap } from "dist-common/maps/parse-map";
 
 import { MAP_STORE } from "../map-editor";
 
@@ -69,7 +70,8 @@ export default function MapChooser({
 
   useEffect(() => {
     if (mapJSONString) {
-      const { errors } = parseMap(mapJSONString);
+      const fixedMapJSON = toAmbidextrousQuote(mapJSONString);
+      const { errors } = parseMap(fixedMapJSON);
 
       setMapErrors(errors);
 
@@ -86,7 +88,7 @@ export default function MapChooser({
             body: JSON.stringify({
               action: "change-map",
               mapName: "custom",
-              mapJSON: mapJSONString,
+              mapJSON: fixedMapJSON,
             }),
           });
           setMapChoiceLoading(false);
@@ -149,10 +151,10 @@ export default function MapChooser({
             <td>{d[1]}</td>
           </tr>
         ))}
-      {mapChoice === "custom" && (
+      {isHost && mapChoice === "custom" && (
         <tr>
           <CustomMapCell1>
-            Load map from map editor or paste a valid map string
+            Load from the map editor or paste a valid map "code"
           </CustomMapCell1>
           <CustomMapCell>
             <div>
@@ -173,7 +175,7 @@ export default function MapChooser({
           </CustomMapCell>
         </tr>
       )}
-      {mapChoice === "custom" && mapErrors.length > 0 && (
+      {isHost && mapChoice === "custom" && mapErrors.length > 0 && (
         <tr>
           <CustomMapCell1>Map Errors</CustomMapCell1>
           <CustomMapCell>
