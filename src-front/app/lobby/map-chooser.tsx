@@ -105,7 +105,7 @@ export default function MapChooser({
           {isHost ? (
             <select
               disabled={!isHost || mapChoiceLoading}
-              value={mapChoice || "risky exchange"}
+              value={mapChoice?.toLowerCase() || "risky exchange"}
               onChange={async (e) => {
                 const mapName = e.target.value;
                 if (mapName === "custom") {
