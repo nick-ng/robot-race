@@ -134,7 +134,7 @@ export default function CardsAndProgramRegisters({
   }, [cardsAreSame, timestampIsNewer]);
 
   useEffect(() => {
-    if (showTimer) {
+    if (showTimer && !youFinishedProgramming) {
       if (!timeoutRef.current) {
         timerSound.volume = 0.25;
         timeoutRef.current = setTimeout(() => {
@@ -159,7 +159,7 @@ export default function CardsAndProgramRegisters({
       }
       timeoutRef.current = null;
     };
-  }, [showTimer]);
+  }, [showTimer, youFinishedProgramming]);
 
   useEffect(() => {
     if (selectedCardId !== null && selectedRegisterIndex !== null) {
