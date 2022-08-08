@@ -39,6 +39,7 @@ const forceSkipPowerDown = (
         type: "power-down-next-turn",
         decision: "no",
         playerId: action.playerId,
+        turn: gameState.turn,
       },
       delay: 0,
     },

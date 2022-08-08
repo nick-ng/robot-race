@@ -7,6 +7,8 @@ import {
   DockMapItem,
 } from "../game-types";
 
+import { isMapItemImpassable, IMPASSABLE_ITEMS } from "../utils";
+
 interface MapWithValidation {
   map: MapNoId;
   fixedMap: MapNoId;
@@ -20,8 +22,6 @@ interface MapWithValidationAndIds {
   warnings: string[];
   errors: string[];
 }
-
-const IMPASSABLE_ITEMS: MapItemNoId["type"][] = ["pit"];
 
 const toMapWithValidation = (map: MapNoId): MapWithValidation => ({
   map,
@@ -51,7 +51,7 @@ const itemsOnImpassable = (
 ): boolean => {
   return itemsToCheck.some((i) => {
     const itemsOnSameGrid = items.filter(
-      (ii) => IMPASSABLE_ITEMS.includes(ii.type) && ii.x === i.x && ii.y === i.y
+      (ii) => isMapItemImpassable(ii) && ii.x === i.x && ii.y === i.y
     );
 
     return itemsOnSameGrid.length > 0;

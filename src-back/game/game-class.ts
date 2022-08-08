@@ -22,6 +22,7 @@ export const ROBOT_DESIGNS = [0, 1, 2, 3, 4, 5, 6, 7] as const;
 
 export const TURN_PHASES = {
   lobby: 0,
+  afterCleanUp: 5,
   dealCards: 10,
   processRegisters: 20,
 } as const;

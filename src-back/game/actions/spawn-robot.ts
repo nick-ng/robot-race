@@ -5,6 +5,7 @@ import type {
 import type Game from "../game-class";
 
 import canSpawnRobot from "../../../dist-common/action-validators/can-spawn-robot";
+import { getRespawnOrder } from "../../../dist-common/utils";
 import { setRobotDamage } from "./utils";
 
 const spawnRobot = (
@@ -81,18 +82,34 @@ const spawnRobot = (
     finishedProgrammingPlayers.push(robot.playerId);
   }
 
-  if (robots.filter((r) => r.status === "stand-by").length <= 0) {
+  const respawnOrder = getRespawnOrder(robots, seatOrder);
+  if (respawnOrder.length > 0) {
+    if (gameSettings.timerStart === "never") {
+      return { game, message: "OK" };
+    }
+
     return {
       game,
       message: "OK",
       automaticAction: {
-        action: { playerId: "server", type: "deal-program-cards" },
-        delay: 0,
+        action: {
+          playerId: respawnOrder[0],
+          type: "force-spawn-robot",
+          turn: gameState.turn,
+        },
+        delay: gameSettings.timerSeconds * 1000 * 3,
       },
     };
   }
 
-  return { game, message: "OK" };
+  return {
+    game,
+    message: "OK",
+    automaticAction: {
+      action: { playerId: "server", type: "deal-program-cards" },
+      delay: 0,
+    },
+  };
 };
 
 export default spawnRobot;

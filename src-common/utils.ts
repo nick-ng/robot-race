@@ -1,6 +1,17 @@
-import type { Robot, MainGameState, GameState, Player } from "./game-types";
+import type {
+  MapItemNoId,
+  Robot,
+  MainGameState,
+  GameState,
+  Player,
+} from "./game-types";
 
 const SOME_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXY0123456789";
+export const CORPOREAL_ROBOT_STATUSES: readonly Robot["status"][] =
+  Object.freeze(["ok", "powered-down", "powered-on"]);
+export const IMPASSABLE_ITEMS: readonly MapItemNoId["type"][] = Object.freeze([
+  "pit",
+]);
 
 export const sleep = (ms: number) =>
   new Promise((resolve, _reject) => {
@@ -28,6 +39,12 @@ export const prevPlayer = (turnOrder: string[], activePlayer: string) => {
 
   return turnOrder[prevIndex];
 };
+
+export const isRobotCorporeal = (robot: Robot): boolean =>
+  CORPOREAL_ROBOT_STATUSES.includes(robot.status);
+
+export const isMapItemImpassable = (mapItem: MapItemNoId): boolean =>
+  IMPASSABLE_ITEMS.includes(mapItem.type);
 
 export const getRespawnOrder = (
   robots: Robot[],

@@ -1,9 +1,13 @@
-import type { MainGameState, MapItem } from "src-common/game-types";
+import type { MainGameState, MapItem } from "dist-common/game-types";
 import type {
   AutomaticAction,
   CleanUpAction,
-} from "../../../dist-common/game-action-types";
+} from "dist-common/game-action-types";
+
+import { getRespawnOrder } from "../../../dist-common/utils";
 import type Game from "../game-class";
+
+import { TURN_PHASES } from "../game-class";
 import { isRobotDestroyed, setRobotDamage, repairRobot } from "./utils";
 
 const cleanUp = (
@@ -63,10 +67,28 @@ const cleanUp = (
     }
   });
 
-  if (robots.some((robot) => robot.status === "stand-by")) {
+  game.gameState.turnPhase = TURN_PHASES.afterCleanUp;
+
+  const respawnOrder = getRespawnOrder(robots, seatOrder);
+  if (respawnOrder.length > 0) {
+    if (gameSettings.timerStart === "never") {
+      return {
+        game,
+        message: "OK",
+      };
+    }
+
     return {
       game,
       message: "OK",
+      automaticAction: {
+        action: {
+          playerId: respawnOrder[0],
+          type: "force-spawn-robot",
+          turn: gameState.turn,
+        },
+        delay: gameSettings.timerSeconds * 1000 * 3,
+      },
     };
   }
 

@@ -108,8 +108,8 @@ export const getCardMap = (): { [cardId: string]: ProgramCard } => {
   }, {} as { [cardId: string]: ProgramCard });
 };
 
-export const shuffle = <T>(inputArray: T[]): T[] =>
-  [...inputArray]
+export const shuffle = <T>(inputArray: readonly T[]): T[] =>
+  inputArray
     .map((data) => ({
       data,
       sortValue: Math.random(),
