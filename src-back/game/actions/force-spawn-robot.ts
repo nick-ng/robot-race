@@ -40,7 +40,7 @@ const forceSpawnRobot = (
 
   if (
     gameState.turn > action.turn ||
-    gameState.turnPhase >= TURN_PHASES.dealCards
+    gameState.turnPhase !== TURN_PHASES.afterCleanUp
   ) {
     return {
       game,
@@ -90,6 +90,15 @@ const forceSpawnRobot = (
           isMapItemImpassable(mi) && mi.x === coords.x && mi.y === coords.y
       );
       if (impassableItem) {
+        return false;
+      }
+      const isOutOfBounds =
+        coords.x < 0 ||
+        coords.y < 0 ||
+        coords.x >= map.width ||
+        coords.y >= map.height;
+
+      if (isOutOfBounds) {
         return false;
       }
 

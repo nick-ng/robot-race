@@ -2,10 +2,10 @@ import type {
   AutomaticAction,
   SpawnRobotAction,
 } from "../../../dist-common/game-action-types";
-import type Game from "../game-class";
 
 import canSpawnRobot from "../../../dist-common/action-validators/can-spawn-robot";
 import { getRespawnOrder } from "../../../dist-common/utils";
+import Game, { TURN_PHASES } from "../game-class";
 import { setRobotDamage } from "./utils";
 
 const spawnRobot = (
@@ -20,8 +20,12 @@ const spawnRobot = (
     };
   }
 
-  const { robots, seatOrder, finishedProgrammingPlayers } = gameState;
+  const { robots, seatOrder, finishedProgrammingPlayers, turn } = gameState;
   const { playerId, facing, x, y, powerDown } = action;
+
+  if (typeof action.turn === "number" && action.turn !== turn) {
+    return { game, message: "OK" };
+  }
 
   const { canPerform, message } = canSpawnRobot(playerId, robots, seatOrder);
 
@@ -101,6 +105,8 @@ const spawnRobot = (
       },
     };
   }
+
+  gameState.turnPhase = TURN_PHASES.dealCards;
 
   return {
     game,

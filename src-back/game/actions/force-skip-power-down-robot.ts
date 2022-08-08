@@ -23,7 +23,7 @@ const forceSkipPowerDown = (
 
   if (
     gameState.turn > action.turn ||
-    gameState.turnPhase >= TURN_PHASES.processRegisters
+    gameState.turnPhase !== TURN_PHASES.announcePowerDown
   ) {
     return {
       game,
