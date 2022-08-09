@@ -23,7 +23,15 @@ const powerDownNextTurn = (
   }
 
   const { poweringDownNextTurn, seatOrder } = gameState as MainGameState;
-  const { type, ...decision } = action;
+  const { type, turn, ...decision } = action;
+
+  if (typeof turn === "number" && turn !== gameState.turn) {
+    return {
+      game,
+      message: "OK",
+    };
+  }
+
   poweringDownNextTurn.push(decision);
 
   if (poweringDownNextTurn.length === seatOrder.length) {

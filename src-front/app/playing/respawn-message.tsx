@@ -7,7 +7,9 @@ import {
   MainGameState,
 } from "dist-common/game-types";
 import { getRespawnOrder } from "dist-common/utils";
-import canSpawnRobot from "dist-common/action-validators/can-spawn-robot";
+import canSpawnRobotValidator from "dist-common/action-validators/can-spawn-robot";
+
+import TimerBar, { TimerContainer } from "./timer-bar";
 
 const StyledRespawnMessage = styled.div``;
 
@@ -20,18 +22,34 @@ export default function RespawnMessage({
   gameData,
   playerDetails,
 }: RespawnMessageProps) {
-  const { gameState, players } = gameData;
+  const { gameSettings, gameState, players } = gameData;
   const { robots, seatOrder } = gameState as MainGameState;
 
+  const showTimer = gameSettings.timerStart !== "never";
   const respawnOrder = getRespawnOrder(robots, seatOrder);
 
   if (respawnOrder.length === 0) {
     return null;
   }
 
+  const canSpawnRobot = canSpawnRobotValidator(
+    playerDetails.playerId,
+    robots,
+    seatOrder
+  ).canPerform;
+
   return (
     <StyledRespawnMessage>
-      {canSpawnRobot(playerDetails.playerId, robots, seatOrder).canPerform && (
+      {showTimer && (
+        <TimerContainer fullHeight={respawnOrder[0] === playerDetails.playerId}>
+          <TimerBar
+            timerDuration={gameSettings.timerSeconds * 3}
+            showText={canSpawnRobot}
+            key={respawnOrder[0]}
+          />
+        </TimerContainer>
+      )}
+      {canSpawnRobot && (
         <>
           <p>Choose which direction your robot should face when it respawns.</p>
           <p>

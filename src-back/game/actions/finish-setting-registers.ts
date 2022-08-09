@@ -33,6 +33,10 @@ const finishSettingRegisters = (
     playerSecrets[playerId]?.programRegisters
   );
 
+  /**
+   * This doesn't return if canPerform is true because the server might be
+   * trying to resume the game.
+   */
   if (canPerform) {
     gameState.finishedProgrammingPlayers = [
       ...new Set([...gameState.finishedProgrammingPlayers, playerId]),
@@ -181,6 +185,7 @@ const finishSettingRegisters = (
     )
   ) {
     gameState.turnPhase = TURN_PHASES.processRegisters;
+
     return {
       game,
       message: "OK",
@@ -190,6 +195,8 @@ const finishSettingRegisters = (
       },
     };
   }
+
+  gameState.turnPhase = TURN_PHASES.announcePowerDown;
 
   const powerDownOrder = getPowerDownDecisionOrder(gameState);
   if (gameSettings.timerStart !== "never" && powerDownOrder.length > 0) {

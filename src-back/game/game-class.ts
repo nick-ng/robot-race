@@ -21,9 +21,13 @@ import { getMap } from "../../dist-common/maps";
 export const ROBOT_DESIGNS = [0, 1, 2, 3, 4, 5, 6, 7] as const;
 
 export const TURN_PHASES = {
-  lobby: 0,
+  lobby: -50,
+  afterCleanUp: 0,
   dealCards: 10,
-  processRegisters: 20,
+  programRobots: 20,
+  announcePowerDown: 30,
+  processRegisters: 40,
+  cleanUp: 50,
 } as const;
 
 export default class Game {

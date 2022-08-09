@@ -1,16 +1,13 @@
 import type { Position, Robot, MapItemNoId, WallMapItem } from "./game-types";
 
+import { isRobotCorporeal } from "./utils";
+
 export const directionMap = {
   up: { xd: 0, yd: -1 },
   right: { xd: 1, yd: 0 },
   down: { xd: 0, yd: 1 },
   left: { xd: -1, yd: 0 },
 } as const;
-
-const isRobotCorporeal = (robot: Robot): boolean => {
-  const { status } = robot;
-  return ["ok", "powered-down", "powered-on"].includes(status);
-};
 
 export const getLaserTarget = (
   position: Position,

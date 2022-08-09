@@ -2,9 +2,10 @@ import type {
   AutomaticAction,
   SpawnRobotAction,
 } from "../../../dist-common/game-action-types";
-import type Game from "../game-class";
 
 import canSpawnRobot from "../../../dist-common/action-validators/can-spawn-robot";
+import { getRespawnOrder } from "../../../dist-common/utils";
+import Game, { TURN_PHASES } from "../game-class";
 import { setRobotDamage } from "./utils";
 
 const spawnRobot = (
@@ -19,8 +20,12 @@ const spawnRobot = (
     };
   }
 
-  const { robots, seatOrder, finishedProgrammingPlayers } = gameState;
+  const { robots, seatOrder, finishedProgrammingPlayers, turn } = gameState;
   const { playerId, facing, x, y, powerDown } = action;
+
+  if (typeof action.turn === "number" && action.turn !== turn) {
+    return { game, message: "OK" };
+  }
 
   const { canPerform, message } = canSpawnRobot(playerId, robots, seatOrder);
 
@@ -81,18 +86,36 @@ const spawnRobot = (
     finishedProgrammingPlayers.push(robot.playerId);
   }
 
-  if (robots.filter((r) => r.status === "stand-by").length <= 0) {
+  const respawnOrder = getRespawnOrder(robots, seatOrder);
+  if (respawnOrder.length > 0) {
+    if (gameSettings.timerStart === "never") {
+      return { game, message: "OK" };
+    }
+
     return {
       game,
       message: "OK",
       automaticAction: {
-        action: { playerId: "server", type: "deal-program-cards" },
-        delay: 0,
+        action: {
+          playerId: respawnOrder[0],
+          type: "force-spawn-robot",
+          turn: gameState.turn,
+        },
+        delay: gameSettings.timerSeconds * 1000 * 3,
       },
     };
   }
 
-  return { game, message: "OK" };
+  gameState.turnPhase = TURN_PHASES.dealCards;
+
+  return {
+    game,
+    message: "OK",
+    automaticAction: {
+      action: { playerId: "server", type: "deal-program-cards" },
+      delay: 0,
+    },
+  };
 };
 
 export default spawnRobot;

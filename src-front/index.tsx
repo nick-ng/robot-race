@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 
+import SoundsContextProvider from "./hooks/sounds-context";
 import OptionsContextProvider from "./hooks/options-context";
 
 const GlobalStyle = createGlobalStyle`
@@ -57,9 +58,11 @@ root.render(
   <StrictMode>
     <GlobalStyle />
     <BrowserRouter>
-      <OptionsContextProvider>
-        <App />
-      </OptionsContextProvider>
+      <SoundsContextProvider>
+        <OptionsContextProvider>
+          <App />
+        </OptionsContextProvider>
+      </SoundsContextProvider>
     </BrowserRouter>
   </StrictMode>
 );

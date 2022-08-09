@@ -8,11 +8,10 @@ import type {
 } from "dist-common/game-types";
 import type { ActionIncomingMessageObject } from "dist-common/game-action-types";
 import { getPowerDownDecisionOrder } from "dist-common/utils";
-import canPowerDownRobot from "dist-common/action-validators/can-power-down";
+import canPowerDownRobotValidator from "dist-common/action-validators/can-power-down";
 
-import { useOptions } from "../../hooks/options-context";
 import { wiggleAnimationMixin } from "../../animations/wiggle";
-import TimerBar from "./timer-bar";
+import TimerBar, { TimerContainer } from "./timer-bar";
 
 const StyledPowerDownControl = styled.div``;
 
@@ -30,11 +29,6 @@ const SkipButton = styled.button`
   flex-grow: 1;
 `;
 
-const TimerContainer = styled.div<{ fullHeight: boolean }>`
-  position: relative;
-  min-height: ${({ fullHeight }) => (fullHeight ? "1.125em" : "0.5em")};
-`;
-
 interface PowerDownControlProps {
   gameData: PlayerGameData;
   playerDetails: PlayerDetails;
@@ -49,11 +43,12 @@ export default function PowerDownControl({
   const { playerId, playerPassword } = playerDetails;
   const { id, gameState, players, gameSettings } = gameData;
 
-  const { options } = useOptions();
-
-  const showTimer = gameSettings.timerStart;
-  const timerSeconds = gameSettings.timerSeconds - (options.ping || 0) / 2000;
+  const showTimer = gameSettings.timerStart !== "never";
   const powerDownOrder = getPowerDownDecisionOrder(gameState);
+  const canPowerDownRobot = canPowerDownRobotValidator(
+    playerDetails.playerId,
+    gameState as MainGameState
+  ).canPerform;
 
   if (powerDownOrder.length === 0) {
     return null;
@@ -61,8 +56,7 @@ export default function PowerDownControl({
 
   return (
     <StyledPowerDownControl>
-      {canPowerDownRobot(playerDetails.playerId, gameState as MainGameState)
-        .canPerform && (
+      {canPowerDownRobot && (
         <>
           <p>Have your robot repair itself next turn?</p>
           <p>
@@ -70,49 +64,7 @@ export default function PowerDownControl({
             turn repairing itself. It cannot be programmed while it is repairing
             itself.
           </p>
-          <ButtonContainer>
-            <PowerDownButton
-              onClick={() => {
-                sendViaWebSocket({
-                  playerId,
-                  password: playerPassword,
-                  gameId: id,
-                  type: "action",
-                  action: {
-                    type: "power-down-next-turn",
-                    playerId,
-                    decision: "yes",
-                  },
-                });
-              }}
-            >
-              Self-Repair
-            </PowerDownButton>
-            <SkipButton
-              onClick={() => {
-                sendViaWebSocket({
-                  playerId,
-                  password: playerPassword,
-                  gameId: id,
-                  type: "action",
-                  action: {
-                    type: "power-down-next-turn",
-                    playerId,
-                    decision: "no",
-                  },
-                });
-              }}
-            >
-              Skip
-            </SkipButton>
-          </ButtonContainer>
         </>
-      )}
-      {powerDownOrder[0] !== playerDetails.playerId && (
-        <p>
-          {players.find((p) => p.id === powerDownOrder[0])?.name} is deciding
-          whether to self-repair.
-        </p>
       )}
       {showTimer && (
         <TimerContainer
@@ -120,10 +72,54 @@ export default function PowerDownControl({
         >
           <TimerBar
             showText={powerDownOrder[0] === playerDetails.playerId}
-            timerDuration={timerSeconds}
+            timerDuration={gameSettings.timerSeconds}
             key={powerDownOrder[0]}
           />
         </TimerContainer>
+      )}
+      {canPowerDownRobot && (
+        <ButtonContainer>
+          <PowerDownButton
+            onClick={() => {
+              sendViaWebSocket({
+                playerId,
+                password: playerPassword,
+                gameId: id,
+                type: "action",
+                action: {
+                  type: "power-down-next-turn",
+                  playerId,
+                  decision: "yes",
+                },
+              });
+            }}
+          >
+            Self-Repair
+          </PowerDownButton>
+          <SkipButton
+            onClick={() => {
+              sendViaWebSocket({
+                playerId,
+                password: playerPassword,
+                gameId: id,
+                type: "action",
+                action: {
+                  type: "power-down-next-turn",
+                  playerId,
+                  decision: "no",
+                },
+              });
+            }}
+          >
+            Skip
+          </SkipButton>
+        </ButtonContainer>
+      )}
+      {powerDownOrder[0] !== playerDetails.playerId && (
+        <p>
+          {players.find((p) => p.id === powerDownOrder[0])?.name} is deciding
+          whether to self-repair.
+        </p>
       )}
     </StyledPowerDownControl>
   );

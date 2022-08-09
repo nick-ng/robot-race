@@ -30,9 +30,11 @@ const dealProgramCards = (
     finishedProgrammingPlayers,
   } = gameState;
 
-  // 00. Increment the turn number and set turn phase to 0
+  /**
+   * 00. Increment the turn number. Turn phase changes to "programRobots" at the
+   * end of this "server tick" so don't bother setting it here.
+   */
   gameState.turn = gameState.turn + 1;
-  gameState.turnPhase = TURN_PHASES.dealCards;
 
   // 05. Power down robots.
   poweringDownNextTurn.forEach((decision) => {
@@ -126,6 +128,9 @@ const dealProgramCards = (
     });
   }
 
+  gameState.turnPhase = TURN_PHASES.programRobots;
+
+  // This advances the game if no all robots are out of comission.
   return {
     game,
     message: "OK",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import type {
@@ -12,7 +12,6 @@ import canSubmitProgram from "dist-common/action-validators/can-submit-program";
 import { setOneRegister, sortAndFilter, areArraysSame } from "./utils";
 
 import { wiggleAnimationMixin } from "../../../animations/wiggle";
-import { useOptions } from "../../../hooks/options-context";
 import { isTimerVisible } from "../utils";
 import TimerBar from "../timer-bar";
 
@@ -86,15 +85,9 @@ export default function CardsAndProgramRegisters({
   >(null);
 
   const [isLoading, setIsLoading] = useState(false);
-  const { options } = useOptions();
-  const timerSound = useRef(new Audio("/timer.mp3")).current;
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const robot = robots.find((r) => r.playerId === playerDetails.playerId)!;
   const youFinishedProgramming = finishedProgrammingPlayers.includes(playerId);
-
-  const actualTimerSeconds =
-    gameSettings.timerSeconds - (options.ping || 0) / 2000;
 
   const showTimer = isTimerVisible({
     finishedProgrammingPlayers,
@@ -132,34 +125,6 @@ export default function CardsAndProgramRegisters({
       }
     }
   }, [cardsAreSame, timestampIsNewer]);
-
-  useEffect(() => {
-    if (showTimer) {
-      if (!timeoutRef.current) {
-        timerSound.volume = 0.25;
-        timeoutRef.current = setTimeout(() => {
-          timerSound.play();
-        }, (actualTimerSeconds - timerSound.duration) * 1000);
-      }
-    } else {
-      timerSound.pause();
-      timerSound.currentTime = 0;
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-
-      timeoutRef.current = null;
-    }
-
-    return () => {
-      timerSound.pause();
-      timerSound.currentTime = 0;
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      timeoutRef.current = null;
-    };
-  }, [showTimer]);
 
   useEffect(() => {
     if (selectedCardId !== null && selectedRegisterIndex !== null) {
@@ -298,7 +263,7 @@ export default function CardsAndProgramRegisters({
         )}
         {showTimer && (
           <TimerBar
-            timerDuration={actualTimerSeconds}
+            timerDuration={gameSettings.timerSeconds}
             showText={!youFinishedProgramming}
           />
         )}

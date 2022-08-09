@@ -3,6 +3,7 @@ import type { Robot, OnePlayerSecrets, Player, GameState } from "./game-types";
 interface BasicAction {
   playerId: string;
   type: string;
+  turn?: GameState["turn"];
 }
 
 export interface StartAction extends BasicAction {
@@ -54,11 +55,17 @@ export interface CleanUpAction extends BasicAction {
   type: "clean-up";
 }
 
+export interface ForceSpawnRobotAction extends BasicAction {
+  type: "force-spawn-robot";
+  turn: GameState["turn"];
+  playerId: Player["id"];
+}
+
 export interface SpawnRobotAction extends BasicAction {
   type: "spawn-robot";
   facing: Robot["position"]["facing"];
-  x: number;
-  y: number;
+  x: Robot["position"]["x"];
+  y: Robot["position"]["y"];
   powerDown: boolean;
 }
 
@@ -73,6 +80,7 @@ export type GameAction =
   | PowerDownNextTurnAction
   | ProcessRegisterAction
   | CleanUpAction
+  | ForceSpawnRobotAction
   | SpawnRobotAction;
 
 interface BasicIncomingMessageObject {
