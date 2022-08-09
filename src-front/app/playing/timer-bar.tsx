@@ -29,6 +29,16 @@ const WhiteBlackAnimation = keyframes`
 }
 `;
 
+const RedWhiteAnimation = keyframes`
+0% {
+  background-color: #ffffff;
+}
+
+100% {
+  background-color: #ff0000;
+}
+`;
+
 const TimerOuterBar = styled.div`
   position: absolute;
   top: 0;
@@ -38,16 +48,20 @@ const TimerOuterBar = styled.div`
   background-color: #000000;
 `;
 
-const TimerInnerBar = styled.div<{ timerDuration: number }>`
+const TimerInnerBar = styled.div<{
+  timerDuration: number;
+  redWhiteDelay: number;
+}>`
   position: absolute;
   left: 0;
   top: 0;
   height: 100%;
-  animation-name: ${TimerAnimation};
-  animation-duration: ${({ timerDuration }) => timerDuration}s;
-  animation-timing-function: linear;
-  animation-delay: 0s;
-  animation-iteration-count: 1;
+  animation-name: ${TimerAnimation}, ${RedWhiteAnimation};
+  animation-duration: ${({ timerDuration }) => timerDuration}s, 1.2s;
+  animation-timing-function: linear, ease-in-out;
+  animation-delay: 0s, ${({ redWhiteDelay }) => redWhiteDelay}s;
+  animation-iteration-count: 1, infinite;
+  animation-direction: normal, alternate;
   background-color: #ffffff;
 `;
 
@@ -116,7 +130,12 @@ export default function TimerBar({
 
   return (
     <TimerOuterBar>
-      <TimerInnerBar timerDuration={timerSeconds}></TimerInnerBar>
+      <TimerInnerBar
+        timerDuration={timerSeconds}
+        redWhiteDelay={
+          showText ? timerSeconds - timerSound.duration : 99 * timerSeconds
+        }
+      ></TimerInnerBar>
       {showText && <TimerText>{timerText || "Hurry Up!"}</TimerText>}
     </TimerOuterBar>
   );

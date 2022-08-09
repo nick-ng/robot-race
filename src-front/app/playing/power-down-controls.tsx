@@ -8,7 +8,7 @@ import type {
 } from "dist-common/game-types";
 import type { ActionIncomingMessageObject } from "dist-common/game-action-types";
 import { getPowerDownDecisionOrder } from "dist-common/utils";
-import canPowerDownRobot from "dist-common/action-validators/can-power-down";
+import canPowerDownRobotValidator from "dist-common/action-validators/can-power-down";
 
 import { wiggleAnimationMixin } from "../../animations/wiggle";
 import TimerBar, { TimerContainer } from "./timer-bar";
@@ -45,6 +45,10 @@ export default function PowerDownControl({
 
   const showTimer = gameSettings.timerStart !== "never";
   const powerDownOrder = getPowerDownDecisionOrder(gameState);
+  const canPowerDownRobot = canPowerDownRobotValidator(
+    playerDetails.playerId,
+    gameState as MainGameState
+  ).canPerform;
 
   if (powerDownOrder.length === 0) {
     return null;
@@ -52,8 +56,7 @@ export default function PowerDownControl({
 
   return (
     <StyledPowerDownControl>
-      {canPowerDownRobot(playerDetails.playerId, gameState as MainGameState)
-        .canPerform && (
+      {canPowerDownRobot && (
         <>
           <p>Have your robot repair itself next turn?</p>
           <p>
@@ -61,54 +64,56 @@ export default function PowerDownControl({
             turn repairing itself. It cannot be programmed while it is repairing
             itself.
           </p>
-          {showTimer && (
-            <TimerContainer
-              fullHeight={powerDownOrder[0] === playerDetails.playerId}
-            >
-              <TimerBar
-                showText={powerDownOrder[0] === playerDetails.playerId}
-                timerDuration={gameSettings.timerSeconds}
-                key={powerDownOrder[0]}
-              />
-            </TimerContainer>
-          )}
-          <ButtonContainer>
-            <PowerDownButton
-              onClick={() => {
-                sendViaWebSocket({
-                  playerId,
-                  password: playerPassword,
-                  gameId: id,
-                  type: "action",
-                  action: {
-                    type: "power-down-next-turn",
-                    playerId,
-                    decision: "yes",
-                  },
-                });
-              }}
-            >
-              Self-Repair
-            </PowerDownButton>
-            <SkipButton
-              onClick={() => {
-                sendViaWebSocket({
-                  playerId,
-                  password: playerPassword,
-                  gameId: id,
-                  type: "action",
-                  action: {
-                    type: "power-down-next-turn",
-                    playerId,
-                    decision: "no",
-                  },
-                });
-              }}
-            >
-              Skip
-            </SkipButton>
-          </ButtonContainer>
         </>
+      )}
+      {showTimer && (
+        <TimerContainer
+          fullHeight={powerDownOrder[0] === playerDetails.playerId}
+        >
+          <TimerBar
+            showText={powerDownOrder[0] === playerDetails.playerId}
+            timerDuration={gameSettings.timerSeconds}
+            key={powerDownOrder[0]}
+          />
+        </TimerContainer>
+      )}
+      {canPowerDownRobot && (
+        <ButtonContainer>
+          <PowerDownButton
+            onClick={() => {
+              sendViaWebSocket({
+                playerId,
+                password: playerPassword,
+                gameId: id,
+                type: "action",
+                action: {
+                  type: "power-down-next-turn",
+                  playerId,
+                  decision: "yes",
+                },
+              });
+            }}
+          >
+            Self-Repair
+          </PowerDownButton>
+          <SkipButton
+            onClick={() => {
+              sendViaWebSocket({
+                playerId,
+                password: playerPassword,
+                gameId: id,
+                type: "action",
+                action: {
+                  type: "power-down-next-turn",
+                  playerId,
+                  decision: "no",
+                },
+              });
+            }}
+          >
+            Skip
+          </SkipButton>
+        </ButtonContainer>
       )}
       {powerDownOrder[0] !== playerDetails.playerId && (
         <p>
