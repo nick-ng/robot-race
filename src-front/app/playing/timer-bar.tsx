@@ -1,5 +1,13 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled, { keyframes } from "styled-components";
+
+import { useSounds } from "../../hooks/sounds-context";
+import { useOptions } from "../../hooks/options-context";
+
+export const TimerContainer = styled.div<{ fullHeight: boolean }>`
+  position: relative;
+  min-height: ${({ fullHeight }) => (fullHeight ? "1.125em" : "0.5em")};
+`;
 
 const TimerAnimation = keyframes`
 0% {
@@ -72,9 +80,43 @@ export default function TimerBar({
   timerText,
   showText,
 }: TimerBarProps) {
+  const { timer: timerSound } = useSounds();
+  const { options } = useOptions();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const timerSeconds = timerDuration - (options.ping || 0) / 2000;
+
+  useEffect(() => {
+    if (showText) {
+      if (!timeoutRef.current) {
+        timerSound.volume = 0.25;
+        timeoutRef.current = setTimeout(() => {
+          timerSound.play();
+        }, (timerSeconds - timerSound.duration) * 1000);
+      }
+    } else {
+      timerSound.pause();
+      timerSound.currentTime = 0;
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      timeoutRef.current = null;
+    }
+
+    return () => {
+      timerSound.pause();
+      timerSound.currentTime = 0;
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = null;
+    };
+  }, [showText]);
+
   return (
     <TimerOuterBar>
-      <TimerInnerBar timerDuration={timerDuration}></TimerInnerBar>
+      <TimerInnerBar timerDuration={timerSeconds}></TimerInnerBar>
       {showText && <TimerText>{timerText || "Hurry Up!"}</TimerText>}
     </TimerOuterBar>
   );
