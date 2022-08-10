@@ -97,6 +97,27 @@ export default function Lobby({ gameData, playerDetails }: LobbyProps) {
             Copy Game Link
           </Button>
         )}
+        <h2>Players In Game</h2>
+        <div>
+          {players.map((player) => (
+            <PlayerItem key={player.id}>
+              <RobotWithDesign
+                bounce={player.id === playerDetails.playerId}
+                design={robots.find((r) => r.playerId === player.id)?.design!}
+              />
+              <span>{player.name}</span>
+            </PlayerItem>
+          ))}
+        </div>
+        {isInGame && (
+          <RobotDesignSelect
+            gameData={gameData}
+            playerDetails={playerDetails}
+          />
+        )}
+      </Column>
+      <Column>
+        <GameSettings gameData={gameData} playerDetails={playerDetails} />
         {canJoinGame && (
           <Button
             disabled={loading}
@@ -142,24 +163,6 @@ export default function Lobby({ gameData, playerDetails }: LobbyProps) {
             Start Game
           </Button>
         )}
-        <h2>Players In Game</h2>
-        <div>
-          {players.map((player) => (
-            <PlayerItem key={player.id}>
-              <RobotWithDesign
-                bounce={player.id === playerDetails.playerId}
-                design={robots.find((r) => r.playerId === player.id)?.design!}
-              />
-              <span>{player.name}</span>
-            </PlayerItem>
-          ))}
-        </div>
-        {isInGame && (
-          <RobotDesignSelect
-            gameData={gameData}
-            playerDetails={playerDetails}
-          />
-        )}
         {!isInGame && !spectateClicked && (
           <Button
             onClick={() => {
@@ -172,9 +175,6 @@ export default function Lobby({ gameData, playerDetails }: LobbyProps) {
         {!isInGame && spectateClicked && (
           <SpectateText>Spectating the game</SpectateText>
         )}
-      </Column>
-      <Column>
-        <GameSettings gameData={gameData} playerDetails={playerDetails} />
       </Column>
       <Column>
         <Map
