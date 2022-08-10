@@ -119,7 +119,11 @@ export const mapList: {
   {
     mapName: "custom",
     mapDisplayName: "Custom",
-    description: [],
+    description: [
+      ["Difficulty", "?"],
+      ["Recommended Players", "?"],
+      ["Length", "?"],
+    ],
   },
 ];
 
