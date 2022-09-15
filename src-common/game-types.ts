@@ -15,6 +15,10 @@ import {
   repairMapItemDecoder,
   straightConveyorMapItemDecoder,
   wallMapItemDecoder,
+  mapItemNoIdDecoder,
+  mapItemDecoder,
+  mapNoIdDecoder,
+  mapDecoder,
 } from "./decoders/map";
 
 export interface Scores {
@@ -165,50 +169,27 @@ export interface OnePlayerSecrets {
   cardsInHand: string[];
 }
 
-export interface BasicMapItem extends D.TypeOf<typeof basicMapItemDecoder> {}
-export interface DockMapItem extends D.TypeOf<typeof dockMapItemDecoder> {}
-export interface FlagMapItem extends D.TypeOf<typeof flagMapItemDecoder> {}
-export interface WallMapItem extends D.TypeOf<typeof wallMapItemDecoder> {}
-export interface StraightConveyorMapItem
-  extends D.TypeOf<typeof straightConveyorMapItemDecoder> {}
-export interface CurvedConveyorMapItem
-  extends D.TypeOf<typeof curvedConveyorMapItemDecoder> {}
-export interface PitMapItem extends D.TypeOf<typeof pitMapItemDecoder> {}
-export interface GearMapItem extends D.TypeOf<typeof gearMapItemDecoder> {}
-export interface LaserMapItem extends D.TypeOf<typeof laserMapItemDecoder> {}
-export interface PusherMapItem extends D.TypeOf<typeof pusherMapItemDecoder> {}
-export interface RepairMapItem extends D.TypeOf<typeof repairMapItemDecoder> {}
-export interface PowerUpMapItem
-  extends D.TypeOf<typeof powerUpMapItemDecoder> {}
+export type BasicMapItem = D.TypeOf<typeof basicMapItemDecoder>;
+export type DockMapItem = D.TypeOf<typeof dockMapItemDecoder>;
+export type FlagMapItem = D.TypeOf<typeof flagMapItemDecoder>;
+export type WallMapItem = D.TypeOf<typeof wallMapItemDecoder>;
+export type StraightConveyorMapItem = D.TypeOf<
+  typeof straightConveyorMapItemDecoder
+>;
+export type CurvedConveyorMapItem = D.TypeOf<
+  typeof curvedConveyorMapItemDecoder
+>;
+export type PitMapItem = D.TypeOf<typeof pitMapItemDecoder>;
+export type GearMapItem = D.TypeOf<typeof gearMapItemDecoder>;
+export type LaserMapItem = D.TypeOf<typeof laserMapItemDecoder>;
+export type PusherMapItem = D.TypeOf<typeof pusherMapItemDecoder>;
+export type RepairMapItem = D.TypeOf<typeof repairMapItemDecoder>;
+export type PowerUpMapItem = D.TypeOf<typeof powerUpMapItemDecoder>;
 
-export type MapItemNoId =
-  | DockMapItem
-  | FlagMapItem
-  | WallMapItem
-  | StraightConveyorMapItem
-  | CurvedConveyorMapItem
-  | PitMapItem
-  | GearMapItem
-  | LaserMapItem
-  | PusherMapItem
-  | RepairMapItem
-  | PowerUpMapItem;
-
-export type MapItem = MapItemNoId & { id: number };
-
-export interface MapNoId {
-  name: string;
-  items: MapItemNoId[];
-  width: number;
-  height: number;
-}
-
-export interface Map {
-  name: string;
-  items: MapItem[];
-  width: number;
-  height: number;
-}
+export type MapItemNoId = D.TypeOf<typeof mapItemNoIdDecoder>;
+export type MapItem = D.TypeOf<typeof mapItemDecoder>;
+export type MapNoId = D.TypeOf<typeof mapNoIdDecoder>;
+export type Map = D.TypeOf<typeof mapDecoder>;
 
 export interface GameSettings {
   map: Map;
