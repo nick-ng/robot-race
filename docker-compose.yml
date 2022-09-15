@@ -1,13 +1,23 @@
 version: "3.4"
 
 services:
-  redis-robot-race:
+  robot-race:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=8080
+      - NODE_ENV="production"
+      - HUSKY=0
+      - REDIS_URL=redis://redis
+    ports:
+      - "8080:8080"
+  redis:
     image: redis:6.2
-    restart: always
     ports:
       - "5052:6379"
     volumes:
-      - redis-data-robot-race:/data
+      - ./volumes/redis:/data
 
 volumes:
   redis-data-robot-race:
