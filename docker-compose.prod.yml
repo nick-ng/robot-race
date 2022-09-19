@@ -5,15 +5,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.server
+    restart: always
     ports:
-      - "3232:8080"
+      - "${PORT}:8080"
   robot-race-worker:
     build:
       context: .
       dockerfile: Dockerfile.worker
+    restart: always
+    scale: 1
   redis:
+    restart: always
     image: redis:6.2
-    ports:
-      - "5052:6379"
     volumes:
       - ./volumes/redis:/data
