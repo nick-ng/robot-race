@@ -12,8 +12,10 @@ services:
       context: .
       dockerfile: Dockerfile.worker
   redis:
-    image: redis:6.2
+    image: redis:alpine
+    command: redis-server /usr/local/etc/redis/redis.conf
     ports:
       - "5052:6379"
     volumes:
       - ./volumes/redis:/data
+      - ./configs/redis.conf:/usr/local/etc/redis/redis.conf
