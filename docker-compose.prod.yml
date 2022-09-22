@@ -16,6 +16,8 @@ services:
     scale: 1
   redis:
     restart: always
-    image: redis:6.2
+    image: redis:alpine
+    command: redis-server /usr/local/etc/redis/redis.conf
     volumes:
       - ./volumes/redis:/data
+      - ./configs/redis.conf:/usr/local/etc/redis/redis.conf
