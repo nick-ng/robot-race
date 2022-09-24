@@ -36,14 +36,18 @@ Forked from [this commit](https://github.com/nick-ng/pig-dice-game/tree/3a89a39b
 
 ## Deploying to Heroku
 
-1. Create an empty Heroku App. Note the app's name
-2. Get your Heroku API key from https://dashboard.heroku.com/account
-3. On GitHub repo for your fork, go to the Settings and click on Secrets > Actions
-4. Add 3 new repository secrets
+1. Change `.github\workflows\deploy-front-end.yml` so the `API_ORIGIN` is your Heroku App's url e.g. `API_ORIGIN=https://${{secrets.HEROKU_APP_NAME}}.herokuapp.com`
+2. Create an empty Heroku App. Note the app's name
+3. Get your Heroku API key from https://dashboard.heroku.com/account
+4. On GitHub repo for your fork, go to the Settings and click on Secrets > Actions
+5. Add 3 new repository secrets
    - `HEROKU_API_KEY`: API key from above
    - `HEROKU_APP_NAME`: App name from above
    - `HEROKU_EMAIL`: Email address of your Heroku account
-5. Push a commit to the `main` branch.
+6. Push a commit to the `main` branch
+7. Manually run the "Deploy Back-end" GitHub action
+
+If you deploy to Heroku often, you can un-comment the "push" trigger in `.github\workflows\deploy-back-end.yml`
 
 ## Unit Tests
 
