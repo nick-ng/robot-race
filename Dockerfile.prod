@@ -3,6 +3,7 @@ FROM node:lts-alpine
 ENV PORT=8080
 ENV HUSKY=0
 ENV REDIS_URL=redis://redis
+ENV NODE_ENV=production
 
 # Create app directory
 WORKDIR /usr/src/app
