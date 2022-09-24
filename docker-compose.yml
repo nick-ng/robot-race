@@ -4,13 +4,28 @@ services:
   robot-race-server:
     build:
       context: .
-      dockerfile: Dockerfile.server
+      dockerfile: Dockerfile.node
     ports:
       - "3232:8080"
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules/
   robot-race-worker:
     build:
       context: .
-      dockerfile: Dockerfile.worker
+      dockerfile: Dockerfile.node
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules/
+    command: npm run dev-worker
+  robot-race-front-end:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules/
+    command: npm run dev-front
   redis:
     image: redis:alpine
     command: redis-server /usr/local/etc/redis/redis.conf

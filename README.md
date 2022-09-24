@@ -7,11 +7,11 @@ Forked from [this commit](https://github.com/nick-ng/pig-dice-game/tree/3a89a39b
 ## Development
 
 1. `npm install`
-2. `docker-compose up -d` - For local redis environment
-3. `npm start`
-4. Navigate to one of the following:
-   - http://localhost:3232/test.html
-   - http://localhost:3232/test-ws.html
+2. `npm start` - This starts 4 docker containers
+   - `robot-race-server`: handles http requests
+   - `robot-race-worker`: handles game logic
+   - `robot-race-front-end`: rebuilds front-end during development
+   - `redis`: a Redis instance
 
 ## Forking (on different GitHub account)
 
@@ -28,6 +28,11 @@ Forked from [this commit](https://github.com/nick-ng/pig-dice-game/tree/3a89a39b
 7. `git remote add origin <url-of-repo-you-made>`
 8. `git push --set-upstream origin main`
 9. Change branch permissions etc.
+
+## Deploying
+
+1. `./build.sh` or `docker compose -f docker-compose.prod.yml build`
+2. `./serve.sh` or `PORT=<desired-port> docker compose -f docker-compose.prod.yml up -d`
 
 ## Deploying to Heroku
 

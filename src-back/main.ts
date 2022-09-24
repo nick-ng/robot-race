@@ -23,7 +23,7 @@ new GameWebSocketServer(
   streamHelper
 );
 
-const port = process.env.PORT || 3232;
+const port = process.env.PORT || 8080;
 app.set("port", port);
 
 app.use(

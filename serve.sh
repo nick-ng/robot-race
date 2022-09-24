@@ -1,1 +1,1 @@
-PORT=3434 docker-compose -f docker-compose.prod.yml up
+PORT=3010 docker compose -f docker-compose.prod.yml up -d
