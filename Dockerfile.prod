@@ -1,9 +1,9 @@
 FROM node:lts-alpine
 
+ENV NODE_ENV=production
 ENV PORT=8080
 ENV HUSKY=0
 ENV REDIS_URL=redis://redis
-ENV NODE_ENV=production
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -15,6 +15,7 @@ COPY package*.json ./
 
 # RUN npm install
 # If you are building your code for production
+RUN npm set-script prepare ""
 RUN npm ci
 
 # Bundle app source
