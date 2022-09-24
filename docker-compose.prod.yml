@@ -4,16 +4,17 @@ services:
   robot-race-server:
     build:
       context: .
-      dockerfile: Dockerfile.server
+      dockerfile: Dockerfile.prod
     restart: always
     ports:
       - "${PORT}:8080"
   robot-race-worker:
     build:
       context: .
-      dockerfile: Dockerfile.worker
+      dockerfile: Dockerfile.prod
     restart: always
     scale: 1
+    command: node ./dist-back/worker.js
   redis:
     restart: always
     image: redis:alpine
