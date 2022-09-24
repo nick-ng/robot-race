@@ -19,7 +19,7 @@ jobs:
           git config user.name "${GITHUB_ACTOR}"
           npm ci
           npm run build-back
-          API_ORIGIN=https://${{secrets.HEROKU_APP_NAME}}.herokuapp.com npm run build-front
+          API_ORIGIN=https://robot-race-server.pux.one npm run build-front
           cp ./static/* ./dist-front
           cp ./dist-front/index.html ./dist-front/404.html
           echo robot-race.pux.one > ./dist-front/CNAME
