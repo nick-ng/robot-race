@@ -224,7 +224,7 @@ export default class Game {
       status: "stand-by",
       damagePoints: 0,
       lockedRegisters: [],
-      lives: 3,
+      lives: 300,
       position: {
         x: 0,
         y: 0,
